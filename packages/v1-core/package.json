@@ -1,6 +1,6 @@
 {
   "name": "@pwndao/v1-core",
-  "version": "0.0.1-alpha",
+  "version": "v0.0.1-alpha-2",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -13,7 +13,10 @@
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist", "!**/*.tsbuildinfo"],
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo"
+  ],
   "dependencies": {
     "@openzeppelin/merkle-tree": "^1.0.8",
     "@pwndao/api-sdk": "workspace:*",
