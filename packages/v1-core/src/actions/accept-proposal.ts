@@ -1,16 +1,18 @@
-import { AddressString, ERC20Token } from "@pwndao/sdk-core";
+import { AddressString } from "@pwndao/sdk-core";
 import { ProposalWithSignature } from "src/models/strategies/types.js";
 import { IProposalElasticContract } from "src/factories/create-elastic-proposal.js";
+import invariant from "ts-invariant";
 
 type AcceptProposalRequest = {
     proposalToAccept: ProposalWithSignature,
     acceptor: AddressString,
-    creditAsset: ERC20Token,
     creditAmount: bigint
 }
 
 interface AcceptProposalDeps {
-    proposalContract: IProposalElasticContract
+    proposalContract: {
+        acceptProposal: IProposalElasticContract['acceptProposal']
+    }
 }
 
 export const acceptProposal = async (
@@ -21,6 +23,8 @@ export const acceptProposal = async (
     }: AcceptProposalRequest,
     deps: AcceptProposalDeps
 ) => {
+    invariant(creditAmount > 0, "Credit amount must be greater than zero.")
+    
     await deps.proposalContract.acceptProposal(
         proposalToAccept,
         acceptor,
