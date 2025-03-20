@@ -3,6 +3,7 @@ import {
 	ZERO_ADDRESS,
 	getElasticProposalContractAddress,
 	getPwnSimpleLoanSimpleProposalAddress,
+	AddressString
 } from "@pwndao/sdk-core";
 import type { SupportedChain } from "@pwndao/sdk-core";
 import { type Config, signTypedData } from "@wagmi/core";
@@ -13,11 +14,15 @@ import {
 	type ProposalWithSignature,
 	readPwnSimpleLoanElasticProposalGetProposalHash,
 	readPwnSimpleLoanGetLenderSpecHash,
+	readPwnSimpleLoanElasticProposalEncodeProposalData,
 	writePwnSimpleLoanElasticProposalMakeProposal,
+	writePwnSimpleLoanElasticProposalAcceptProposal, 
 } from "../index.js";
+import type { V1_3SimpleLoanElasticProposalStruct } from "../structs.js";
 import { readPwnSimpleLoanElasticProposalGetCollateralAmount } from "../index.js";
 import type { ElasticProposal } from "../models/proposals/elastic-proposal.js";
 import type { ILenderSpec } from "../models/terms.js";
+import { Loan } from '../models/loan/index.js'
 
 export class ElasticProposalContract implements IProposalElasticContract {
 	constructor(private readonly config: Config) {}
@@ -117,5 +122,55 @@ export class ElasticProposalContract implements IProposalElasticContract {
 			},
 		);
 		return data;
+	}
+
+	async encodeProposalData(
+		proposal: ProposalWithSignature,
+		creditAmount: bigint
+	) {
+		const data = await readPwnSimpleLoanElasticProposalEncodeProposalData(
+			this.config,
+			{
+				address: getPwnSimpleLoanSimpleProposalAddress(proposal.chainId),
+				chainId: proposal.chainId,
+				args: [
+					proposal.createProposalStruct() as V1_3SimpleLoanElasticProposalStruct, 
+					{
+						creditAmount,
+					}
+				]
+			}
+		)
+		return data
+	}
+
+	async acceptProposal(
+		proposal: ProposalWithSignature,
+		acceptor: AddressString,
+		creditAmount: bigint,
+	): Promise<Loan> {
+		const encodedProposalData = await this.encodeProposalData(
+			proposal,
+			creditAmount, 
+		)
+		const accepted = await writePwnSimpleLoanElasticProposalAcceptProposal(
+			this.config,
+			{
+				address: getPwnSimpleLoanSimpleProposalAddress(proposal.chainId),
+				chainId: proposal.chainId,
+				args: [
+					acceptor,
+					0n,
+					encodedProposalData,
+					[],
+					proposal.signature
+				]
+			}
+		)
+		
+		return new Loan(
+			0n,
+			proposal.chainId,
+		)
 	}
 }

@@ -35,9 +35,7 @@ export interface IProposalContract {
 	getProposerSpec(params: ILenderSpec, chainId: SupportedChain): Promise<Hex>;
 	createProposal(params: Proposal): Promise<ProposalWithSignature>;
 	getProposalHash(proposal: Proposal): Promise<Hex>;
-	createMultiProposal(
-		proposals: ProposalWithHash[],
-	): Promise<ProposalWithSignature[]>;
+	createMultiProposal(proposals: ProposalWithHash[]): Promise<ProposalWithSignature[]>;
 }
 
 export type ProposalContract =

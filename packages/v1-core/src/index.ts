@@ -24,6 +24,7 @@ export * from './generated.js'
 export * from './utils/index.js'
 
 export * from './api.js'
+export * from './structs.js'
 export * from './abi.js'
 
 export * from './contracts/index.js'
