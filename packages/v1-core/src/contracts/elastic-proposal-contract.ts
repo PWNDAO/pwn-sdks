@@ -3,7 +3,7 @@ import {
 	ZERO_ADDRESS,
 	getElasticProposalContractAddress,
 	getPwnSimpleLoanSimpleProposalAddress,
-	AddressString
+	type AddressString
 } from "@pwndao/sdk-core";
 import type { SupportedChain } from "@pwndao/sdk-core";
 import { type Config, signTypedData } from "@wagmi/core";

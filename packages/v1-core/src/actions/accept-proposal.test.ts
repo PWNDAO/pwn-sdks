@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker'
 import { describe, it, vi } from 'vitest'
 import { acceptProposal } from './accept-proposal.js'
-import { ProposalWithSignature } from '../models/strategies/types.js'
-import { AddressString } from '@pwndao/sdk-core'
+import type { ProposalWithSignature } from '../models/strategies/types.js'
+import type { AddressString } from '@pwndao/sdk-core'
 
 describe("Test accept proposal", () => {
 
