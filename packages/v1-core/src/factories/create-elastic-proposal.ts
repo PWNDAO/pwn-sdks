@@ -15,7 +15,7 @@ import {
 	getLendingCommonProposalFields,
 } from "./helpers.js";
 import type { BaseTerm, IServerAPI } from "./types.js";
-import { Loan } from '../models/loan/index.js';
+import type { Loan } from '../models/loan/index.js';
 
 export type CreateElasticProposalParams = BaseTerm & {
 	minCreditAmountPercentage: number;

@@ -1,6 +1,6 @@
-import { AddressString } from "@pwndao/sdk-core";
-import { ProposalWithSignature } from "src/models/strategies/types.js";
-import { IProposalElasticContract } from "src/factories/create-elastic-proposal.js";
+import type { AddressString } from "@pwndao/sdk-core";
+import type { ProposalWithSignature } from "src/models/strategies/types.js";
+import type { IProposalElasticContract } from "src/factories/create-elastic-proposal.js";
 import invariant from "ts-invariant";
 
 type AcceptProposalRequest = {
