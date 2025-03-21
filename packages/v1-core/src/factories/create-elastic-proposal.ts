@@ -5,16 +5,14 @@ import { ElasticProposal } from "../models/proposals/elastic-proposal.js";
 import type { IElasticProposalBase } from "../models/proposals/proposal-base.js";
 import type {
 	IProposalStrategy,
-	ProposalWithHash,
-	ProposalWithSignature,
 	StrategyTerm,
 } from "../models/strategies/types.js";
 import { calculateCreditPerCollateralUnit } from "../utils/calculations.js";
 import {
-	type IProposalContract,
 	getLendingCommonProposalFields,
 } from "./helpers.js";
 import type { BaseTerm, IServerAPI } from "./types.js";
+import { IProposalElasticContract } from "src/contracts/elastic-proposal-contract.js";
 
 export type CreateElasticProposalParams = BaseTerm & {
 	minCreditAmountPercentage: number;
@@ -27,15 +25,6 @@ export interface IProposalElasticAPIDeps {
 	getAssetUsdUnitPrice: IServerAPI["get"]["getAssetUsdUnitPrice"];
 	persistProposals: IServerAPI["post"]["persistProposals"];
 	updateNonces: IServerAPI["post"]["updateNonce"];
-}
-
-export interface IProposalElasticContract extends IProposalContract {
-	getCollateralAmount(proposal: ElasticProposal): Promise<bigint>;
-	getProposalHash(proposal: ElasticProposal): Promise<Hex>;
-	createProposal(proposal: ElasticProposal): Promise<ProposalWithSignature>;
-	createMultiProposal(
-		proposals: ProposalWithHash[],
-	): Promise<ProposalWithSignature[]>;
 }
 
 export class ElasticProposalStrategy

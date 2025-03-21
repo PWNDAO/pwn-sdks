@@ -36,8 +36,9 @@ export const makeProposal = async <T extends ProposalType>(
 			>[0];
 			const elasticDeps = deps as Parameters<typeof createElasticProposal>[1];
 			const proposal = await createElasticProposal(elasticParams, elasticDeps);
-			proposalWithSignature =
-				await elasticDeps.contract.createProposal(proposal);
+			// TODO does this make sense?? because calling this is forcing a user to pay gas
+			//  as it's onchain tx
+			proposalWithSignature = await elasticDeps.contract.createProposal(proposal);
 			break;
 		}
 		case ProposalType.ChainLink: {
@@ -51,8 +52,9 @@ export const makeProposal = async <T extends ProposalType>(
 				chainLinkParams,
 				chainLinkDeps,
 			);
-			proposalWithSignature =
-				await chainLinkDeps.contract.createProposal(proposal);
+			// TODO does this make sense?? because calling this is forcing a user to pay gas
+			//  as it's onchain tx
+			proposalWithSignature = await chainLinkDeps.contract.createProposal(proposal);
 			break;
 		}
 		case ProposalType.DutchAuction:
@@ -61,6 +63,8 @@ export const makeProposal = async <T extends ProposalType>(
 		default:
 			throw new Error(`Unknown proposal type: ${proposalType}`);
 	}
+
+	await deps.api.persistProposal(proposalWithSignature)
 
 	return proposalWithSignature;
 };

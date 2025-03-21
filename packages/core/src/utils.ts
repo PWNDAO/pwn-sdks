@@ -5,7 +5,7 @@ export const getLoanContractAddress = (chainId: SupportedChain) => {
 	return CHAIN_TO_ADDRESSES_MAP[chainId].pwnSimpleLoan;
 };
 
-export const getPwnSimpleLoanSimpleProposalAddress = (
+export const getPwnSimpleLoanAddress = (
 	chainId: SupportedChain,
 ) => {
 	return CHAIN_TO_ADDRESSES_MAP[chainId].pwnSimpleLoan;
@@ -38,3 +38,7 @@ export const getChainLinkProposalContractAddress = (
 
 	return CHAIN_TO_ADDRESSES_MAP[chainId].pwnSimpleLoanElasticChainlinkProposal;
 };
+
+export const typeSafeObjectKeys = <const T extends object>(obj: T) => {
+	return Object.keys(obj) as Array<keyof T>
+}

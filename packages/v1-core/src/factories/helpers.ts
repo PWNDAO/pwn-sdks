@@ -31,8 +31,11 @@ type CommonProposalFieldsParams = {
 	loanContract: AddressString;
 };
 
-export interface IProposalContract {
+export interface ILoanContract {
 	getProposerSpec(params: ILenderSpec, chainId: SupportedChain): Promise<Hex>;
+}
+
+export interface IProposalContract {
 	createProposal(params: Proposal): Promise<ProposalWithSignature>;
 	getProposalHash(proposal: Proposal): Promise<Hex>;
 	createMultiProposal(

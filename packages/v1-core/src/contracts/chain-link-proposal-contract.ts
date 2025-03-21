@@ -1,36 +1,36 @@
 import { SimpleMerkleTree } from "@openzeppelin/merkle-tree";
 import {
 	ZERO_ADDRESS,
-	getElasticProposalContractAddress,
+	getChainLinkProposalContractAddress,
 } from "@pwndao/sdk-core";
 import { type Config, signTypedData } from "@wagmi/core";
 import type { Hex } from "viem";
 import {
+	ChainLinkProposal,
 	IProposalContract,
 	type ProposalWithHash,
 	type ProposalWithSignature,
-	readPwnSimpleLoanElasticProposalGetProposalHash,
-	writePwnSimpleLoanElasticProposalMakeProposal,
+	readPwnSimpleLoanElasticChainlinkProposalGetCollateralAmount,
+	readPwnSimpleLoanElasticChainlinkProposalGetProposalHash,
+	writePwnSimpleLoanElasticChainlinkProposalMakeProposal,
 } from "../index.js";
-import { readPwnSimpleLoanElasticProposalGetCollateralAmount } from "../index.js";
-import type { ElasticProposal } from "../models/proposals/elastic-proposal.js";
 
-export interface IProposalElasticContract extends IProposalContract {
-	getCollateralAmount(proposal: ElasticProposal): Promise<bigint>;
-	getProposalHash(proposal: ElasticProposal): Promise<Hex>;
-	createProposal(proposal: ElasticProposal): Promise<ProposalWithSignature>;
+export interface IProposalChainLinkContract extends IProposalContract {
+	getProposalHash(proposal: ChainLinkProposal): Promise<Hex>;
+	getCollateralAmount(proposal: ChainLinkProposal): Promise<bigint>;
+	createProposal(proposal: ChainLinkProposal): Promise<ProposalWithSignature>;
 	createMultiProposal(proposals: ProposalWithHash[]): Promise<ProposalWithSignature[]>;
-}
+  }
 
-export class ElasticProposalContract implements IProposalElasticContract {
+export class ChainLinkProposalContract implements IProposalChainLinkContract {
 	constructor(private readonly config: Config) {}
 
-	async getProposalHash(proposal: ElasticProposal): Promise<Hex> {
+	async getProposalHash(proposal: ChainLinkProposal): Promise<Hex> {
 		// on-chain call is not required here. We can just use hashTypedData from wagmi
-		const data = await readPwnSimpleLoanElasticProposalGetProposalHash(
+		const data = await readPwnSimpleLoanElasticChainlinkProposalGetProposalHash(
 			this.config,
 			{
-				address: getElasticProposalContractAddress(proposal.chainId),
+				address: getChainLinkProposalContractAddress(proposal.chainId),
 				chainId: proposal.chainId,
 				args: [proposal.createProposalStruct()],
 			},
@@ -39,12 +39,12 @@ export class ElasticProposalContract implements IProposalElasticContract {
 	}
 
 	async createProposal(
-		proposal: ElasticProposal,
+		proposal: ChainLinkProposal,
 	): Promise<ProposalWithSignature> {
-		const data = await writePwnSimpleLoanElasticProposalMakeProposal(
+		const data = await writePwnSimpleLoanElasticChainlinkProposalMakeProposal(
 			this.config,
 			{
-				address: getElasticProposalContractAddress(proposal.chainId),
+				address: getChainLinkProposalContractAddress(proposal.chainId),
 				chainId: proposal.chainId,
 				args: [proposal.createProposalStruct()],
 			},
@@ -57,6 +57,8 @@ export class ElasticProposalContract implements IProposalElasticContract {
 		}) as ProposalWithSignature;
 	}
 
+	// TODO: this is exactly same function as in elastic-proposal-contract
+	//  should we move the code to some common base?
 	async createMultiProposal(
 		proposals: ProposalWithHash[],
 	): Promise<ProposalWithSignature[]> {
@@ -94,13 +96,21 @@ export class ElasticProposalContract implements IProposalElasticContract {
 		);
 	}
 
-	async getCollateralAmount(proposal: ElasticProposal): Promise<bigint> {
-		const data = await readPwnSimpleLoanElasticProposalGetCollateralAmount(
+	async getCollateralAmount(proposal: ChainLinkProposal): Promise<bigint> {
+		const data = await readPwnSimpleLoanElasticChainlinkProposalGetCollateralAmount(
 			this.config,
 			{
-				address: getElasticProposalContractAddress(proposal.chainId),
+				address: getChainLinkProposalContractAddress(proposal.chainId),
 				chainId: proposal.chainId,
-				args: [proposal.availableCreditLimit, proposal.creditPerCollateralUnit],
+				args: [
+					proposal.creditAddress,
+					proposal.availableCreditLimit,
+					proposal.collateralAddress,
+					proposal.feedIntermediaryDenominations,
+					proposal.feedInvertFlags,
+					// TODO is this fine or we need to multiply this value by 100 ?
+					proposal.loanToValue
+				],
 			},
 		);
 		return data;
