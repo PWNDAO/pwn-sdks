@@ -1,4 +1,4 @@
-import { CHAIN_TO_ADDRESSES_MAP, SupportedChain, V1_2_StarknetContracts, V1_3_Contracts } from "@pwndao/sdk-core";
+import { CHAIN_TO_ADDRESSES_MAP, SupportedChain, type V1_2_StarknetContracts, type V1_3_Contracts } from "@pwndao/sdk-core";
 import { ProposalType } from "../models/proposals/proposal-base.js";
 
 export const getProposalAddressByType = (

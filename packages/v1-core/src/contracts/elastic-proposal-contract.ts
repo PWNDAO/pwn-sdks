@@ -159,57 +159,52 @@ export class ElasticProposalContract implements IProposalElasticContract {
 		acceptor: AddressString,
 		creditAmount: bigint,
 	): Promise<Loan> {
-		try {
-			// if proposal is lending offer sourceOfFunds is alreday set. If not then it's lender address
-			const sourceOfFunds =
-				proposal.isOffer && proposal.sourceOfFunds === null
-					? proposal.proposer
-					: acceptor;
+		// if proposal is lending offer sourceOfFunds is alreday set. If not then it's lender address
+		const sourceOfFunds =
+			proposal.isOffer && proposal.sourceOfFunds === null
+				? proposal.proposer
+				: acceptor;
 
-			Object.assign(proposal, {
-				sourceOfFunds,
-			});
+		Object.assign(proposal, {
+			sourceOfFunds,
+		});
 
-			const encodedProposalData = await this.encodeProposalData(
-				proposal,
-				creditAmount,
-			);
+		const encodedProposalData = await this.encodeProposalData(
+			proposal,
+			creditAmount,
+		);
 
-			const proposalInclusionProof = await getInclusionProof(proposal);
+		const proposalInclusionProof = await getInclusionProof(proposal);
 
-			const proposalSpec = {
-				proposalContract: proposal.proposalContract,
-				proposalData: encodedProposalData,
-				proposalInclusionProof,
-				signature: proposal.signature,
-			};
+		const proposalSpec = {
+			proposalContract: proposal.proposalContract,
+			proposalData: encodedProposalData,
+			proposalInclusionProof,
+			signature: proposal.signature,
+		};
 
-			const lenderSpec = {
-				sourceOfFunds,
-			};
+		const lenderSpec = {
+			sourceOfFunds,
+		};
 
-			console.log("lenderSpec", lenderSpec);
+		console.log("lenderSpec", lenderSpec);
 
-			const callerSpec = {
-				refinancingLoanId: 0n,
-				revokeNonce: false,
-				nonce: 0n,
-			};
+		const callerSpec = {
+			refinancingLoanId: 0n,
+			revokeNonce: false,
+			nonce: 0n,
+		};
 
-			console.log("callerSpec", callerSpec);
+		console.log("callerSpec", callerSpec);
 
-			const extra = "0x";
+		const extra = "0x";
 
-			const accepted = await writePwnSimpleLoanCreateLoan(this.config, {
-				address: getPwnSimpleLoanSimpleProposalAddress(proposal.chainId),
-				chainId: proposal.chainId,
-				args: [proposalSpec, lenderSpec, callerSpec, extra],
-			});
+		const accepted = await writePwnSimpleLoanCreateLoan(this.config, {
+			address: getPwnSimpleLoanSimpleProposalAddress(proposal.chainId),
+			chainId: proposal.chainId,
+			args: [proposalSpec, lenderSpec, callerSpec, extra],
+		});
 
-			return new Loan(0n, proposal.chainId);
-		} catch (error) {
-			console.error(error);
-			debugger;
-		}
+		return new Loan(0n, proposal.chainId);
 	}
 }
