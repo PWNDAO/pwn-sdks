@@ -97,7 +97,7 @@ export class ElasticProposal implements IElasticProposalBase {
 		this.creditAddress = proposal.creditAddress;
 
 		this.proposalContract = getElasticProposalContractAddress(chainId);
-		this.loanContract = getLoanContractAddress(chainId);
+		this.loanContract = proposal.loanContract;
 		this.type = ProposalType.Elastic;
 		this.chainId = chainId;
 

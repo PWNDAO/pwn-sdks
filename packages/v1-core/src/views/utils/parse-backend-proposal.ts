@@ -24,7 +24,6 @@ export const parseBackendProposalResponse = (
 	// Convert string values to appropriate types
 	const convertedData = {
 		...backendData,
-		collateralId: BigInt(backendData.collateral.tokenId || "0"),
 		availableCreditLimit: BigInt(backendData.availableCreditLimit || "0"),
 		refinancingLoanId: BigInt(backendData.refinancingLoanId || "0"),
 		nonceSpace: BigInt(backendData.nonceSpace || "0"),
@@ -42,6 +41,10 @@ export const parseBackendProposalResponse = (
 		sourceOfFunds: backendData.sourceOfFunds,
 		multiproposalMerkleRoot: backendData.multiproposalMerkleRoot,
 		type: backendData.type,
+		creditAddress: backendData.creditAsset.address,
+		collateralAddress: backendData.collateral.address,
+		collateralCategory: backendData.collateral.category,
+		collateralId: BigInt(backendData.collateral.tokenId || "0"),
 	};
 
 	const chainId = backendData.chainId;
@@ -74,6 +77,8 @@ export const parseBackendProposalResponse = (
 		chainId: chainId,
 		sourceOfFunds: convertedData.sourceOfFunds,
 		multiproposalMerkleRoot: convertedData.multiproposalMerkleRoot,
+		proposalContract: convertedData.proposalContractAddress,
+		loanContract: convertedData.loanContract,
 	});
 
 	return proposal as ProposalWithSignature;

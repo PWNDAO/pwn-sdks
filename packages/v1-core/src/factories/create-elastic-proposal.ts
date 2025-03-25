@@ -1,4 +1,4 @@
-import type { UserWithNonceManager } from "@pwndao/sdk-core";
+import type { AddressString, UserWithNonceManager } from "@pwndao/sdk-core";
 import type { Hex, Token } from "@pwndao/sdk-core";
 import { getLoanContractAddress } from "@pwndao/sdk-core";
 import { ElasticProposal } from "../models/proposals/elastic-proposal.js";
@@ -16,6 +16,7 @@ import {
 } from "./helpers.js";
 import type { BaseTerm, IServerAPI } from "./types.js";
 import { LTV_DENOMINATOR, MIN_CREDIT_CALCULATION_DENOMINATOR } from "./constants.js";
+import type { Loan } from '../models/loan/index.js';
 
 export type CreateElasticProposalParams = BaseTerm & {
 	minCreditAmountPercentage: number;
@@ -37,6 +38,11 @@ export interface IProposalElasticContract extends IProposalContract {
 	createMultiProposal(
 		proposals: ProposalWithHash[],
 	): Promise<ProposalWithSignature[]>;
+	acceptProposal(
+		proposal: ProposalWithSignature,
+		acceptor: AddressString,
+		creditAmount: bigint,
+	): Promise<Loan>
 }
 
 export class ElasticProposalStrategy
