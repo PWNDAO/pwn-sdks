@@ -17,14 +17,14 @@ type ContractAddresses = {
 	tokenBundlerContract: AddressString;
 };
 
-type V1_3_Contracts = ContractAddresses & {
+export type V1_3_Contracts = ContractAddresses & {
 	pwnSimpleLoanElasticProposal: AddressString;
 	pwnSimpleLoanElasticChainlinkProposal: AddressString;
 	utilizedCredit: AddressString;
 };
 
 // starknet has no tokenBundlerContract by now
-type V1_2_StarknetContracts = Omit<
+export type V1_2_StarknetContracts = Omit<
 	ContractAddresses,
 	"tokenBundlerContract"
 > & {

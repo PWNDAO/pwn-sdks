@@ -41,6 +41,8 @@ export const API: IServerAPI = {
 		): Promise<ProposalWithSignature[]> => {
 			const data: listProposalsResponse = await listProposals({
 				relatedThesisId: strategyId,
+				limit: 100,
+				offset: 0,
 			});
 			invariant(data.data.results !== undefined, "Error parsing response");
 			return data.data.results.map(parseBackendProposalResponse) ?? [];

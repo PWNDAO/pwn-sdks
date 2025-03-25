@@ -1,9 +1,9 @@
 import { SimpleMerkleTree } from "@openzeppelin/merkle-tree";
 import {
+	type AddressString,
 	ZERO_ADDRESS,
 	getElasticProposalContractAddress,
 	getPwnSimpleLoanSimpleProposalAddress,
-	type AddressString
 } from "@pwndao/sdk-core";
 import type { SupportedChain } from "@pwndao/sdk-core";
 import { type Config, signTypedData } from "@wagmi/core";
@@ -12,17 +12,19 @@ import type { IProposalElasticContract } from "../factories/create-elastic-propo
 import {
 	type ProposalWithHash,
 	type ProposalWithSignature,
+	readPwnSimpleLoanElasticProposalEncodeProposalData,
 	readPwnSimpleLoanElasticProposalGetProposalHash,
 	readPwnSimpleLoanGetLenderSpecHash,
-	readPwnSimpleLoanElasticProposalEncodeProposalData,
+	writePwnSimpleLoanCreateLoan,
 	writePwnSimpleLoanElasticProposalMakeProposal,
-	writePwnSimpleLoanElasticProposalAcceptProposal, 
 } from "../index.js";
-import type { V1_3SimpleLoanElasticProposalStruct } from "../structs.js";
 import { readPwnSimpleLoanElasticProposalGetCollateralAmount } from "../index.js";
+import { Loan } from "../models/loan/index.js";
 import type { ElasticProposal } from "../models/proposals/elastic-proposal.js";
 import type { ILenderSpec } from "../models/terms.js";
-import { Loan } from '../models/loan/index.js'
+import type { V1_3SimpleLoanElasticProposalStruct } from "../structs.js";
+import { getProposalAddressByType } from "../utils/contract-addresses.js";
+import { getInclusionProof } from "./utilts.js";
 
 export class ElasticProposalContract implements IProposalElasticContract {
 	constructor(private readonly config: Config) {}
@@ -126,51 +128,88 @@ export class ElasticProposalContract implements IProposalElasticContract {
 
 	async encodeProposalData(
 		proposal: ProposalWithSignature,
-		creditAmount: bigint
+		creditAmount: bigint,
 	) {
 		const data = await readPwnSimpleLoanElasticProposalEncodeProposalData(
 			this.config,
 			{
-				address: getPwnSimpleLoanSimpleProposalAddress(proposal.chainId),
+				address: getProposalAddressByType(proposal.type, proposal.chainId),
 				chainId: proposal.chainId,
 				args: [
-					proposal.createProposalStruct() as V1_3SimpleLoanElasticProposalStruct, 
+					proposal.createProposalStruct() as V1_3SimpleLoanElasticProposalStruct,
 					{
 						creditAmount,
-					}
-				]
-			}
-		)
-		return data
+					},
+				],
+			},
+		);
+		return data;
 	}
 
+	/**
+	 * This function accept a proposal and a credit amount.
+	 * Then it resolves the sourceOfFunds from the proposal, encodes it and accepts the proposal.
+	 * @param proposal - The proposal to accept
+	 * @param acceptor - The address of the acceptor
+	 * @param creditAmount - The amount of credit to accept
+	 * @returns The loan object
+	 */
 	async acceptProposal(
 		proposal: ProposalWithSignature,
 		acceptor: AddressString,
 		creditAmount: bigint,
 	): Promise<Loan> {
-		const encodedProposalData = await this.encodeProposalData(
-			proposal,
-			creditAmount, 
-		)
-		const accepted = await writePwnSimpleLoanElasticProposalAcceptProposal(
-			this.config,
-			{
+		try {
+			// if proposal is lending offer sourceOfFunds is alreday set. If not then it's lender address
+			const sourceOfFunds =
+				proposal.isOffer && proposal.sourceOfFunds === null
+					? proposal.proposer
+					: acceptor;
+
+			Object.assign(proposal, {
+				sourceOfFunds,
+			});
+
+			const encodedProposalData = await this.encodeProposalData(
+				proposal,
+				creditAmount,
+			);
+
+			const proposalInclusionProof = await getInclusionProof(proposal);
+
+			const proposalSpec = {
+				proposalContract: proposal.proposalContract,
+				proposalData: encodedProposalData,
+				proposalInclusionProof,
+				signature: proposal.signature,
+			};
+
+			const lenderSpec = {
+				sourceOfFunds,
+			};
+
+			console.log("lenderSpec", lenderSpec);
+
+			const callerSpec = {
+				refinancingLoanId: 0n,
+				revokeNonce: false,
+				nonce: 0n,
+			};
+
+			console.log("callerSpec", callerSpec);
+
+			const extra = "0x";
+
+			const accepted = await writePwnSimpleLoanCreateLoan(this.config, {
 				address: getPwnSimpleLoanSimpleProposalAddress(proposal.chainId),
 				chainId: proposal.chainId,
-				args: [
-					acceptor,
-					0n,
-					encodedProposalData,
-					[],
-					proposal.signature
-				]
-			}
-		)
-		
-		return new Loan(
-			0n,
-			proposal.chainId,
-		)
+				args: [proposalSpec, lenderSpec, callerSpec, extra],
+			});
+
+			return new Loan(0n, proposal.chainId);
+		} catch (error) {
+			console.error(error);
+			debugger;
+		}
 	}
 }
