@@ -5,5 +5,5 @@
  */
 
 export type NFTAssetCollectionDetailSchemaTotalOwnersUpdatedTime =
-	| string
-	| null;
+  | string
+  | null;

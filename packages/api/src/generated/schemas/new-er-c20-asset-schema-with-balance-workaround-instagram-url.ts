@@ -5,5 +5,5 @@
  */
 
 export type NewERC20AssetSchemaWithBalanceWorkaroundInstagramUrl =
-	| string
-	| null;
+  | string
+  | null;

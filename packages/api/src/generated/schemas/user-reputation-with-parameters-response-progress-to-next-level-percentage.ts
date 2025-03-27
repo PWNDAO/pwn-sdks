@@ -5,5 +5,5 @@
  */
 
 export type UserReputationWithParametersResponseProgressToNextLevelPercentage =
-	| number
-	| string;
+  | number
+  | string;

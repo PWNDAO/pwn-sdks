@@ -5,5 +5,5 @@
  */
 
 export type V13CreateSimpleLoanElasticProposalRequestSchemaRequestNonceSpace =
-	| number
-	| string;
+  | number
+  | string;

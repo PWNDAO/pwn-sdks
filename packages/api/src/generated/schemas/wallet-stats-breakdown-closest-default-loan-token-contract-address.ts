@@ -5,5 +5,5 @@
  */
 
 export type WalletStatsBreakdownClosestDefaultLoanTokenContractAddress =
-	| string
-	| null;
+  | string
+  | null;

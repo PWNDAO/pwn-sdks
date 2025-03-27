@@ -3,12 +3,12 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { UserProfileSerializerAuthenticatedEmail } from "./user-profile-serializer-authenticated-email";
+import type { UserProfileSerializerAuthenticatedEmail } from './user-profile-serializer-authenticated-email';
 
 export interface UserProfileSerializerAuthenticated {
-	description?: string;
-	/** @maxLength 19 */
-	discord_user_id?: string;
-	email?: UserProfileSerializerAuthenticatedEmail;
-	is_email_verified?: boolean;
+  description?: string;
+  /** @maxLength 19 */
+  discord_user_id?: string;
+  email?: UserProfileSerializerAuthenticatedEmail;
+  is_email_verified?: boolean;
 }

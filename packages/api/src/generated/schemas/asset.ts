@@ -3,6 +3,6 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { Erc20OrNftAsset } from "./erc20-or-nft-asset";
+import type { Erc20OrNftAsset } from './erc20-or-nft-asset';
 
 export type Asset = Erc20OrNftAsset;

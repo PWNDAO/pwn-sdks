@@ -12,13 +12,13 @@
  * `OBJECT` - OBJECT
  */
 export type DisplayTypeEnum =
-	(typeof DisplayTypeEnum)[keyof typeof DisplayTypeEnum];
+  (typeof DisplayTypeEnum)[keyof typeof DisplayTypeEnum];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const DisplayTypeEnum = {
-	NUMBER: "NUMBER",
-	STRING: "STRING",
-	DATE: "DATE",
-	RANKING: "RANKING",
-	OBJECT: "OBJECT",
+  NUMBER: 'NUMBER',
+  STRING: 'STRING',
+  DATE: 'DATE',
+  RANKING: 'RANKING',
+  OBJECT: 'OBJECT',
 } as const;

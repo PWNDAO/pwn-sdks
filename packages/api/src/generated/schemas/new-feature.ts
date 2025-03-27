@@ -3,15 +3,15 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { NewFeatureDescription } from "./new-feature-description";
-import type { NewFeatureImage } from "./new-feature-image";
+import type { NewFeatureDescription } from './new-feature-description';
+import type { NewFeatureImage } from './new-feature-image';
 
 export interface NewFeature {
-	readonly id: number;
-	/** @maxLength 255 */
-	title: string;
-	description?: NewFeatureDescription;
-	image?: NewFeatureImage;
-	/** @maxLength 12 */
-	version: string;
+  readonly id: number;
+  /** @maxLength 255 */
+  title: string;
+  description?: NewFeatureDescription;
+  image?: NewFeatureImage;
+  /** @maxLength 12 */
+  version: string;
 }

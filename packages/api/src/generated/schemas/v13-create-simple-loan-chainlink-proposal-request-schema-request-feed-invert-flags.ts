@@ -5,5 +5,4 @@
  */
 
 export type V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestFeedInvertFlags =
-	| boolean[]
-	| null;
+  boolean[] | null;

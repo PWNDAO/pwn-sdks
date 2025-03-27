@@ -5,5 +5,5 @@
  */
 
 export type WalletAssetsResponseWorkaroundTasksInfoAnyOf = {
-	[key: string]: unknown;
+  [key: string]: unknown;
 };

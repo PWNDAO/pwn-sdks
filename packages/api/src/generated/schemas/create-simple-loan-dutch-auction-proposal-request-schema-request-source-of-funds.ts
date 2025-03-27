@@ -5,5 +5,4 @@
  */
 
 export type CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestSourceOfFunds =
-	| string
-	| null;
+  string | null;

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { NFTAssetSchemaWithBalanceAndOwnerBundledAssetsAnyOfItem } from "./nftasset-schema-with-balance-and-owner-bundled-assets-any-of-item";
+import type { NFTAssetSchemaWithBalanceAndOwnerBundledAssetsAnyOfItem } from './nftasset-schema-with-balance-and-owner-bundled-assets-any-of-item';
 
 export type NFTAssetSchemaWithBalanceAndOwnerBundledAssets =
-	| NFTAssetSchemaWithBalanceAndOwnerBundledAssetsAnyOfItem[]
-	| null;
+  | NFTAssetSchemaWithBalanceAndOwnerBundledAssetsAnyOfItem[]
+  | null;

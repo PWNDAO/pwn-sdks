@@ -5,28 +5,28 @@
  */
 
 export type ProposalAndLoanListOrderByItem =
-	(typeof ProposalAndLoanListOrderByItem)[keyof typeof ProposalAndLoanListOrderByItem];
+  (typeof ProposalAndLoanListOrderByItem)[keyof typeof ProposalAndLoanListOrderByItem];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ProposalAndLoanListOrderByItem = {
-	"-apr": "-apr",
-	"-builder_score": "-builder_score",
-	"-collateral_name": "-collateral_name",
-	"-created_at": "-created_at",
-	"-default_date": "-default_date",
-	"-duration": "-duration",
-	"-expiration": "-expiration",
-	"-ltv": "-ltv",
-	"-reputation_score": "-reputation_score",
-	"-usd_credit_value": "-usd_credit_value",
-	apr: "apr",
-	builder_score: "builder_score",
-	collateral_name: "collateral_name",
-	created_at: "created_at",
-	default_date: "default_date",
-	duration: "duration",
-	expiration: "expiration",
-	ltv: "ltv",
-	reputation_score: "reputation_score",
-	usd_credit_value: "usd_credit_value",
+  '-apr': '-apr',
+  '-builder_score': '-builder_score',
+  '-collateral_name': '-collateral_name',
+  '-created_at': '-created_at',
+  '-default_date': '-default_date',
+  '-duration': '-duration',
+  '-expiration': '-expiration',
+  '-ltv': '-ltv',
+  '-reputation_score': '-reputation_score',
+  '-usd_credit_value': '-usd_credit_value',
+  apr: 'apr',
+  builder_score: 'builder_score',
+  collateral_name: 'collateral_name',
+  created_at: 'created_at',
+  default_date: 'default_date',
+  duration: 'duration',
+  expiration: 'expiration',
+  ltv: 'ltv',
+  reputation_score: 'reputation_score',
+  usd_credit_value: 'usd_credit_value',
 } as const;

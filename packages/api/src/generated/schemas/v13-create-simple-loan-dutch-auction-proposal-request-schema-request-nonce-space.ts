@@ -5,5 +5,4 @@
  */
 
 export type V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestNonceSpace =
-	| number
-	| string;
+  number | string;

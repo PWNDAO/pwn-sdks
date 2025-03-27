@@ -3,13 +3,13 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { PaginatedProposalAndLoanListSchemaWorkaroundListNext } from "./paginated-proposal-and-loan-list-schema-workaround-list-next";
-import type { PaginatedProposalAndLoanListSchemaWorkaroundListPrevious } from "./paginated-proposal-and-loan-list-schema-workaround-list-previous";
-import type { ProposalAndLoanListSchemaWorkaround } from "./proposal-and-loan-list-schema-workaround";
+import type { PaginatedProposalAndLoanListSchemaWorkaroundListNext } from './paginated-proposal-and-loan-list-schema-workaround-list-next';
+import type { PaginatedProposalAndLoanListSchemaWorkaroundListPrevious } from './paginated-proposal-and-loan-list-schema-workaround-list-previous';
+import type { ProposalAndLoanListSchemaWorkaround } from './proposal-and-loan-list-schema-workaround';
 
 export interface PaginatedProposalAndLoanListSchemaWorkaroundList {
-	count?: number;
-	next?: PaginatedProposalAndLoanListSchemaWorkaroundListNext;
-	previous?: PaginatedProposalAndLoanListSchemaWorkaroundListPrevious;
-	results?: ProposalAndLoanListSchemaWorkaround[];
+  count?: number;
+  next?: PaginatedProposalAndLoanListSchemaWorkaroundListNext;
+  previous?: PaginatedProposalAndLoanListSchemaWorkaroundListPrevious;
+  results?: ProposalAndLoanListSchemaWorkaround[];
 }

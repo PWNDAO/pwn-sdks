@@ -5,5 +5,5 @@
  */
 
 export type FetchAssetMetadataParams = {
-	refresh?: boolean;
+  refresh?: boolean;
 };

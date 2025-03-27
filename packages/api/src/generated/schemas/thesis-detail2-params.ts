@@ -5,5 +5,5 @@
  */
 
 export type ThesisDetail2Params = {
-	user_address?: string;
+  user_address?: string;
 };

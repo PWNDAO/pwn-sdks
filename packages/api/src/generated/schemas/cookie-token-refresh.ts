@@ -5,7 +5,7 @@
  */
 
 export interface CookieTokenRefresh {
-	readonly refresh: string;
-	readonly access: string;
-	readonly access_expiration: string;
+  readonly refresh: string;
+  readonly access: string;
+  readonly access_expiration: string;
 }

@@ -5,5 +5,5 @@
  */
 
 export type ThesisCreateUpdateSchemaRequestCustomAprCreditAddresses =
-	| string[]
-	| null;
+  | string[]
+  | null;

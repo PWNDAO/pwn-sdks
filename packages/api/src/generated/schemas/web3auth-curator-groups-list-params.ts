@@ -5,12 +5,12 @@
  */
 
 export type Web3authCuratorGroupsListParams = {
-	/**
-	 * Number of results to return per page.
-	 */
-	limit?: number;
-	/**
-	 * The initial index from which to return the results.
-	 */
-	offset?: number;
+  /**
+   * Number of results to return per page.
+   */
+  limit?: number;
+  /**
+   * The initial index from which to return the results.
+   */
+  offset?: number;
 };

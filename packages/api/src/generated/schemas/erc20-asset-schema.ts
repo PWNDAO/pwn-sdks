@@ -3,40 +3,40 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { BaseAssetContractSchema } from "./base-asset-contract-schema";
-import type { ERC20AssetSchemaAtrTokensOfUser } from "./erc20-asset-schema-atr-tokens-of-user";
-import type { ERC20AssetSchemaDescription } from "./erc20-asset-schema-description";
-import type { ERC20AssetSchemaDiscordUrl } from "./erc20-asset-schema-discord-url";
-import type { ERC20AssetSchemaGithubUrl } from "./erc20-asset-schema-github-url";
-import type { ERC20AssetSchemaId } from "./erc20-asset-schema-id";
-import type { ERC20AssetSchemaInstagramUrl } from "./erc20-asset-schema-instagram-url";
-import type { ERC20AssetSchemaIsVerified } from "./erc20-asset-schema-is-verified";
-import type { ERC20AssetSchemaIsVerifiedSource } from "./erc20-asset-schema-is-verified-source";
-import type { ERC20AssetSchemaLatestPrice } from "./erc20-asset-schema-latest-price";
-import type { ERC20AssetSchemaName } from "./erc20-asset-schema-name";
-import type { ERC20AssetSchemaSymbol } from "./erc20-asset-schema-symbol";
-import type { ERC20AssetSchemaThumbnailUrl } from "./erc20-asset-schema-thumbnail-url";
-import type { ERC20AssetSchemaTokenId } from "./erc20-asset-schema-token-id";
-import type { ERC20AssetSchemaTwitterUrl } from "./erc20-asset-schema-twitter-url";
-import type { ERC20AssetSchemaType } from "./erc20-asset-schema-type";
-import type { ERC20AssetSchemaWebsiteUrl } from "./erc20-asset-schema-website-url";
+import type { BaseAssetContractSchema } from './base-asset-contract-schema';
+import type { ERC20AssetSchemaTokenId } from './erc20-asset-schema-token-id';
+import type { ERC20AssetSchemaName } from './erc20-asset-schema-name';
+import type { ERC20AssetSchemaDescription } from './erc20-asset-schema-description';
+import type { ERC20AssetSchemaType } from './erc20-asset-schema-type';
+import type { ERC20AssetSchemaSymbol } from './erc20-asset-schema-symbol';
+import type { ERC20AssetSchemaIsVerified } from './erc20-asset-schema-is-verified';
+import type { ERC20AssetSchemaIsVerifiedSource } from './erc20-asset-schema-is-verified-source';
+import type { ERC20AssetSchemaThumbnailUrl } from './erc20-asset-schema-thumbnail-url';
+import type { ERC20AssetSchemaWebsiteUrl } from './erc20-asset-schema-website-url';
+import type { ERC20AssetSchemaDiscordUrl } from './erc20-asset-schema-discord-url';
+import type { ERC20AssetSchemaTwitterUrl } from './erc20-asset-schema-twitter-url';
+import type { ERC20AssetSchemaInstagramUrl } from './erc20-asset-schema-instagram-url';
+import type { ERC20AssetSchemaGithubUrl } from './erc20-asset-schema-github-url';
+import type { ERC20AssetSchemaId } from './erc20-asset-schema-id';
+import type { ERC20AssetSchemaAtrTokensOfUser } from './erc20-asset-schema-atr-tokens-of-user';
+import type { ERC20AssetSchemaLatestPrice } from './erc20-asset-schema-latest-price';
 
 export interface ERC20AssetSchema {
-	contract: BaseAssetContractSchema;
-	token_id?: ERC20AssetSchemaTokenId;
-	name?: ERC20AssetSchemaName;
-	description?: ERC20AssetSchemaDescription;
-	type: ERC20AssetSchemaType;
-	symbol?: ERC20AssetSchemaSymbol;
-	is_verified?: ERC20AssetSchemaIsVerified;
-	is_verified_source?: ERC20AssetSchemaIsVerifiedSource;
-	thumbnail_url?: ERC20AssetSchemaThumbnailUrl;
-	website_url?: ERC20AssetSchemaWebsiteUrl;
-	discord_url?: ERC20AssetSchemaDiscordUrl;
-	twitter_url?: ERC20AssetSchemaTwitterUrl;
-	instagram_url?: ERC20AssetSchemaInstagramUrl;
-	github_url?: ERC20AssetSchemaGithubUrl;
-	id?: ERC20AssetSchemaId;
-	atr_tokens_of_user?: ERC20AssetSchemaAtrTokensOfUser;
-	latest_price?: ERC20AssetSchemaLatestPrice;
+  contract: BaseAssetContractSchema;
+  token_id?: ERC20AssetSchemaTokenId;
+  name?: ERC20AssetSchemaName;
+  description?: ERC20AssetSchemaDescription;
+  type: ERC20AssetSchemaType;
+  symbol?: ERC20AssetSchemaSymbol;
+  is_verified?: ERC20AssetSchemaIsVerified;
+  is_verified_source?: ERC20AssetSchemaIsVerifiedSource;
+  thumbnail_url?: ERC20AssetSchemaThumbnailUrl;
+  website_url?: ERC20AssetSchemaWebsiteUrl;
+  discord_url?: ERC20AssetSchemaDiscordUrl;
+  twitter_url?: ERC20AssetSchemaTwitterUrl;
+  instagram_url?: ERC20AssetSchemaInstagramUrl;
+  github_url?: ERC20AssetSchemaGithubUrl;
+  id?: ERC20AssetSchemaId;
+  atr_tokens_of_user?: ERC20AssetSchemaAtrTokensOfUser;
+  latest_price?: ERC20AssetSchemaLatestPrice;
 }

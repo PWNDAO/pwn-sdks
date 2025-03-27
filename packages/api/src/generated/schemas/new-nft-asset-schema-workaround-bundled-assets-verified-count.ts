@@ -5,5 +5,5 @@
  */
 
 export type NewNFTAssetSchemaWorkaroundBundledAssetsVerifiedCount =
-	| number
-	| null;
+  | number
+  | null;

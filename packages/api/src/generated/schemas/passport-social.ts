@@ -3,24 +3,24 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { PassportSocialFollowerCount } from "./passport-social-follower-count";
-import type { PassportSocialFollowingCount } from "./passport-social-following-count";
-import type { PassportSocialLocation } from "./passport-social-location";
-import type { PassportSocialProfileBio } from "./passport-social-profile-bio";
-import type { PassportSocialProfileDisplayName } from "./passport-social-profile-display-name";
-import type { PassportSocialProfileImageUrl } from "./passport-social-profile-image-url";
-import type { PassportSocialProfileName } from "./passport-social-profile-name";
-import type { PassportSocialProfileUrl } from "./passport-social-profile-url";
+import type { PassportSocialFollowerCount } from './passport-social-follower-count';
+import type { PassportSocialFollowingCount } from './passport-social-following-count';
+import type { PassportSocialLocation } from './passport-social-location';
+import type { PassportSocialProfileBio } from './passport-social-profile-bio';
+import type { PassportSocialProfileDisplayName } from './passport-social-profile-display-name';
+import type { PassportSocialProfileImageUrl } from './passport-social-profile-image-url';
+import type { PassportSocialProfileName } from './passport-social-profile-name';
+import type { PassportSocialProfileUrl } from './passport-social-profile-url';
 
 export interface PassportSocial {
-	disconnected: boolean;
-	followerCount?: PassportSocialFollowerCount;
-	followingCount?: PassportSocialFollowingCount;
-	location?: PassportSocialLocation;
-	profileBio?: PassportSocialProfileBio;
-	profileDisplayName?: PassportSocialProfileDisplayName;
-	profileImageUrl?: PassportSocialProfileImageUrl;
-	profileName?: PassportSocialProfileName;
-	profileUrl?: PassportSocialProfileUrl;
-	source: string;
+  disconnected: boolean;
+  followerCount?: PassportSocialFollowerCount;
+  followingCount?: PassportSocialFollowingCount;
+  location?: PassportSocialLocation;
+  profileBio?: PassportSocialProfileBio;
+  profileDisplayName?: PassportSocialProfileDisplayName;
+  profileImageUrl?: PassportSocialProfileImageUrl;
+  profileName?: PassportSocialProfileName;
+  profileUrl?: PassportSocialProfileUrl;
+  source: string;
 }

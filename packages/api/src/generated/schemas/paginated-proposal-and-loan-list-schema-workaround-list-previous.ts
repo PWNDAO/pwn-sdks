@@ -5,5 +5,5 @@
  */
 
 export type PaginatedProposalAndLoanListSchemaWorkaroundListPrevious =
-	| string
-	| null;
+  | string
+  | null;

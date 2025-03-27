@@ -5,5 +5,5 @@
  */
 
 export type CreateSimpleLoanListProposalRequestSchemaRequestCollateralAmount =
-	| number
-	| string;
+  | number
+  | string;

@@ -5,5 +5,4 @@
  */
 
 export type V13SimpleLoanElasticProposalDetailSchemaWorkaroundRefinancingLoanId =
-	| string
-	| null;
+  string | null;

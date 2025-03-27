@@ -3,6 +3,6 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AssetPriceSchema } from "./asset-price-schema";
+import type { AssetPriceSchema } from './asset-price-schema';
 
 export type NFTAssetSchemaWithBalanceLatestPrice = AssetPriceSchema | null;

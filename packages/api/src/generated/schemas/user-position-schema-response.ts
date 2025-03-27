@@ -3,6 +3,6 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { UserPositionSchemaResponseAnyOf } from "./user-position-schema-response-any-of";
+import type { UserPositionSchemaResponseAnyOf } from './user-position-schema-response-any-of';
 
 export type UserPositionSchemaResponse = UserPositionSchemaResponseAnyOf | null;

@@ -3,128 +3,128 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ProposalAndLoanListChainsItem } from "./proposal-and-loan-list-chains-item";
-import type { ProposalAndLoanListCollateralType } from "./proposal-and-loan-list-collateral-type";
-import type { ProposalAndLoanListOrderByItem } from "./proposal-and-loan-list-order-by-item";
-import type { ProposalAndLoanListStatusesItem } from "./proposal-and-loan-list-statuses-item";
+import type { ProposalAndLoanListChainsItem } from './proposal-and-loan-list-chains-item';
+import type { ProposalAndLoanListCollateralType } from './proposal-and-loan-list-collateral-type';
+import type { ProposalAndLoanListOrderByItem } from './proposal-and-loan-list-order-by-item';
+import type { ProposalAndLoanListStatusesItem } from './proposal-and-loan-list-statuses-item';
 
 export type ProposalAndLoanListParams = {
-	apr_max?: string;
-	apr_min?: string;
-	assetContractAddress?: string;
-	assetOwnerAddress?: string;
-	borrowerAddress?: string;
-	/**
-	 * * `1` - Mainnet
-	 * `137` - Polygon
-	 * `100` - Gnosis
-	 * `25` - Cronos
-	 * `8453` - Base
-	 * `10` - Optimism
-	 * `130` - Unichain
-	 * `42161` - Arbitrum One
-	 * `56` - Bnb Smart Chain
-	 * `11155111` - Sepolia
-	 * `1301` - Unichain Sepolia
-	 * `112211` - Sn Main
-	 * `11155112` - Sn Sepolia
-	 * `480` - World
-	 */
-	chains?: ProposalAndLoanListChainsItem[];
-	/**
-	 * Values passed to this filter should be CSV values with length 2, 3 or 4: 'chain_id,contract_address,amount(optional),token_id(optional)'. If you want to pass token_id but not amount, you should keep the amount empty.
-	 */
-	collateralAsset?: string[];
-	/**
-	 * Multiple values may be separated by commas.
-	 */
-	collateralAssetCategory?: string[];
-	/**
-	 * * `erc20` - Only proposals/loans with ERC20 collateral
-	 * `nft` - Only proposals/loans with NFT collateral
-	 * `all` - All proposals/loans no matter the collateral type
-	 */
-	collateralType?: ProposalAndLoanListCollateralType;
-	createdFromProposalHash?: string;
-	createdFromProposalId?: string;
-	/**
-	 * Values passed to this filter should be CSV values with length 2 or 3: 'chain_id,contract_address,amount(optional)'
-	 */
-	creditAsset?: string[];
-	/**
-	 * Multiple values may be separated by commas.
-	 */
-	creditAssetCategory?: string[];
-	durationInSeconds_max?: number;
-	durationInSeconds_min?: number;
-	/**
-	 * End Time
-	 */
-	endTime?: string;
-	excludeUserAddress?: string;
-	includeCollateralWithoutPrice?: boolean;
-	includeCreditWithoutPrice?: boolean;
-	includeLoans?: boolean;
-	includeProposals?: boolean;
-	includeUnverifiedCollateral?: boolean;
-	includeUnverifiedCredit?: boolean;
-	isOffer?: boolean;
-	lenderAddress?: string;
-	/**
-	 * Number of results to return per page.
-	 */
-	limit?: number;
-	ltv_max?: number | null;
-	ltv_min?: number | null;
-	/**
-	 * The initial index from which to return the results.
-	 */
-	offset?: number;
-	onlyWithBuilderScore?: boolean;
-	onlyWithReputationScore?: boolean;
-	/**
-	 * Ordering choices:
-	 * `expiration`: Expiration (only proposals)
-	 * `-expiration`: Expiration desc (only proposals)
-	 * `ltv`: LTV (comma separated)
-	 * `-ltv`: LTV desc (comma separated)
-	 * `apr`: APR
-	 * `-apr`: APR desc
-	 * `collateral_name`: Collateral name
-	 * `-collateral_name`: Collateral name desc
-	 * `duration`: Duration
-	 * `-duration`: Duration desc
-	 * `created_at`: Created at
-	 * `-created_at`: Created at desc
-	 * `usd_credit_value`: Credit value in USD
-	 * `-usd_credit_value`: Credit value in USD (desc)
-	 * `default_date`: Default date (loan)
-	 * `-default_date`: Default date (loan) (desc)
-	 * `builder_score`: Builder Score
-	 * `-builder_score`: Builder Score (desc)
-	 * `reputation_score`: Reputation Score
-	 * `-reputation_score`: Reputation Score (desc)
-	 */
-	orderBy?: ProposalAndLoanListOrderByItem[];
-	q?: string;
-	relatedThesisId?: string;
-	/**
-	 * Start Time
-	 */
-	startTime?: string;
-	/**
-	 * * `0` - DEAD
-	 * `2` - RUNNING
-	 * `3` - PAID
-	 * `4` - DEFAULTED
-	 * `-6` - DEPRECATED
-	 * `-5` - UNAVAILABLE_THESIS_TERMS_CHANGED
-	 * `-4` - UNACCEPTABLE
-	 * `-3` - ACCEPTED
-	 * `-2` - EXPIRED
-	 * `-1` - REVOKED
-	 * `1` - OPEN
-	 */
-	statuses?: ProposalAndLoanListStatusesItem[];
-	userAddress?: string;
+  apr_max?: string;
+  apr_min?: string;
+  assetContractAddress?: string;
+  assetOwnerAddress?: string;
+  borrowerAddress?: string;
+  /**
+   * * `1` - Mainnet
+   * `137` - Polygon
+   * `100` - Gnosis
+   * `25` - Cronos
+   * `8453` - Base
+   * `10` - Optimism
+   * `130` - Unichain
+   * `42161` - Arbitrum One
+   * `56` - Bnb Smart Chain
+   * `11155111` - Sepolia
+   * `1301` - Unichain Sepolia
+   * `112211` - Sn Main
+   * `11155112` - Sn Sepolia
+   * `480` - World
+   */
+  chains?: ProposalAndLoanListChainsItem[];
+  /**
+   * Values passed to this filter should be CSV values with length 2, 3 or 4: 'chain_id,contract_address,amount(optional),token_id(optional)'. If you want to pass token_id but not amount, you should keep the amount empty.
+   */
+  collateralAsset?: string[];
+  /**
+   * Multiple values may be separated by commas.
+   */
+  collateralAssetCategory?: string[];
+  /**
+   * * `erc20` - Only proposals/loans with ERC20 collateral
+   * `nft` - Only proposals/loans with NFT collateral
+   * `all` - All proposals/loans no matter the collateral type
+   */
+  collateralType?: ProposalAndLoanListCollateralType;
+  createdFromProposalHash?: string;
+  createdFromProposalId?: string;
+  /**
+   * Values passed to this filter should be CSV values with length 2 or 3: 'chain_id,contract_address,amount(optional)'
+   */
+  creditAsset?: string[];
+  /**
+   * Multiple values may be separated by commas.
+   */
+  creditAssetCategory?: string[];
+  durationInSeconds_max?: number;
+  durationInSeconds_min?: number;
+  /**
+   * End Time
+   */
+  endTime?: string;
+  excludeUserAddress?: string;
+  includeCollateralWithoutPrice?: boolean;
+  includeCreditWithoutPrice?: boolean;
+  includeLoans?: boolean;
+  includeProposals?: boolean;
+  includeUnverifiedCollateral?: boolean;
+  includeUnverifiedCredit?: boolean;
+  isOffer?: boolean;
+  lenderAddress?: string;
+  /**
+   * Number of results to return per page.
+   */
+  limit?: number;
+  ltv_max?: number | null;
+  ltv_min?: number | null;
+  /**
+   * The initial index from which to return the results.
+   */
+  offset?: number;
+  onlyWithBuilderScore?: boolean;
+  onlyWithReputationScore?: boolean;
+  /**
+   * Ordering choices:
+   * `expiration`: Expiration (only proposals)
+   * `-expiration`: Expiration desc (only proposals)
+   * `ltv`: LTV (comma separated)
+   * `-ltv`: LTV desc (comma separated)
+   * `apr`: APR
+   * `-apr`: APR desc
+   * `collateral_name`: Collateral name
+   * `-collateral_name`: Collateral name desc
+   * `duration`: Duration
+   * `-duration`: Duration desc
+   * `created_at`: Created at
+   * `-created_at`: Created at desc
+   * `usd_credit_value`: Credit value in USD
+   * `-usd_credit_value`: Credit value in USD (desc)
+   * `default_date`: Default date (loan)
+   * `-default_date`: Default date (loan) (desc)
+   * `builder_score`: Builder Score
+   * `-builder_score`: Builder Score (desc)
+   * `reputation_score`: Reputation Score
+   * `-reputation_score`: Reputation Score (desc)
+   */
+  orderBy?: ProposalAndLoanListOrderByItem[];
+  q?: string;
+  relatedThesisId?: string;
+  /**
+   * Start Time
+   */
+  startTime?: string;
+  /**
+   * * `0` - DEAD
+   * `2` - RUNNING
+   * `3` - PAID
+   * `4` - DEFAULTED
+   * `-6` - DEPRECATED
+   * `-5` - UNAVAILABLE_THESIS_TERMS_CHANGED
+   * `-4` - UNACCEPTABLE
+   * `-3` - ACCEPTED
+   * `-2` - EXPIRED
+   * `-1` - REVOKED
+   * `1` - OPEN
+   */
+  statuses?: ProposalAndLoanListStatusesItem[];
+  userAddress?: string;
 };

@@ -3,30 +3,30 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AssetCategory } from "./asset-category";
-import type { ChainIdEnum } from "./chain-id-enum";
-import type { CollateralAssetInThesisSchemaWorkaroundApr } from "./collateral-asset-in-thesis-schema-workaround-apr";
-import type { CollateralAssetInThesisSchemaWorkaroundDecimals } from "./collateral-asset-in-thesis-schema-workaround-decimals";
-import type { CollateralAssetInThesisSchemaWorkaroundIsKycRequired } from "./collateral-asset-in-thesis-schema-workaround-is-kyc-required";
-import type { CollateralAssetInThesisSchemaWorkaroundIsVerified } from "./collateral-asset-in-thesis-schema-workaround-is-verified";
-import type { CollateralAssetInThesisSchemaWorkaroundLtv } from "./collateral-asset-in-thesis-schema-workaround-ltv";
-import type { CollateralAssetInThesisSchemaWorkaroundName } from "./collateral-asset-in-thesis-schema-workaround-name";
-import type { CollateralAssetInThesisSchemaWorkaroundSymbol } from "./collateral-asset-in-thesis-schema-workaround-symbol";
-import type { CollateralAssetInThesisSchemaWorkaroundTokenId } from "./collateral-asset-in-thesis-schema-workaround-token-id";
+import type { AssetCategory } from './asset-category';
+import type { ChainIdEnum } from './chain-id-enum';
+import type { CollateralAssetInThesisSchemaWorkaroundDecimals } from './collateral-asset-in-thesis-schema-workaround-decimals';
+import type { CollateralAssetInThesisSchemaWorkaroundIsVerified } from './collateral-asset-in-thesis-schema-workaround-is-verified';
+import type { CollateralAssetInThesisSchemaWorkaroundName } from './collateral-asset-in-thesis-schema-workaround-name';
+import type { CollateralAssetInThesisSchemaWorkaroundTokenId } from './collateral-asset-in-thesis-schema-workaround-token-id';
+import type { CollateralAssetInThesisSchemaWorkaroundSymbol } from './collateral-asset-in-thesis-schema-workaround-symbol';
+import type { CollateralAssetInThesisSchemaWorkaroundIsKycRequired } from './collateral-asset-in-thesis-schema-workaround-is-kyc-required';
+import type { CollateralAssetInThesisSchemaWorkaroundLtv } from './collateral-asset-in-thesis-schema-workaround-ltv';
+import type { CollateralAssetInThesisSchemaWorkaroundApr } from './collateral-asset-in-thesis-schema-workaround-apr';
 
 export interface CollateralAssetInThesisSchemaWorkaround {
-	id: string;
-	category: AssetCategory;
-	chainId: ChainIdEnum;
-	address: string;
-	decimals: CollateralAssetInThesisSchemaWorkaroundDecimals;
-	thumbnailUrl: string;
-	isVerified: CollateralAssetInThesisSchemaWorkaroundIsVerified;
-	name: CollateralAssetInThesisSchemaWorkaroundName;
-	tokenId: CollateralAssetInThesisSchemaWorkaroundTokenId;
-	symbol: CollateralAssetInThesisSchemaWorkaroundSymbol;
-	is_kyc_required: CollateralAssetInThesisSchemaWorkaroundIsKycRequired;
-	allocationPercentage: number;
-	ltv: CollateralAssetInThesisSchemaWorkaroundLtv;
-	apr: CollateralAssetInThesisSchemaWorkaroundApr;
+  id: string;
+  category: AssetCategory;
+  chainId: ChainIdEnum;
+  address: string;
+  decimals: CollateralAssetInThesisSchemaWorkaroundDecimals;
+  thumbnailUrl: string;
+  isVerified: CollateralAssetInThesisSchemaWorkaroundIsVerified;
+  name: CollateralAssetInThesisSchemaWorkaroundName;
+  tokenId: CollateralAssetInThesisSchemaWorkaroundTokenId;
+  symbol: CollateralAssetInThesisSchemaWorkaroundSymbol;
+  is_kyc_required: CollateralAssetInThesisSchemaWorkaroundIsKycRequired;
+  allocationPercentage: number;
+  ltv: CollateralAssetInThesisSchemaWorkaroundLtv;
+  apr: CollateralAssetInThesisSchemaWorkaroundApr;
 }

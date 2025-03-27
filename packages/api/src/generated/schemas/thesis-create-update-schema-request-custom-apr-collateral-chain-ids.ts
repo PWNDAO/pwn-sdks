@@ -5,5 +5,5 @@
  */
 
 export type ThesisCreateUpdateSchemaRequestCustomAprCollateralChainIds =
-	| number[]
-	| null;
+  | number[]
+  | null;

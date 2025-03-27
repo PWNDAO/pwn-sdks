@@ -3,13 +3,13 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ChainIdEnum } from "./chain-id-enum";
-import type { TokenizedAssetSchemaWorkaroundDecimals } from "./tokenized-asset-schema-workaround-decimals";
-import type { TokenizedAssetSchemaWorkaroundTokenId } from "./tokenized-asset-schema-workaround-token-id";
+import type { ChainIdEnum } from './chain-id-enum';
+import type { TokenizedAssetSchemaWorkaroundTokenId } from './tokenized-asset-schema-workaround-token-id';
+import type { TokenizedAssetSchemaWorkaroundDecimals } from './tokenized-asset-schema-workaround-decimals';
 
 export interface TokenizedAssetSchemaWorkaround {
-	chainId: ChainIdEnum;
-	contractAddress: string;
-	tokenId: TokenizedAssetSchemaWorkaroundTokenId;
-	decimals: TokenizedAssetSchemaWorkaroundDecimals;
+  chainId: ChainIdEnum;
+  contractAddress: string;
+  tokenId: TokenizedAssetSchemaWorkaroundTokenId;
+  decimals: TokenizedAssetSchemaWorkaroundDecimals;
 }

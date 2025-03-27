@@ -5,5 +5,5 @@
  */
 
 export type FetchNFTAssetCollectionMetadataParams = {
-	refresh?: boolean;
+  refresh?: boolean;
 };

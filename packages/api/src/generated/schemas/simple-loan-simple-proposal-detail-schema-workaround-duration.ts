@@ -5,5 +5,5 @@
  */
 
 export type SimpleLoanSimpleProposalDetailSchemaWorkaroundDuration =
-	| number
-	| null;
+  | number
+  | null;

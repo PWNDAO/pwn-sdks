@@ -8,13 +8,13 @@ export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TaskStatus = {
-	PENDING: "PENDING",
-	NEW: "NEW",
-	STARTED: "STARTED",
-	DONE: "DONE",
-	ERROR: "ERROR",
-	DONE_WITHIN_TTL: "DONE_WITHIN_TTL",
-	MAX_ERRORS_THRESHOLD_REACHED: "MAX_ERRORS_THRESHOLD_REACHED",
-	REFRESH_TOO_SOON: "REFRESH_TOO_SOON",
-	REFRESH: "REFRESH",
+  PENDING: 'PENDING',
+  NEW: 'NEW',
+  STARTED: 'STARTED',
+  DONE: 'DONE',
+  ERROR: 'ERROR',
+  DONE_WITHIN_TTL: 'DONE_WITHIN_TTL',
+  MAX_ERRORS_THRESHOLD_REACHED: 'MAX_ERRORS_THRESHOLD_REACHED',
+  REFRESH_TOO_SOON: 'REFRESH_TOO_SOON',
+  REFRESH: 'REFRESH',
 } as const;

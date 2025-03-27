@@ -3,8 +3,8 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { NFTAssetSchemaBundledAssetsAnyOfItem } from "./nftasset-schema-bundled-assets-any-of-item";
+import type { NFTAssetSchemaBundledAssetsAnyOfItem } from './nftasset-schema-bundled-assets-any-of-item';
 
 export type NFTAssetSchemaBundledAssets =
-	| NFTAssetSchemaBundledAssetsAnyOfItem[]
-	| null;
+  | NFTAssetSchemaBundledAssetsAnyOfItem[]
+  | null;

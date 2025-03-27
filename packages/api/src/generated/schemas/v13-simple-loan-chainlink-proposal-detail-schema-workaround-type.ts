@@ -5,10 +5,10 @@
  */
 
 export type V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundType =
-	(typeof V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundType)[keyof typeof V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundType];
+  (typeof V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundType)[keyof typeof V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundType = {
-	pwn_contractsv1_3simpleloanelasticchainlinkproposal:
-		"pwn_contracts.v1_3simpleloanelasticchainlinkproposal",
+  pwn_contractsv1_3simpleloanelasticchainlinkproposal:
+    'pwn_contracts.v1_3simpleloanelasticchainlinkproposal',
 } as const;

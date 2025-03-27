@@ -5,6 +5,6 @@
  */
 
 export type FetchAssetPriceParams = {
-	refresh?: boolean;
-	timestamp?: number;
+  refresh?: boolean;
+  timestamp?: number;
 };

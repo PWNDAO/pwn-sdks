@@ -5,5 +5,4 @@
  */
 
 export type V13SimpleLoanElasticProposalDetailSchemaWorkaroundProposerSpecHash =
-	| string
-	| null;
+  string | null;

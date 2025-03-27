@@ -3,52 +3,52 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ChainIdEnum } from "./chain-id-enum";
-import type { LoanAdminClaimedAt } from "./loan-admin-claimed-at";
-import type { LoanAdminCreatedFromProposalId } from "./loan-admin-created-from-proposal-id";
-import type { LoanAdminPaidBackAt } from "./loan-admin-paid-back-at";
+import type { ChainIdEnum } from './chain-id-enum';
+import type { LoanAdminPaidBackAt } from './loan-admin-paid-back-at';
+import type { LoanAdminClaimedAt } from './loan-admin-claimed-at';
+import type { LoanAdminCreatedFromProposalId } from './loan-admin-created-from-proposal-id';
 
 export interface LoanAdmin {
-	readonly id: number;
-	/**
-	 * @minimum 0
-	 * @maximum 2147483647
-	 */
-	chain_id: ChainIdEnum;
-	/** @maxLength 66 */
-	contract_address: string;
-	/** @pattern ^-?\d{0,78}(?:\.\d{0,0})?$ */
-	on_chain_id: string;
-	/** @maxLength 66 */
-	loan_token_contract_address: string;
-	created_at?: string;
-	borrower_address: string;
-	lender_address: string;
-	owner_address: string;
-	readonly collateral_asset_chain_id: string;
-	readonly collateral_asset_address: string;
-	readonly collateral_asset_amount: string;
-	readonly collateral_asset_decimals: string;
-	readonly collateral_asset_thumbnail_url: string;
-	readonly collateral_asset_name: string;
-	readonly collateral_asset_symbol: string;
-	readonly collateral_asset_is_verified: string;
-	readonly collateral_asset_token_id: string;
-	readonly credit_asset_chain_id: string;
-	readonly credit_asset_address: string;
-	readonly credit_asset_amount: string;
-	readonly credit_asset_decimals: string;
-	readonly credit_asset_thumbnail_url: string;
-	readonly credit_asset_name: string;
-	readonly credit_asset_symbol: string;
-	readonly credit_asset_is_verified: string;
-	start_date: string;
-	default_date: string;
-	readonly ltv: string;
-	paid_back_at?: LoanAdminPaidBackAt;
-	claimed_at?: LoanAdminClaimedAt;
-	readonly created_from_proposal_id: LoanAdminCreatedFromProposalId;
-	readonly status: string;
-	readonly duration: string;
-	readonly chain_name: string;
+  readonly id: number;
+  /**
+   * @minimum 0
+   * @maximum 2147483647
+   */
+  chain_id: ChainIdEnum;
+  /** @maxLength 66 */
+  contract_address: string;
+  /** @pattern ^-?\d{0,78}(?:\.\d{0,0})?$ */
+  on_chain_id: string;
+  /** @maxLength 66 */
+  loan_token_contract_address: string;
+  created_at?: string;
+  borrower_address: string;
+  lender_address: string;
+  owner_address: string;
+  readonly collateral_asset_chain_id: string;
+  readonly collateral_asset_address: string;
+  readonly collateral_asset_amount: string;
+  readonly collateral_asset_decimals: string;
+  readonly collateral_asset_thumbnail_url: string;
+  readonly collateral_asset_name: string;
+  readonly collateral_asset_symbol: string;
+  readonly collateral_asset_is_verified: string;
+  readonly collateral_asset_token_id: string;
+  readonly credit_asset_chain_id: string;
+  readonly credit_asset_address: string;
+  readonly credit_asset_amount: string;
+  readonly credit_asset_decimals: string;
+  readonly credit_asset_thumbnail_url: string;
+  readonly credit_asset_name: string;
+  readonly credit_asset_symbol: string;
+  readonly credit_asset_is_verified: string;
+  start_date: string;
+  default_date: string;
+  readonly ltv: string;
+  paid_back_at?: LoanAdminPaidBackAt;
+  claimed_at?: LoanAdminClaimedAt;
+  readonly created_from_proposal_id: LoanAdminCreatedFromProposalId;
+  readonly status: string;
+  readonly duration: string;
+  readonly chain_name: string;
 }

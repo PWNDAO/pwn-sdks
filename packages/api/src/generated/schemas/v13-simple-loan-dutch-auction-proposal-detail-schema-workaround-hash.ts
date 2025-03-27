@@ -5,5 +5,5 @@
  */
 
 export type V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundHash =
-	| string
-	| null;
+  | string
+  | null;

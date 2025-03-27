@@ -3,8 +3,8 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ThesisCreateUpdateSchemaRequestCustomAprValuesAnyOfItem } from "./thesis-create-update-schema-request-custom-apr-values-any-of-item";
+import type { ThesisCreateUpdateSchemaRequestCustomAprValuesAnyOfItem } from './thesis-create-update-schema-request-custom-apr-values-any-of-item';
 
 export type ThesisCreateUpdateSchemaRequestCustomAprValues =
-	| ThesisCreateUpdateSchemaRequestCustomAprValuesAnyOfItem[]
-	| null;
+  | ThesisCreateUpdateSchemaRequestCustomAprValuesAnyOfItem[]
+  | null;

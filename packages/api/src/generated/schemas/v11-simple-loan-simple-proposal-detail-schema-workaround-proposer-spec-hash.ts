@@ -5,5 +5,5 @@
  */
 
 export type V11SimpleLoanSimpleProposalDetailSchemaWorkaroundProposerSpecHash =
-	| string
-	| null;
+  | string
+  | null;

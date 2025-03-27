@@ -5,5 +5,5 @@
  */
 
 export type NFTAssetCollectionDetailWithStatsSchemaBannerImageUrl =
-	| string
-	| null;
+  | string
+  | null;

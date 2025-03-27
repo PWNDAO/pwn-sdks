@@ -5,5 +5,4 @@
  */
 
 export type ThesisCreateUpdateSchemaRequestCollateralAllocationPercentagesItem =
-	| number
-	| number;
+  number | number;

@@ -3,10 +3,10 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { UserPotentialReputationPerProposalFundResponsePotentialRepsPerProposalFund } from "./user-potential-reputation-per-proposal-fund-response-potential-reps-per-proposal-fund";
+import type { UserPotentialReputationPerProposalFundResponsePotentialRepsPerProposalFund } from './user-potential-reputation-per-proposal-fund-response-potential-reps-per-proposal-fund';
 
 export interface UserPotentialReputationPerProposalFundResponse {
-	walletAddress: string;
-	potentialRepsPerProposalFund: UserPotentialReputationPerProposalFundResponsePotentialRepsPerProposalFund;
-	timestamp: string;
+  walletAddress: string;
+  potentialRepsPerProposalFund: UserPotentialReputationPerProposalFundResponsePotentialRepsPerProposalFund;
+  timestamp: string;
 }

@@ -5,5 +5,5 @@
  */
 
 export type CollateralAssetInThesisSchemaWorkaroundIsKycRequired =
-	| boolean
-	| null;
+  | boolean
+  | null;

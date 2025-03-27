@@ -5,5 +5,5 @@
  */
 
 export type ThesisCreateUpdateSchemaRequestCustomAprCollateralAddresses =
-	| string[]
-	| null;
+  | string[]
+  | null;

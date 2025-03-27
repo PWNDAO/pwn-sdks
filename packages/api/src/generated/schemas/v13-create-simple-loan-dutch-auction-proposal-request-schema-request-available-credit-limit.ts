@@ -5,5 +5,4 @@
  */
 
 export type V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestAvailableCreditLimit =
-	| number
-	| string;
+  number | string;

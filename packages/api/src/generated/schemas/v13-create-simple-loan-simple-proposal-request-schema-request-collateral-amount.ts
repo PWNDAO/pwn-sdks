@@ -5,5 +5,4 @@
  */
 
 export type V13CreateSimpleLoanSimpleProposalRequestSchemaRequestCollateralAmount =
-	| number
-	| string;
+  number | string;

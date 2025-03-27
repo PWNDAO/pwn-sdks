@@ -5,5 +5,5 @@
  */
 
 export type NewNFTAssetSchemaWithBalanceWorkaroundBundledAssetsTotalCount =
-	| number
-	| null;
+  | number
+  | null;

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { NewNFTAssetSchemaWorkaroundBundledAssetsAnyOfItem } from "./new-nft-asset-schema-workaround-bundled-assets-any-of-item";
+import type { NewNFTAssetSchemaWorkaroundBundledAssetsAnyOfItem } from './new-nft-asset-schema-workaround-bundled-assets-any-of-item';
 
 export type NewNFTAssetSchemaWorkaroundBundledAssets =
-	| NewNFTAssetSchemaWorkaroundBundledAssetsAnyOfItem[]
-	| null;
+  | NewNFTAssetSchemaWorkaroundBundledAssetsAnyOfItem[]
+  | null;

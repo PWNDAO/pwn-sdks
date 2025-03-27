@@ -5,11 +5,11 @@
  */
 
 export type ProposalAndLoanListCollateralType =
-	(typeof ProposalAndLoanListCollateralType)[keyof typeof ProposalAndLoanListCollateralType];
+  (typeof ProposalAndLoanListCollateralType)[keyof typeof ProposalAndLoanListCollateralType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ProposalAndLoanListCollateralType = {
-	all: "all",
-	erc20: "erc20",
-	nft: "nft",
+  all: 'all',
+  erc20: 'erc20',
+  nft: 'nft',
 } as const;

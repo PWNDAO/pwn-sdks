@@ -5,5 +5,5 @@
  */
 
 export type CreateSimpleLoanFungibleProposalRequestSchemaRequestCollateralId =
-	| number
-	| string;
+  | number
+  | string;

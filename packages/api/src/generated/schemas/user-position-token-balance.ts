@@ -5,6 +5,6 @@
  */
 
 export interface UserPositionTokenBalance {
-	aToken_address: string;
-	balance: number;
+  aToken_address: string;
+  balance: number;
 }

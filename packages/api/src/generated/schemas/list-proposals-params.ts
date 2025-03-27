@@ -3,103 +3,103 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ListProposalsChainsItem } from "./list-proposals-chains-item";
-import type { ListProposalsCollateralType } from "./list-proposals-collateral-type";
-import type { ListProposalsStatusesItem } from "./list-proposals-statuses-item";
+import type { ListProposalsChainsItem } from './list-proposals-chains-item';
+import type { ListProposalsCollateralType } from './list-proposals-collateral-type';
+import type { ListProposalsStatusesItem } from './list-proposals-statuses-item';
 
 export type ListProposalsParams = {
-	apr_max?: string;
-	apr_min?: string;
-	assetContractAddress?: string;
-	assetOwnerAddress?: string;
-	borrowerAddress?: string;
-	/**
-	 * * `1` - Mainnet
-	 * `137` - Polygon
-	 * `100` - Gnosis
-	 * `25` - Cronos
-	 * `8453` - Base
-	 * `10` - Optimism
-	 * `130` - Unichain
-	 * `42161` - Arbitrum One
-	 * `56` - Bnb Smart Chain
-	 * `11155111` - Sepolia
-	 * `1301` - Unichain Sepolia
-	 * `112211` - Sn Main
-	 * `11155112` - Sn Sepolia
-	 * `480` - World
-	 */
-	chains?: ListProposalsChainsItem[];
-	/**
-	 * Values passed to this filter should be CSV values with length 2, 3 or 4: 'chain_id,contract_address,amount(optional),token_id(optional)'. If you want to pass token_id but not amount, you should keep the amount empty.
-	 */
-	collateralAsset?: string[];
-	/**
-	 * Multiple values may be separated by commas.
-	 */
-	collateralAssetCategory?: string[];
-	/**
-	 * * `erc20` - Only proposals/loans with ERC20 collateral
-	 * `nft` - Only proposals/loans with NFT collateral
-	 * `all` - All proposals/loans no matter the collateral type
-	 */
-	collateralType?: ListProposalsCollateralType;
-	createdFromProposalHash?: string;
-	createdFromProposalId?: string;
-	/**
-	 * Values passed to this filter should be CSV values with length 2 or 3: 'chain_id,contract_address,amount(optional)'
-	 */
-	creditAsset?: string[];
-	/**
-	 * Multiple values may be separated by commas.
-	 */
-	creditAssetCategory?: string[];
-	durationInSeconds_max?: string;
-	durationInSeconds_min?: string;
-	/**
-	 * End Time
-	 */
-	endTime?: string;
-	excludeUserAddress?: string;
-	includeCollateralWithoutPrice?: boolean;
-	includeCreditWithoutPrice?: boolean;
-	includeLoans?: boolean;
-	includeProposals?: boolean;
-	includeUnverifiedCollateral?: boolean;
-	includeUnverifiedCredit?: boolean;
-	isOffer?: boolean;
-	lenderAddress?: string;
-	/**
-	 * Number of results to return per page.
-	 */
-	limit?: number;
-	ltv_max?: number | null;
-	ltv_min?: number | null;
-	/**
-	 * The initial index from which to return the results.
-	 */
-	offset?: number;
-	onlyWithBuilderScore?: boolean;
-	onlyWithReputationScore?: boolean;
-	q?: string;
-	relatedThesisId?: string;
-	/**
-	 * Start Time
-	 */
-	startTime?: string;
-	/**
-	 * * `0` - DEAD
-	 * `2` - RUNNING
-	 * `3` - PAID
-	 * `4` - DEFAULTED
-	 * `-6` - DEPRECATED
-	 * `-5` - UNAVAILABLE_THESIS_TERMS_CHANGED
-	 * `-4` - UNACCEPTABLE
-	 * `-3` - ACCEPTED
-	 * `-2` - EXPIRED
-	 * `-1` - REVOKED
-	 * `1` - OPEN
-	 */
-	statuses?: ListProposalsStatusesItem[];
-	userAddress?: string;
+  apr_max?: string;
+  apr_min?: string;
+  assetContractAddress?: string;
+  assetOwnerAddress?: string;
+  borrowerAddress?: string;
+  /**
+   * * `1` - Mainnet
+   * `137` - Polygon
+   * `100` - Gnosis
+   * `25` - Cronos
+   * `8453` - Base
+   * `10` - Optimism
+   * `130` - Unichain
+   * `42161` - Arbitrum One
+   * `56` - Bnb Smart Chain
+   * `11155111` - Sepolia
+   * `1301` - Unichain Sepolia
+   * `112211` - Sn Main
+   * `11155112` - Sn Sepolia
+   * `480` - World
+   */
+  chains?: ListProposalsChainsItem[];
+  /**
+   * Values passed to this filter should be CSV values with length 2, 3 or 4: 'chain_id,contract_address,amount(optional),token_id(optional)'. If you want to pass token_id but not amount, you should keep the amount empty.
+   */
+  collateralAsset?: string[];
+  /**
+   * Multiple values may be separated by commas.
+   */
+  collateralAssetCategory?: string[];
+  /**
+   * * `erc20` - Only proposals/loans with ERC20 collateral
+   * `nft` - Only proposals/loans with NFT collateral
+   * `all` - All proposals/loans no matter the collateral type
+   */
+  collateralType?: ListProposalsCollateralType;
+  createdFromProposalHash?: string;
+  createdFromProposalId?: string;
+  /**
+   * Values passed to this filter should be CSV values with length 2 or 3: 'chain_id,contract_address,amount(optional)'
+   */
+  creditAsset?: string[];
+  /**
+   * Multiple values may be separated by commas.
+   */
+  creditAssetCategory?: string[];
+  durationInSeconds_max?: string;
+  durationInSeconds_min?: string;
+  /**
+   * End Time
+   */
+  endTime?: string;
+  excludeUserAddress?: string;
+  includeCollateralWithoutPrice?: boolean;
+  includeCreditWithoutPrice?: boolean;
+  includeLoans?: boolean;
+  includeProposals?: boolean;
+  includeUnverifiedCollateral?: boolean;
+  includeUnverifiedCredit?: boolean;
+  isOffer?: boolean;
+  lenderAddress?: string;
+  /**
+   * Number of results to return per page.
+   */
+  limit?: number;
+  ltv_max?: number | null;
+  ltv_min?: number | null;
+  /**
+   * The initial index from which to return the results.
+   */
+  offset?: number;
+  onlyWithBuilderScore?: boolean;
+  onlyWithReputationScore?: boolean;
+  q?: string;
+  relatedThesisId?: string;
+  /**
+   * Start Time
+   */
+  startTime?: string;
+  /**
+   * * `0` - DEAD
+   * `2` - RUNNING
+   * `3` - PAID
+   * `4` - DEFAULTED
+   * `-6` - DEPRECATED
+   * `-5` - UNAVAILABLE_THESIS_TERMS_CHANGED
+   * `-4` - UNACCEPTABLE
+   * `-3` - ACCEPTED
+   * `-2` - EXPIRED
+   * `-1` - REVOKED
+   * `1` - OPEN
+   */
+  statuses?: ListProposalsStatusesItem[];
+  userAddress?: string;
 };

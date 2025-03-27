@@ -3,7 +3,7 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { WalletStatsSeparatedBreakdown } from "./wallet-stats-separated-breakdown";
+import type { WalletStatsSeparatedBreakdown } from './wallet-stats-separated-breakdown';
 
 export type WalletStatsBreakdownDefaulted =
-	WalletStatsSeparatedBreakdown | null;
+  WalletStatsSeparatedBreakdown | null;

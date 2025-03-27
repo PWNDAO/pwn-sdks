@@ -13,6 +13,12 @@ export default defineConfig({
 			docs: true,
 			prettier: true,
 			// baseUrl: 'https://api.pwn.xyz'
+			override: {
+				mutator: {
+					path: "../custom-instance.ts",
+					name: "customInstance",
+				},
+			},
 		},
 		input: "./src/schema.yaml",
 	},

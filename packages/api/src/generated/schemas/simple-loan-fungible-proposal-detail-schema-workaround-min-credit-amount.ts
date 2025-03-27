@@ -5,5 +5,5 @@
  */
 
 export type SimpleLoanFungibleProposalDetailSchemaWorkaroundMinCreditAmount =
-	| string
-	| null;
+  | string
+  | null;

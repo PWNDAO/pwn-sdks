@@ -5,5 +5,5 @@
  */
 
 export type V13SimpleLoanListProposalDetailSchemaWorkaroundMinCreditAmount =
-	| string
-	| null;
+  | string
+  | null;

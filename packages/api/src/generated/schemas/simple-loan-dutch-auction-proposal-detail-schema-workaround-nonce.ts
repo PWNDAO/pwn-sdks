@@ -5,5 +5,5 @@
  */
 
 export type SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundNonce =
-	| string
-	| null;
+  | string
+  | null;

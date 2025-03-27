@@ -5,5 +5,5 @@
  */
 
 export type V13SimpleLoanListProposalDetailSchemaWorkaroundProposalId =
-	| string
-	| null;
+  | string
+  | null;

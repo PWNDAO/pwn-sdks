@@ -8,8 +8,8 @@ export type LoanStatus = (typeof LoanStatus)[keyof typeof LoanStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const LoanStatus = {
-	NUMBER_0: 0,
-	NUMBER_2: 2,
-	NUMBER_3: 3,
-	NUMBER_4: 4,
+  NUMBER_0: 0,
+  NUMBER_2: 2,
+  NUMBER_3: 3,
+  NUMBER_4: 4,
 } as const;

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AssetKYCDetailsSchema } from "./asset-kyc-details-schema";
+import type { AssetKYCDetailsSchema } from './asset-kyc-details-schema';
 
 export type BaseAssetContractSchemaWorkaroundKycDetails =
-	AssetKYCDetailsSchema | null;
+  AssetKYCDetailsSchema | null;

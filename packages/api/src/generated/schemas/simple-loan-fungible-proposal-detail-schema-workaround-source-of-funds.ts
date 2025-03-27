@@ -5,5 +5,5 @@
  */
 
 export type SimpleLoanFungibleProposalDetailSchemaWorkaroundSourceOfFunds =
-	| string
-	| null;
+  | string
+  | null;

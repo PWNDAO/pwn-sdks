@@ -3,6 +3,6 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { LLLSchemaWorkaround } from "./lllschema-workaround";
+import type { LLLSchemaWorkaround } from './lllschema-workaround';
 
 export type LLLSchemaResponse = LLLSchemaWorkaround[] | null;

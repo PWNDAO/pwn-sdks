@@ -3,7 +3,7 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { LoanExtensionCounterProposalSchemaWorkaround } from "./loan-extension-counter-proposal-schema-workaround";
+import type { LoanExtensionCounterProposalSchemaWorkaround } from './loan-extension-counter-proposal-schema-workaround';
 
 export type LoanExtensionCounterProposalSchemaWorkaroundLoanExtensionCounterProposal =
-	LoanExtensionCounterProposalSchemaWorkaround | null;
+  LoanExtensionCounterProposalSchemaWorkaround | null;

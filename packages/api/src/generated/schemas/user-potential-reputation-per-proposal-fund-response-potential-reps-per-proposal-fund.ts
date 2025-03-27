@@ -5,4 +5,4 @@
  */
 
 export type UserPotentialReputationPerProposalFundResponsePotentialRepsPerProposalFund =
-	{ [key: string]: number };
+  { [key: string]: number };

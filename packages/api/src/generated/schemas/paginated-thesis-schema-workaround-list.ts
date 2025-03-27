@@ -3,13 +3,13 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { PaginatedThesisSchemaWorkaroundListNext } from "./paginated-thesis-schema-workaround-list-next";
-import type { PaginatedThesisSchemaWorkaroundListPrevious } from "./paginated-thesis-schema-workaround-list-previous";
-import type { ThesisSchemaWorkaround } from "./thesis-schema-workaround";
+import type { PaginatedThesisSchemaWorkaroundListNext } from './paginated-thesis-schema-workaround-list-next';
+import type { PaginatedThesisSchemaWorkaroundListPrevious } from './paginated-thesis-schema-workaround-list-previous';
+import type { ThesisSchemaWorkaround } from './thesis-schema-workaround';
 
 export interface PaginatedThesisSchemaWorkaroundList {
-	count?: number;
-	next?: PaginatedThesisSchemaWorkaroundListNext;
-	previous?: PaginatedThesisSchemaWorkaroundListPrevious;
-	results?: ThesisSchemaWorkaround[];
+  count?: number;
+  next?: PaginatedThesisSchemaWorkaroundListNext;
+  previous?: PaginatedThesisSchemaWorkaroundListPrevious;
+  results?: ThesisSchemaWorkaround[];
 }

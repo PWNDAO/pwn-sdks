@@ -3,11 +3,11 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { TraitTypeSchemaDisplayType } from "./trait-type-schema-display-type";
-import type { TraitTypeSchemaMaxValue } from "./trait-type-schema-max-value";
+import type { TraitTypeSchemaDisplayType } from './trait-type-schema-display-type';
+import type { TraitTypeSchemaMaxValue } from './trait-type-schema-max-value';
 
 export interface TraitTypeSchema {
-	trait_type: string;
-	display_type?: TraitTypeSchemaDisplayType;
-	max_value?: TraitTypeSchemaMaxValue;
+  trait_type: string;
+  display_type?: TraitTypeSchemaDisplayType;
+  max_value?: TraitTypeSchemaMaxValue;
 }

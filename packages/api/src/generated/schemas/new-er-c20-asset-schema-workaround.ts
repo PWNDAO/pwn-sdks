@@ -3,36 +3,36 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { BaseAssetContractSchemaWorkaround } from "./base-asset-contract-schema-workaround";
-import type { NewERC20AssetSchemaWorkaroundDescription } from "./new-er-c20-asset-schema-workaround-description";
-import type { NewERC20AssetSchemaWorkaroundDiscordUrl } from "./new-er-c20-asset-schema-workaround-discord-url";
-import type { NewERC20AssetSchemaWorkaroundGithubUrl } from "./new-er-c20-asset-schema-workaround-github-url";
-import type { NewERC20AssetSchemaWorkaroundId } from "./new-er-c20-asset-schema-workaround-id";
-import type { NewERC20AssetSchemaWorkaroundInstagramUrl } from "./new-er-c20-asset-schema-workaround-instagram-url";
-import type { NewERC20AssetSchemaWorkaroundIsVerified } from "./new-er-c20-asset-schema-workaround-is-verified";
-import type { NewERC20AssetSchemaWorkaroundIsVerifiedSource } from "./new-er-c20-asset-schema-workaround-is-verified-source";
-import type { NewERC20AssetSchemaWorkaroundName } from "./new-er-c20-asset-schema-workaround-name";
-import type { NewERC20AssetSchemaWorkaroundSymbol } from "./new-er-c20-asset-schema-workaround-symbol";
-import type { NewERC20AssetSchemaWorkaroundThumbnailUrl } from "./new-er-c20-asset-schema-workaround-thumbnail-url";
-import type { NewERC20AssetSchemaWorkaroundTokenId } from "./new-er-c20-asset-schema-workaround-token-id";
-import type { NewERC20AssetSchemaWorkaroundTwitterUrl } from "./new-er-c20-asset-schema-workaround-twitter-url";
-import type { NewERC20AssetSchemaWorkaroundType } from "./new-er-c20-asset-schema-workaround-type";
-import type { NewERC20AssetSchemaWorkaroundWebsiteUrl } from "./new-er-c20-asset-schema-workaround-website-url";
+import type { BaseAssetContractSchemaWorkaround } from './base-asset-contract-schema-workaround';
+import type { NewERC20AssetSchemaWorkaroundTokenId } from './new-er-c20-asset-schema-workaround-token-id';
+import type { NewERC20AssetSchemaWorkaroundName } from './new-er-c20-asset-schema-workaround-name';
+import type { NewERC20AssetSchemaWorkaroundDescription } from './new-er-c20-asset-schema-workaround-description';
+import type { NewERC20AssetSchemaWorkaroundType } from './new-er-c20-asset-schema-workaround-type';
+import type { NewERC20AssetSchemaWorkaroundSymbol } from './new-er-c20-asset-schema-workaround-symbol';
+import type { NewERC20AssetSchemaWorkaroundIsVerified } from './new-er-c20-asset-schema-workaround-is-verified';
+import type { NewERC20AssetSchemaWorkaroundIsVerifiedSource } from './new-er-c20-asset-schema-workaround-is-verified-source';
+import type { NewERC20AssetSchemaWorkaroundThumbnailUrl } from './new-er-c20-asset-schema-workaround-thumbnail-url';
+import type { NewERC20AssetSchemaWorkaroundWebsiteUrl } from './new-er-c20-asset-schema-workaround-website-url';
+import type { NewERC20AssetSchemaWorkaroundDiscordUrl } from './new-er-c20-asset-schema-workaround-discord-url';
+import type { NewERC20AssetSchemaWorkaroundTwitterUrl } from './new-er-c20-asset-schema-workaround-twitter-url';
+import type { NewERC20AssetSchemaWorkaroundInstagramUrl } from './new-er-c20-asset-schema-workaround-instagram-url';
+import type { NewERC20AssetSchemaWorkaroundGithubUrl } from './new-er-c20-asset-schema-workaround-github-url';
+import type { NewERC20AssetSchemaWorkaroundId } from './new-er-c20-asset-schema-workaround-id';
 
 export interface NewERC20AssetSchemaWorkaround {
-	contract: BaseAssetContractSchemaWorkaround;
-	tokenId?: NewERC20AssetSchemaWorkaroundTokenId;
-	name?: NewERC20AssetSchemaWorkaroundName;
-	description?: NewERC20AssetSchemaWorkaroundDescription;
-	type?: NewERC20AssetSchemaWorkaroundType;
-	symbol?: NewERC20AssetSchemaWorkaroundSymbol;
-	isVerified?: NewERC20AssetSchemaWorkaroundIsVerified;
-	isVerifiedSource?: NewERC20AssetSchemaWorkaroundIsVerifiedSource;
-	thumbnailUrl?: NewERC20AssetSchemaWorkaroundThumbnailUrl;
-	websiteUrl?: NewERC20AssetSchemaWorkaroundWebsiteUrl;
-	discordUrl?: NewERC20AssetSchemaWorkaroundDiscordUrl;
-	twitterUrl?: NewERC20AssetSchemaWorkaroundTwitterUrl;
-	instagramUrl?: NewERC20AssetSchemaWorkaroundInstagramUrl;
-	githubUrl?: NewERC20AssetSchemaWorkaroundGithubUrl;
-	id?: NewERC20AssetSchemaWorkaroundId;
+  contract: BaseAssetContractSchemaWorkaround;
+  tokenId?: NewERC20AssetSchemaWorkaroundTokenId;
+  name?: NewERC20AssetSchemaWorkaroundName;
+  description?: NewERC20AssetSchemaWorkaroundDescription;
+  type?: NewERC20AssetSchemaWorkaroundType;
+  symbol?: NewERC20AssetSchemaWorkaroundSymbol;
+  isVerified?: NewERC20AssetSchemaWorkaroundIsVerified;
+  isVerifiedSource?: NewERC20AssetSchemaWorkaroundIsVerifiedSource;
+  thumbnailUrl?: NewERC20AssetSchemaWorkaroundThumbnailUrl;
+  websiteUrl?: NewERC20AssetSchemaWorkaroundWebsiteUrl;
+  discordUrl?: NewERC20AssetSchemaWorkaroundDiscordUrl;
+  twitterUrl?: NewERC20AssetSchemaWorkaroundTwitterUrl;
+  instagramUrl?: NewERC20AssetSchemaWorkaroundInstagramUrl;
+  githubUrl?: NewERC20AssetSchemaWorkaroundGithubUrl;
+  id?: NewERC20AssetSchemaWorkaroundId;
 }

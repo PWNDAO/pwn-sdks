@@ -3,6 +3,6 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AssetVolumeOverPeriodSchema } from "./asset-volume-over-period-schema";
+import type { AssetVolumeOverPeriodSchema } from './asset-volume-over-period-schema';
 
 export type ERC20AssetStatsSchemaVolume24h = AssetVolumeOverPeriodSchema | null;

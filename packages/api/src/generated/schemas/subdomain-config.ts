@@ -3,52 +3,52 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AssetContractWithNameAndImage } from "./asset-contract-with-name-and-image";
-import type { ChainIdEnum } from "./chain-id-enum";
-import type { SubdomainConfigAvatar } from "./subdomain-config-avatar";
-import type { SubdomainConfigTitle } from "./subdomain-config-title";
+import type { AssetContractWithNameAndImage } from './asset-contract-with-name-and-image';
+import type { ChainIdEnum } from './chain-id-enum';
+import type { SubdomainConfigAvatar } from './subdomain-config-avatar';
+import type { SubdomainConfigTitle } from './subdomain-config-title';
 
 export interface SubdomainConfig {
-	readonly id: number;
-	allowed_contracts: AssetContractWithNameAndImage[];
-	readonly allowed_category: string;
-	/** @maxLength 32 */
-	subdomain_name: string;
-	banner_url: string;
-	/** @maxLength 255 */
-	lend_table_heading?: string;
-	/**
-	 * Color in hex format (e.g. #ABC123).
-	 * @maxLength 7
-	 */
-	background_color: string;
-	/**
-	 * Color in hex format (e.g. #ABC123).
-	 * @maxLength 7
-	 */
-	text_color: string;
-	/**
-	 * Color in hex format (e.g. #ABC123).
-	 * @maxLength 7
-	 */
-	primary_color: string;
-	/**
-	 * Color in hex format (e.g. #ABC123).
-	 * @maxLength 7
-	 */
-	separator_color: string;
-	/**
-	 * Color in hex format (e.g. #ABC123).
-	 * @maxLength 7
-	 */
-	dark_separator_color: string;
-	/**
-	 * Color in hex format (e.g. #ABC123).
-	 * @maxLength 7
-	 */
-	input_color: string;
-	supported_chains: ChainIdEnum[];
-	avatar?: SubdomainConfigAvatar;
-	title?: SubdomainConfigTitle;
-	show_in_spaces_page?: boolean;
+  readonly id: number;
+  allowed_contracts: AssetContractWithNameAndImage[];
+  readonly allowed_category: string;
+  /** @maxLength 32 */
+  subdomain_name: string;
+  banner_url: string;
+  /** @maxLength 255 */
+  lend_table_heading?: string;
+  /**
+   * Color in hex format (e.g. #ABC123).
+   * @maxLength 7
+   */
+  background_color: string;
+  /**
+   * Color in hex format (e.g. #ABC123).
+   * @maxLength 7
+   */
+  text_color: string;
+  /**
+   * Color in hex format (e.g. #ABC123).
+   * @maxLength 7
+   */
+  primary_color: string;
+  /**
+   * Color in hex format (e.g. #ABC123).
+   * @maxLength 7
+   */
+  separator_color: string;
+  /**
+   * Color in hex format (e.g. #ABC123).
+   * @maxLength 7
+   */
+  dark_separator_color: string;
+  /**
+   * Color in hex format (e.g. #ABC123).
+   * @maxLength 7
+   */
+  input_color: string;
+  supported_chains: ChainIdEnum[];
+  avatar?: SubdomainConfigAvatar;
+  title?: SubdomainConfigTitle;
+  show_in_spaces_page?: boolean;
 }

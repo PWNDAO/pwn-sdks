@@ -5,5 +5,5 @@
  */
 
 export type V11SimpleLoanSimpleProposalDetailSchemaWorkaroundNonce =
-	| string
-	| null;
+  | string
+  | null;

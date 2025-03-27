@@ -3,7 +3,7 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { LendingProposalAPYsSuggestion } from "./lending-proposal-ap-ys-suggestion";
+import type { LendingProposalAPYsSuggestion } from './lending-proposal-ap-ys-suggestion';
 
 export type LendingProposalTermSuggestionApy =
-	LendingProposalAPYsSuggestion | null;
+  LendingProposalAPYsSuggestion | null;

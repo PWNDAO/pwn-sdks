@@ -5,9 +5,9 @@
  */
 
 export type BetaProposalDetailSchemaWorkaroundType =
-	(typeof BetaProposalDetailSchemaWorkaroundType)[keyof typeof BetaProposalDetailSchemaWorkaroundType];
+  (typeof BetaProposalDetailSchemaWorkaroundType)[keyof typeof BetaProposalDetailSchemaWorkaroundType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const BetaProposalDetailSchemaWorkaroundType = {
-	pwn_contractsbetaproposal: "pwn_contracts.betaproposal",
+  pwn_contractsbetaproposal: 'pwn_contracts.betaproposal',
 } as const;

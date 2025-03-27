@@ -5,5 +5,4 @@
  */
 
 export type V11SimpleLoanListProposalDetailSchemaWorkaroundCollateralStateFingerprint =
-	| string
-	| null;
+  string | null;

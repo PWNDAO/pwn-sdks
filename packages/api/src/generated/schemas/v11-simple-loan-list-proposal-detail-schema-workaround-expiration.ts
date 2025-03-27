@@ -5,5 +5,5 @@
  */
 
 export type V11SimpleLoanListProposalDetailSchemaWorkaroundExpiration =
-	| number
-	| null;
+  | number
+  | null;

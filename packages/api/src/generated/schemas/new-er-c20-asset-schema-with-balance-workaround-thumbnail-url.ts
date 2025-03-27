@@ -5,5 +5,5 @@
  */
 
 export type NewERC20AssetSchemaWithBalanceWorkaroundThumbnailUrl =
-	| string
-	| null;
+  | string
+  | null;

@@ -5,5 +5,5 @@
  */
 
 export type SimpleLoanFungibleProposalDetailSchemaWorkaroundRefinancingLoanId =
-	| string
-	| null;
+  | string
+  | null;

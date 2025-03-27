@@ -5,10 +5,10 @@
  */
 
 export type NFTAssetSchemaType =
-	(typeof NFTAssetSchemaType)[keyof typeof NFTAssetSchemaType];
+  (typeof NFTAssetSchemaType)[keyof typeof NFTAssetSchemaType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const NFTAssetSchemaType = {
-	NFTAssetSchema: "NFTAssetSchema",
-	None: "None",
+  NFTAssetSchema: 'NFTAssetSchema',
+  None: 'None',
 } as const;

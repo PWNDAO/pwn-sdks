@@ -5,5 +5,5 @@
  */
 
 export type CreateSimpleLoanFungibleProposalRequestSchemaRequestNonce =
-	| number
-	| string;
+  | number
+  | string;

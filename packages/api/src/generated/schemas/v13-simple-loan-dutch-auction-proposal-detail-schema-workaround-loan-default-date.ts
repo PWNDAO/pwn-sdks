@@ -5,5 +5,4 @@
  */
 
 export type V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundLoanDefaultDate =
-	| number
-	| null;
+  number | null;

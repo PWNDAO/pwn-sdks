@@ -5,5 +5,5 @@
  */
 
 export type BetaProposalDetailSchemaWorkaroundMultiproposalMerkleRoot =
-	| string
-	| null;
+  | string
+  | null;

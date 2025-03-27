@@ -8,7 +8,7 @@ export type EventTypeEnum = (typeof EventTypeEnum)[keyof typeof EventTypeEnum];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const EventTypeEnum = {
-	mint: "mint",
-	sale: "sale",
-	transfer: "transfer",
+  mint: 'mint',
+  sale: 'sale',
+  transfer: 'transfer',
 } as const;

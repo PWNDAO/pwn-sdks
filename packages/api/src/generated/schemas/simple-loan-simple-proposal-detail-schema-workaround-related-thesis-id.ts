@@ -5,5 +5,5 @@
  */
 
 export type SimpleLoanSimpleProposalDetailSchemaWorkaroundRelatedThesisId =
-	| string
-	| null;
+  | string
+  | null;

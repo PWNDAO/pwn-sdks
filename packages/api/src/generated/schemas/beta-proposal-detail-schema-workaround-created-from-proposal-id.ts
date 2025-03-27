@@ -5,5 +5,5 @@
  */
 
 export type BetaProposalDetailSchemaWorkaroundCreatedFromProposalId =
-	| string
-	| null;
+  | string
+  | null;

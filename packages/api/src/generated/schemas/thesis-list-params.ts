@@ -5,15 +5,15 @@
  */
 
 export type ThesisListParams = {
-	chain_id?: number;
-	curator?: string;
-	/**
-	 * Number of results to return per page.
-	 */
-	limit?: number;
-	/**
-	 * The initial index from which to return the results.
-	 */
-	offset?: number;
-	user_address?: string;
+  chain_id?: number;
+  curator?: string;
+  /**
+   * Number of results to return per page.
+   */
+  limit?: number;
+  /**
+   * The initial index from which to return the results.
+   */
+  offset?: number;
+  user_address?: string;
 };

@@ -3,14 +3,14 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { PassportUserEmail } from "./passport-user-email";
-import type { PassportUserName } from "./passport-user-name";
-import type { PassportUserProfilePictureUrl } from "./passport-user-profile-picture-url";
+import type { PassportUserEmail } from './passport-user-email';
+import type { PassportUserName } from './passport-user-name';
+import type { PassportUserProfilePictureUrl } from './passport-user-profile-picture-url';
 
 export interface PassportUser {
-	admin: boolean;
-	email?: PassportUserEmail;
-	id: string;
-	name?: PassportUserName;
-	profilePictureUrl?: PassportUserProfilePictureUrl;
+  admin: boolean;
+  email?: PassportUserEmail;
+  id: string;
+  name?: PassportUserName;
+  profilePictureUrl?: PassportUserProfilePictureUrl;
 }

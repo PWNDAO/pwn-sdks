@@ -5,5 +5,5 @@
  */
 
 export type SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundDuration =
-	| number
-	| null;
+  | number
+  | null;

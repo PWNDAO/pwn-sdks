@@ -5,5 +5,5 @@
  */
 
 export type SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundSourceOfFunds =
-	| string
-	| null;
+  | string
+  | null;

@@ -5,5 +5,5 @@
  */
 
 export type V13SimpleLoanElasticProposalDetailSchemaWorkaroundRelatedThesisId =
-	| string
-	| null;
+  | string
+  | null;

@@ -5,10 +5,10 @@
  */
 
 export type CreateSimpleLoanSimpleProposalRequestSchemaRequestType =
-	(typeof CreateSimpleLoanSimpleProposalRequestSchemaRequestType)[keyof typeof CreateSimpleLoanSimpleProposalRequestSchemaRequestType];
+  (typeof CreateSimpleLoanSimpleProposalRequestSchemaRequestType)[keyof typeof CreateSimpleLoanSimpleProposalRequestSchemaRequestType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateSimpleLoanSimpleProposalRequestSchemaRequestType = {
-	pwn_contractsv1_2simpleloansimpleproposal:
-		"pwn_contracts.v1_2simpleloansimpleproposal",
+  pwn_contractsv1_2simpleloansimpleproposal:
+    'pwn_contracts.v1_2simpleloansimpleproposal',
 } as const;

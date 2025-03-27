@@ -5,5 +5,5 @@
  */
 
 export type CreateSimpleLoanListProposalRequestSchemaRequestRelatedThesisId =
-	| number
-	| null;
+  | number
+  | null;

@@ -3,9 +3,9 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ChainIdEnum } from "./chain-id-enum";
+import type { ChainIdEnum } from './chain-id-enum';
 
 export interface Web3TokenObtainPairRequest {
-	signature: string;
-	chain_id: ChainIdEnum;
+  signature: string;
+  chain_id: ChainIdEnum;
 }

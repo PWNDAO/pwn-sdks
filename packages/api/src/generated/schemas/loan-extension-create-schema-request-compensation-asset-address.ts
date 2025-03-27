@@ -5,5 +5,5 @@
  */
 
 export type LoanExtensionCreateSchemaRequestCompensationAssetAddress =
-	| string
-	| null;
+  | string
+  | null;

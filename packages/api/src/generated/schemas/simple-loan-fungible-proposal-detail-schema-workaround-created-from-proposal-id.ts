@@ -5,5 +5,4 @@
  */
 
 export type SimpleLoanFungibleProposalDetailSchemaWorkaroundCreatedFromProposalId =
-	| string
-	| null;
+  string | null;

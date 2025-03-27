@@ -3,10 +3,10 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AmountInEthAndUsdEthAmount } from "./amount-in-eth-and-usd-eth-amount";
-import type { AmountInEthAndUsdUsdAmount } from "./amount-in-eth-and-usd-usd-amount";
+import type { AmountInEthAndUsdEthAmount } from './amount-in-eth-and-usd-eth-amount';
+import type { AmountInEthAndUsdUsdAmount } from './amount-in-eth-and-usd-usd-amount';
 
 export interface AmountInEthAndUsd {
-	eth_amount?: AmountInEthAndUsdEthAmount;
-	usd_amount?: AmountInEthAndUsdUsdAmount;
+  eth_amount?: AmountInEthAndUsdEthAmount;
+  usd_amount?: AmountInEthAndUsdUsdAmount;
 }

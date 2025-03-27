@@ -3,23 +3,23 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AssetInListSchemaWorkaround } from "./asset-in-list-schema-workaround";
-import type { ThesisAmountsStatsWorkaround } from "./thesis-amounts-stats-workaround";
-import type { ThesisCreditStatsSchemaWorkaroundClosestDefault } from "./thesis-credit-stats-schema-workaround-closest-default";
-import type { ThesisCreditStatsSchemaWorkaroundLoans } from "./thesis-credit-stats-schema-workaround-loans";
-import type { ThesisCreditStatsSchemaWorkaroundProposalIds } from "./thesis-credit-stats-schema-workaround-proposal-ids";
-import type { ThesisCreditStatsSchemaWorkaroundProposalNonces } from "./thesis-credit-stats-schema-workaround-proposal-nonces";
-import type { ThesisCreditStatsSchemaWorkaroundProposalsNonceSpace } from "./thesis-credit-stats-schema-workaround-proposals-nonce-space";
+import type { AssetInListSchemaWorkaround } from './asset-in-list-schema-workaround';
+import type { ThesisAmountsStatsWorkaround } from './thesis-amounts-stats-workaround';
+import type { ThesisCreditStatsSchemaWorkaroundProposalNonces } from './thesis-credit-stats-schema-workaround-proposal-nonces';
+import type { ThesisCreditStatsSchemaWorkaroundProposalsNonceSpace } from './thesis-credit-stats-schema-workaround-proposals-nonce-space';
+import type { ThesisCreditStatsSchemaWorkaroundProposalIds } from './thesis-credit-stats-schema-workaround-proposal-ids';
+import type { ThesisCreditStatsSchemaWorkaroundLoans } from './thesis-credit-stats-schema-workaround-loans';
+import type { ThesisCreditStatsSchemaWorkaroundClosestDefault } from './thesis-credit-stats-schema-workaround-closest-default';
 
 /**
  * loans filled-in once user_address is provided, and stored as string format: {chainId}/{loanTokenContractAddress}/{onChainId}
  */
 export interface ThesisCreditStatsSchemaWorkaround {
-	creditAssetMetadata: AssetInListSchemaWorkaround;
-	amountsStats: ThesisAmountsStatsWorkaround;
-	proposalNonces?: ThesisCreditStatsSchemaWorkaroundProposalNonces;
-	proposalsNonceSpace?: ThesisCreditStatsSchemaWorkaroundProposalsNonceSpace;
-	proposalIds?: ThesisCreditStatsSchemaWorkaroundProposalIds;
-	loans?: ThesisCreditStatsSchemaWorkaroundLoans;
-	closestDefault?: ThesisCreditStatsSchemaWorkaroundClosestDefault;
+  creditAssetMetadata: AssetInListSchemaWorkaround;
+  amountsStats: ThesisAmountsStatsWorkaround;
+  proposalNonces?: ThesisCreditStatsSchemaWorkaroundProposalNonces;
+  proposalsNonceSpace?: ThesisCreditStatsSchemaWorkaroundProposalsNonceSpace;
+  proposalIds?: ThesisCreditStatsSchemaWorkaroundProposalIds;
+  loans?: ThesisCreditStatsSchemaWorkaroundLoans;
+  closestDefault?: ThesisCreditStatsSchemaWorkaroundClosestDefault;
 }

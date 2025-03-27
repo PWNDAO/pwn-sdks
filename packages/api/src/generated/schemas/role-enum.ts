@@ -12,6 +12,6 @@ export type RoleEnum = (typeof RoleEnum)[keyof typeof RoleEnum];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RoleEnum = {
-	NUMBER_0: 0,
-	NUMBER_1: 1,
+  NUMBER_0: 0,
+  NUMBER_1: 1,
 } as const;

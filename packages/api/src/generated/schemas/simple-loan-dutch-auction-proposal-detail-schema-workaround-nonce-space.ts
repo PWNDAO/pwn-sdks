@@ -5,5 +5,5 @@
  */
 
 export type SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundNonceSpace =
-	| string
-	| null;
+  | string
+  | null;

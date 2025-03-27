@@ -3,36 +3,36 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { BaseAssetContractSchema } from "./base-asset-contract-schema";
-import type { NewERC20AssetSchemaDescription } from "./new-er-c20-asset-schema-description";
-import type { NewERC20AssetSchemaDiscordUrl } from "./new-er-c20-asset-schema-discord-url";
-import type { NewERC20AssetSchemaGithubUrl } from "./new-er-c20-asset-schema-github-url";
-import type { NewERC20AssetSchemaId } from "./new-er-c20-asset-schema-id";
-import type { NewERC20AssetSchemaInstagramUrl } from "./new-er-c20-asset-schema-instagram-url";
-import type { NewERC20AssetSchemaIsVerified } from "./new-er-c20-asset-schema-is-verified";
-import type { NewERC20AssetSchemaIsVerifiedSource } from "./new-er-c20-asset-schema-is-verified-source";
-import type { NewERC20AssetSchemaName } from "./new-er-c20-asset-schema-name";
-import type { NewERC20AssetSchemaSymbol } from "./new-er-c20-asset-schema-symbol";
-import type { NewERC20AssetSchemaThumbnailUrl } from "./new-er-c20-asset-schema-thumbnail-url";
-import type { NewERC20AssetSchemaTokenId } from "./new-er-c20-asset-schema-token-id";
-import type { NewERC20AssetSchemaTwitterUrl } from "./new-er-c20-asset-schema-twitter-url";
-import type { NewERC20AssetSchemaType } from "./new-er-c20-asset-schema-type";
-import type { NewERC20AssetSchemaWebsiteUrl } from "./new-er-c20-asset-schema-website-url";
+import type { BaseAssetContractSchema } from './base-asset-contract-schema';
+import type { NewERC20AssetSchemaTokenId } from './new-er-c20-asset-schema-token-id';
+import type { NewERC20AssetSchemaName } from './new-er-c20-asset-schema-name';
+import type { NewERC20AssetSchemaDescription } from './new-er-c20-asset-schema-description';
+import type { NewERC20AssetSchemaType } from './new-er-c20-asset-schema-type';
+import type { NewERC20AssetSchemaSymbol } from './new-er-c20-asset-schema-symbol';
+import type { NewERC20AssetSchemaIsVerified } from './new-er-c20-asset-schema-is-verified';
+import type { NewERC20AssetSchemaIsVerifiedSource } from './new-er-c20-asset-schema-is-verified-source';
+import type { NewERC20AssetSchemaThumbnailUrl } from './new-er-c20-asset-schema-thumbnail-url';
+import type { NewERC20AssetSchemaWebsiteUrl } from './new-er-c20-asset-schema-website-url';
+import type { NewERC20AssetSchemaDiscordUrl } from './new-er-c20-asset-schema-discord-url';
+import type { NewERC20AssetSchemaTwitterUrl } from './new-er-c20-asset-schema-twitter-url';
+import type { NewERC20AssetSchemaInstagramUrl } from './new-er-c20-asset-schema-instagram-url';
+import type { NewERC20AssetSchemaGithubUrl } from './new-er-c20-asset-schema-github-url';
+import type { NewERC20AssetSchemaId } from './new-er-c20-asset-schema-id';
 
 export interface NewERC20AssetSchema {
-	contract: BaseAssetContractSchema;
-	token_id?: NewERC20AssetSchemaTokenId;
-	name?: NewERC20AssetSchemaName;
-	description?: NewERC20AssetSchemaDescription;
-	type?: NewERC20AssetSchemaType;
-	symbol?: NewERC20AssetSchemaSymbol;
-	is_verified?: NewERC20AssetSchemaIsVerified;
-	is_verified_source?: NewERC20AssetSchemaIsVerifiedSource;
-	thumbnail_url?: NewERC20AssetSchemaThumbnailUrl;
-	website_url?: NewERC20AssetSchemaWebsiteUrl;
-	discord_url?: NewERC20AssetSchemaDiscordUrl;
-	twitter_url?: NewERC20AssetSchemaTwitterUrl;
-	instagram_url?: NewERC20AssetSchemaInstagramUrl;
-	github_url?: NewERC20AssetSchemaGithubUrl;
-	id?: NewERC20AssetSchemaId;
+  contract: BaseAssetContractSchema;
+  token_id?: NewERC20AssetSchemaTokenId;
+  name?: NewERC20AssetSchemaName;
+  description?: NewERC20AssetSchemaDescription;
+  type?: NewERC20AssetSchemaType;
+  symbol?: NewERC20AssetSchemaSymbol;
+  is_verified?: NewERC20AssetSchemaIsVerified;
+  is_verified_source?: NewERC20AssetSchemaIsVerifiedSource;
+  thumbnail_url?: NewERC20AssetSchemaThumbnailUrl;
+  website_url?: NewERC20AssetSchemaWebsiteUrl;
+  discord_url?: NewERC20AssetSchemaDiscordUrl;
+  twitter_url?: NewERC20AssetSchemaTwitterUrl;
+  instagram_url?: NewERC20AssetSchemaInstagramUrl;
+  github_url?: NewERC20AssetSchemaGithubUrl;
+  id?: NewERC20AssetSchemaId;
 }

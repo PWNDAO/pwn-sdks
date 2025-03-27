@@ -5,5 +5,5 @@
  */
 
 export type LoanExtensionCounterProposalSchemaWorkaroundMessageToLender =
-	| string
-	| null;
+  | string
+  | null;

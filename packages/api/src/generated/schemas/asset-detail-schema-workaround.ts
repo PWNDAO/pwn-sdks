@@ -3,25 +3,25 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AssetCategory } from "./asset-category";
-import type { AssetDetailSchemaWorkaroundDecimals } from "./asset-detail-schema-workaround-decimals";
-import type { AssetDetailSchemaWorkaroundIsKycRequired } from "./asset-detail-schema-workaround-is-kyc-required";
-import type { AssetDetailSchemaWorkaroundIsVerified } from "./asset-detail-schema-workaround-is-verified";
-import type { AssetDetailSchemaWorkaroundName } from "./asset-detail-schema-workaround-name";
-import type { AssetDetailSchemaWorkaroundSymbol } from "./asset-detail-schema-workaround-symbol";
-import type { AssetDetailSchemaWorkaroundTokenId } from "./asset-detail-schema-workaround-token-id";
-import type { ChainIdEnum } from "./chain-id-enum";
+import type { AssetCategory } from './asset-category';
+import type { ChainIdEnum } from './chain-id-enum';
+import type { AssetDetailSchemaWorkaroundDecimals } from './asset-detail-schema-workaround-decimals';
+import type { AssetDetailSchemaWorkaroundIsVerified } from './asset-detail-schema-workaround-is-verified';
+import type { AssetDetailSchemaWorkaroundName } from './asset-detail-schema-workaround-name';
+import type { AssetDetailSchemaWorkaroundTokenId } from './asset-detail-schema-workaround-token-id';
+import type { AssetDetailSchemaWorkaroundSymbol } from './asset-detail-schema-workaround-symbol';
+import type { AssetDetailSchemaWorkaroundIsKycRequired } from './asset-detail-schema-workaround-is-kyc-required';
 
 export interface AssetDetailSchemaWorkaround {
-	id: string;
-	category: AssetCategory;
-	chainId: ChainIdEnum;
-	address: string;
-	decimals: AssetDetailSchemaWorkaroundDecimals;
-	thumbnailUrl: string;
-	isVerified: AssetDetailSchemaWorkaroundIsVerified;
-	name: AssetDetailSchemaWorkaroundName;
-	tokenId: AssetDetailSchemaWorkaroundTokenId;
-	symbol: AssetDetailSchemaWorkaroundSymbol;
-	isKycRequired: AssetDetailSchemaWorkaroundIsKycRequired;
+  id: string;
+  category: AssetCategory;
+  chainId: ChainIdEnum;
+  address: string;
+  decimals: AssetDetailSchemaWorkaroundDecimals;
+  thumbnailUrl: string;
+  isVerified: AssetDetailSchemaWorkaroundIsVerified;
+  name: AssetDetailSchemaWorkaroundName;
+  tokenId: AssetDetailSchemaWorkaroundTokenId;
+  symbol: AssetDetailSchemaWorkaroundSymbol;
+  isKycRequired: AssetDetailSchemaWorkaroundIsKycRequired;
 }

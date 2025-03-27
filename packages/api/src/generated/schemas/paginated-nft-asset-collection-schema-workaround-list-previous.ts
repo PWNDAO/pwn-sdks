@@ -5,5 +5,5 @@
  */
 
 export type PaginatedNFTAssetCollectionSchemaWorkaroundListPrevious =
-	| string
-	| null;
+  | string
+  | null;

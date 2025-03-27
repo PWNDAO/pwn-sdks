@@ -3,12 +3,12 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AmountInEthAndUsd } from "./amount-in-eth-and-usd";
-import type { NFTEvent } from "./nftevent";
+import type { AmountInEthAndUsd } from './amount-in-eth-and-usd';
+import type { NFTEvent } from './nftevent';
 
 export interface AssetPriceHistory {
-	all_time_average: AmountInEthAndUsd;
-	all_time_low: AmountInEthAndUsd;
-	all_time_high: AmountInEthAndUsd;
-	sell_events: NFTEvent[];
+  all_time_average: AmountInEthAndUsd;
+  all_time_low: AmountInEthAndUsd;
+  all_time_high: AmountInEthAndUsd;
+  sell_events: NFTEvent[];
 }

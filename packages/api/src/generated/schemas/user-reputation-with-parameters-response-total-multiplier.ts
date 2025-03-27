@@ -5,5 +5,5 @@
  */
 
 export type UserReputationWithParametersResponseTotalMultiplier =
-	| number
-	| string;
+  | number
+  | string;

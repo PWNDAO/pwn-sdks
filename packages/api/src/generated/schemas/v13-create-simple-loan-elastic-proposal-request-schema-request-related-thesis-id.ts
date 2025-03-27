@@ -5,5 +5,4 @@
  */
 
 export type V13CreateSimpleLoanElasticProposalRequestSchemaRequestRelatedThesisId =
-	| number
-	| null;
+  number | null;

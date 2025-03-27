@@ -5,5 +5,5 @@
  */
 
 export type FetchUserErc20sParams = {
-	subdomain?: string;
+  subdomain?: string;
 };

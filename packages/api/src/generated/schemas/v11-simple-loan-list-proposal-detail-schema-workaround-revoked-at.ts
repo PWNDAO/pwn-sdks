@@ -5,5 +5,5 @@
  */
 
 export type V11SimpleLoanListProposalDetailSchemaWorkaroundRevokedAt =
-	| number
-	| null;
+  | number
+  | null;

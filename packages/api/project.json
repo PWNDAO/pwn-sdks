@@ -1,31 +1,28 @@
 {
-  "name": "@pwndao/api-sdk",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/api/src",
-  "projectType": "library",
-  "tags": [
-    "api"
-  ],
-  "targets": {
-    "build-code": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx orval",
-        "cwd": "packages/api"
-      }
-    },
-    "biome-lint": {
-      "executor": "@gitopslovers/nx-biome:biome-lint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
-      "options": {
-        "lintFilePatterns": [
-          "packages/api/**/*.ts"
-        ],
-        "write": false,
-        "unsafe": false
-      }
-    }
-  }
+	"name": "@pwndao/api-sdk",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "packages/api/src",
+	"projectType": "library",
+	"tags": ["api"],
+	"targets": {
+		"build-code": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "npx orval",
+				"cwd": "packages/api",
+				"env": {
+					"PWN_API_URL": ""
+				}
+			}
+		},
+		"biome-lint": {
+			"executor": "@gitopslovers/nx-biome:biome-lint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["packages/api/**/*.ts"],
+				"write": false,
+				"unsafe": false
+			}
+		}
+	}
 }

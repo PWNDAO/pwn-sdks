@@ -5,10 +5,10 @@
  */
 
 export type MarketplaceEnum =
-	(typeof MarketplaceEnum)[keyof typeof MarketplaceEnum];
+  (typeof MarketplaceEnum)[keyof typeof MarketplaceEnum];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const MarketplaceEnum = {
-	LOOKSRARE: "LOOKSRARE",
-	OPENSEA: "OPENSEA",
+  LOOKSRARE: 'LOOKSRARE',
+  OPENSEA: 'OPENSEA',
 } as const;

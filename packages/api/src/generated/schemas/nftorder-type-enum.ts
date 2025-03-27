@@ -5,10 +5,10 @@
  */
 
 export type NFTOrderTypeEnum =
-	(typeof NFTOrderTypeEnum)[keyof typeof NFTOrderTypeEnum];
+  (typeof NFTOrderTypeEnum)[keyof typeof NFTOrderTypeEnum];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const NFTOrderTypeEnum = {
-	listing: "listing",
-	offer: "offer",
+  listing: 'listing',
+  offer: 'offer',
 } as const;

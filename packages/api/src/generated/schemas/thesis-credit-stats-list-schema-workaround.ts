@@ -3,7 +3,7 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ThesisCreditStatsSchemaWorkaround } from "./thesis-credit-stats-schema-workaround";
+import type { ThesisCreditStatsSchemaWorkaround } from './thesis-credit-stats-schema-workaround';
 
 export type ThesisCreditStatsListSchemaWorkaround =
-	ThesisCreditStatsSchemaWorkaround[];
+  ThesisCreditStatsSchemaWorkaround[];

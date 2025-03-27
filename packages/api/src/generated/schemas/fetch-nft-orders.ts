@@ -3,12 +3,12 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { FetchNFTOrdersNext } from "./fetch-nft-orders-next";
-import type { FetchNFTOrdersPrevious } from "./fetch-nft-orders-previous";
-import type { NFTOrder } from "./nftorder";
+import type { FetchNFTOrdersNext } from './fetch-nft-orders-next';
+import type { FetchNFTOrdersPrevious } from './fetch-nft-orders-previous';
+import type { NFTOrder } from './nftorder';
 
 export interface FetchNFTOrders {
-	next?: FetchNFTOrdersNext;
-	previous?: FetchNFTOrdersPrevious;
-	orders: NFTOrder[];
+  next?: FetchNFTOrdersNext;
+  previous?: FetchNFTOrdersPrevious;
+  orders: NFTOrder[];
 }

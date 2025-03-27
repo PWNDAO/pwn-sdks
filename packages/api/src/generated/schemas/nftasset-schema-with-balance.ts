@@ -3,42 +3,42 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { BaseAssetContractSchema } from "./base-asset-contract-schema";
-import type { NFTAssetCollectionSchema } from "./nftasset-collection-schema";
-import type { NFTAssetSchemaWithBalanceAnimationUrl } from "./nftasset-schema-with-balance-animation-url";
-import type { NFTAssetSchemaWithBalanceAssetOfAtrToken } from "./nftasset-schema-with-balance-asset-of-atr-token";
-import type { NFTAssetSchemaWithBalanceAtrTokensOfUser } from "./nftasset-schema-with-balance-atr-tokens-of-user";
-import type { NFTAssetSchemaWithBalanceBundledAssets } from "./nftasset-schema-with-balance-bundled-assets";
-import type { NFTAssetSchemaWithBalanceBundledAssetsTotalCount } from "./nftasset-schema-with-balance-bundled-assets-total-count";
-import type { NFTAssetSchemaWithBalanceBundledAssetsVerifiedCount } from "./nftasset-schema-with-balance-bundled-assets-verified-count";
-import type { NFTAssetSchemaWithBalanceDescription } from "./nftasset-schema-with-balance-description";
-import type { NFTAssetSchemaWithBalanceId } from "./nftasset-schema-with-balance-id";
-import type { NFTAssetSchemaWithBalanceIsVerified } from "./nftasset-schema-with-balance-is-verified";
-import type { NFTAssetSchemaWithBalanceIsVerifiedSource } from "./nftasset-schema-with-balance-is-verified-source";
-import type { NFTAssetSchemaWithBalanceLatestPrice } from "./nftasset-schema-with-balance-latest-price";
-import type { NFTAssetSchemaWithBalanceName } from "./nftasset-schema-with-balance-name";
-import type { NFTAssetSchemaWithBalanceThumbnailUrl } from "./nftasset-schema-with-balance-thumbnail-url";
-import type { NFTAssetSchemaWithBalanceTokenUri } from "./nftasset-schema-with-balance-token-uri";
-import type { NFTAssetSchemaWithBalanceType } from "./nftasset-schema-with-balance-type";
+import type { BaseAssetContractSchema } from './base-asset-contract-schema';
+import type { NFTAssetSchemaWithBalanceName } from './nftasset-schema-with-balance-name';
+import type { NFTAssetSchemaWithBalanceDescription } from './nftasset-schema-with-balance-description';
+import type { NFTAssetSchemaWithBalanceType } from './nftasset-schema-with-balance-type';
+import type { NFTAssetSchemaWithBalanceAnimationUrl } from './nftasset-schema-with-balance-animation-url';
+import type { NFTAssetSchemaWithBalanceTokenUri } from './nftasset-schema-with-balance-token-uri';
+import type { NFTAssetSchemaWithBalanceId } from './nftasset-schema-with-balance-id';
+import type { NFTAssetCollectionSchema } from './nftasset-collection-schema';
+import type { NFTAssetSchemaWithBalanceBundledAssets } from './nftasset-schema-with-balance-bundled-assets';
+import type { NFTAssetSchemaWithBalanceThumbnailUrl } from './nftasset-schema-with-balance-thumbnail-url';
+import type { NFTAssetSchemaWithBalanceIsVerified } from './nftasset-schema-with-balance-is-verified';
+import type { NFTAssetSchemaWithBalanceIsVerifiedSource } from './nftasset-schema-with-balance-is-verified-source';
+import type { NFTAssetSchemaWithBalanceBundledAssetsVerifiedCount } from './nftasset-schema-with-balance-bundled-assets-verified-count';
+import type { NFTAssetSchemaWithBalanceBundledAssetsTotalCount } from './nftasset-schema-with-balance-bundled-assets-total-count';
+import type { NFTAssetSchemaWithBalanceAssetOfAtrToken } from './nftasset-schema-with-balance-asset-of-atr-token';
+import type { NFTAssetSchemaWithBalanceAtrTokensOfUser } from './nftasset-schema-with-balance-atr-tokens-of-user';
+import type { NFTAssetSchemaWithBalanceLatestPrice } from './nftasset-schema-with-balance-latest-price';
 
 export interface NFTAssetSchemaWithBalance {
-	contract: BaseAssetContractSchema;
-	token_id: string;
-	name?: NFTAssetSchemaWithBalanceName;
-	description?: NFTAssetSchemaWithBalanceDescription;
-	type?: NFTAssetSchemaWithBalanceType;
-	animation_url?: NFTAssetSchemaWithBalanceAnimationUrl;
-	token_uri?: NFTAssetSchemaWithBalanceTokenUri;
-	id?: NFTAssetSchemaWithBalanceId;
-	collection: NFTAssetCollectionSchema;
-	bundled_assets?: NFTAssetSchemaWithBalanceBundledAssets;
-	thumbnail_url?: NFTAssetSchemaWithBalanceThumbnailUrl;
-	is_verified?: NFTAssetSchemaWithBalanceIsVerified;
-	is_verified_source?: NFTAssetSchemaWithBalanceIsVerifiedSource;
-	bundled_assets_verified_count?: NFTAssetSchemaWithBalanceBundledAssetsVerifiedCount;
-	bundled_assets_total_count?: NFTAssetSchemaWithBalanceBundledAssetsTotalCount;
-	asset_of_atr_token?: NFTAssetSchemaWithBalanceAssetOfAtrToken;
-	atr_tokens_of_user?: NFTAssetSchemaWithBalanceAtrTokensOfUser;
-	latest_price?: NFTAssetSchemaWithBalanceLatestPrice;
-	balance: string;
+  contract: BaseAssetContractSchema;
+  token_id: string;
+  name?: NFTAssetSchemaWithBalanceName;
+  description?: NFTAssetSchemaWithBalanceDescription;
+  type?: NFTAssetSchemaWithBalanceType;
+  animation_url?: NFTAssetSchemaWithBalanceAnimationUrl;
+  token_uri?: NFTAssetSchemaWithBalanceTokenUri;
+  id?: NFTAssetSchemaWithBalanceId;
+  collection: NFTAssetCollectionSchema;
+  bundled_assets?: NFTAssetSchemaWithBalanceBundledAssets;
+  thumbnail_url?: NFTAssetSchemaWithBalanceThumbnailUrl;
+  is_verified?: NFTAssetSchemaWithBalanceIsVerified;
+  is_verified_source?: NFTAssetSchemaWithBalanceIsVerifiedSource;
+  bundled_assets_verified_count?: NFTAssetSchemaWithBalanceBundledAssetsVerifiedCount;
+  bundled_assets_total_count?: NFTAssetSchemaWithBalanceBundledAssetsTotalCount;
+  asset_of_atr_token?: NFTAssetSchemaWithBalanceAssetOfAtrToken;
+  atr_tokens_of_user?: NFTAssetSchemaWithBalanceAtrTokensOfUser;
+  latest_price?: NFTAssetSchemaWithBalanceLatestPrice;
+  balance: string;
 }

@@ -3,11 +3,11 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { CuratorGroupAvatar } from "./curator-group-avatar";
+import type { CuratorGroupAvatar } from './curator-group-avatar';
 
 export interface CuratorGroup {
-	/** @maxLength 100 */
-	name: string;
-	avatar?: CuratorGroupAvatar;
-	description?: string;
+  /** @maxLength 100 */
+  name: string;
+  avatar?: CuratorGroupAvatar;
+  description?: string;
 }

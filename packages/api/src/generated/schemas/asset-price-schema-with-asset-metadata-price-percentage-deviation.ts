@@ -5,5 +5,5 @@
  */
 
 export type AssetPriceSchemaWithAssetMetadataPricePercentageDeviation =
-	| string
-	| null;
+  | string
+  | null;

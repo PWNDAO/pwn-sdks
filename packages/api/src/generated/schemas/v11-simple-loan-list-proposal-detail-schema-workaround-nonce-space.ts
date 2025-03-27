@@ -5,5 +5,5 @@
  */
 
 export type V11SimpleLoanListProposalDetailSchemaWorkaroundNonceSpace =
-	| string
-	| null;
+  | string
+  | null;

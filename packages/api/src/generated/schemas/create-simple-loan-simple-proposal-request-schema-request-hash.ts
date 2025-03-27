@@ -5,5 +5,5 @@
  */
 
 export type CreateSimpleLoanSimpleProposalRequestSchemaRequestHash =
-	| string
-	| null;
+  | string
+  | null;

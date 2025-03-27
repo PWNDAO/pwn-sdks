@@ -3,38 +3,38 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { BaseAssetContractSchema } from "./base-asset-contract-schema";
-import type { NFTAssetCollectionSchemaBannerImageUrl } from "./nftasset-collection-schema-banner-image-url";
-import type { NFTAssetCollectionSchemaDescription } from "./nftasset-collection-schema-description";
-import type { NFTAssetCollectionSchemaDiscordUrl } from "./nftasset-collection-schema-discord-url";
-import type { NFTAssetCollectionSchemaGithubUrl } from "./nftasset-collection-schema-github-url";
-import type { NFTAssetCollectionSchemaId } from "./nftasset-collection-schema-id";
-import type { NFTAssetCollectionSchemaInstagramUrl } from "./nftasset-collection-schema-instagram-url";
-import type { NFTAssetCollectionSchemaIsTopCollection } from "./nftasset-collection-schema-is-top-collection";
-import type { NFTAssetCollectionSchemaIsVerified } from "./nftasset-collection-schema-is-verified";
-import type { NFTAssetCollectionSchemaIsVerifiedSource } from "./nftasset-collection-schema-is-verified-source";
-import type { NFTAssetCollectionSchemaName } from "./nftasset-collection-schema-name";
-import type { NFTAssetCollectionSchemaOpenseaSlug } from "./nftasset-collection-schema-opensea-slug";
-import type { NFTAssetCollectionSchemaSymbol } from "./nftasset-collection-schema-symbol";
-import type { NFTAssetCollectionSchemaThumbnailUrl } from "./nftasset-collection-schema-thumbnail-url";
-import type { NFTAssetCollectionSchemaTwitterUrl } from "./nftasset-collection-schema-twitter-url";
-import type { NFTAssetCollectionSchemaWebsiteUrl } from "./nftasset-collection-schema-website-url";
+import type { BaseAssetContractSchema } from './base-asset-contract-schema';
+import type { NFTAssetCollectionSchemaOpenseaSlug } from './nftasset-collection-schema-opensea-slug';
+import type { NFTAssetCollectionSchemaName } from './nftasset-collection-schema-name';
+import type { NFTAssetCollectionSchemaDescription } from './nftasset-collection-schema-description';
+import type { NFTAssetCollectionSchemaThumbnailUrl } from './nftasset-collection-schema-thumbnail-url';
+import type { NFTAssetCollectionSchemaBannerImageUrl } from './nftasset-collection-schema-banner-image-url';
+import type { NFTAssetCollectionSchemaIsVerified } from './nftasset-collection-schema-is-verified';
+import type { NFTAssetCollectionSchemaIsVerifiedSource } from './nftasset-collection-schema-is-verified-source';
+import type { NFTAssetCollectionSchemaSymbol } from './nftasset-collection-schema-symbol';
+import type { NFTAssetCollectionSchemaWebsiteUrl } from './nftasset-collection-schema-website-url';
+import type { NFTAssetCollectionSchemaDiscordUrl } from './nftasset-collection-schema-discord-url';
+import type { NFTAssetCollectionSchemaTwitterUrl } from './nftasset-collection-schema-twitter-url';
+import type { NFTAssetCollectionSchemaInstagramUrl } from './nftasset-collection-schema-instagram-url';
+import type { NFTAssetCollectionSchemaGithubUrl } from './nftasset-collection-schema-github-url';
+import type { NFTAssetCollectionSchemaIsTopCollection } from './nftasset-collection-schema-is-top-collection';
+import type { NFTAssetCollectionSchemaId } from './nftasset-collection-schema-id';
 
 export interface NFTAssetCollectionSchema {
-	contract: BaseAssetContractSchema;
-	opensea_slug?: NFTAssetCollectionSchemaOpenseaSlug;
-	name?: NFTAssetCollectionSchemaName;
-	description?: NFTAssetCollectionSchemaDescription;
-	thumbnail_url?: NFTAssetCollectionSchemaThumbnailUrl;
-	banner_image_url?: NFTAssetCollectionSchemaBannerImageUrl;
-	is_verified?: NFTAssetCollectionSchemaIsVerified;
-	is_verified_source?: NFTAssetCollectionSchemaIsVerifiedSource;
-	symbol?: NFTAssetCollectionSchemaSymbol;
-	website_url?: NFTAssetCollectionSchemaWebsiteUrl;
-	discord_url?: NFTAssetCollectionSchemaDiscordUrl;
-	twitter_url?: NFTAssetCollectionSchemaTwitterUrl;
-	instagram_url?: NFTAssetCollectionSchemaInstagramUrl;
-	github_url?: NFTAssetCollectionSchemaGithubUrl;
-	is_top_collection?: NFTAssetCollectionSchemaIsTopCollection;
-	id?: NFTAssetCollectionSchemaId;
+  contract: BaseAssetContractSchema;
+  opensea_slug?: NFTAssetCollectionSchemaOpenseaSlug;
+  name?: NFTAssetCollectionSchemaName;
+  description?: NFTAssetCollectionSchemaDescription;
+  thumbnail_url?: NFTAssetCollectionSchemaThumbnailUrl;
+  banner_image_url?: NFTAssetCollectionSchemaBannerImageUrl;
+  is_verified?: NFTAssetCollectionSchemaIsVerified;
+  is_verified_source?: NFTAssetCollectionSchemaIsVerifiedSource;
+  symbol?: NFTAssetCollectionSchemaSymbol;
+  website_url?: NFTAssetCollectionSchemaWebsiteUrl;
+  discord_url?: NFTAssetCollectionSchemaDiscordUrl;
+  twitter_url?: NFTAssetCollectionSchemaTwitterUrl;
+  instagram_url?: NFTAssetCollectionSchemaInstagramUrl;
+  github_url?: NFTAssetCollectionSchemaGithubUrl;
+  is_top_collection?: NFTAssetCollectionSchemaIsTopCollection;
+  id?: NFTAssetCollectionSchemaId;
 }

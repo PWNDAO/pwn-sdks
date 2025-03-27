@@ -5,5 +5,5 @@
  */
 
 export type NFTAssetSchemaWithBalanceAndOwnerBundledAssetsVerifiedCount =
-	| number
-	| null;
+  | number
+  | null;

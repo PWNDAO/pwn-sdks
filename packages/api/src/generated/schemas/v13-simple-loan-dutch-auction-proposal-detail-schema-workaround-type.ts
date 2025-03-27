@@ -5,10 +5,10 @@
  */
 
 export type V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundType =
-	(typeof V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundType)[keyof typeof V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundType];
+  (typeof V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundType)[keyof typeof V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundType = {
-	pwn_contractsv1_3simpleloandutchauctionproposal:
-		"pwn_contracts.v1_3simpleloandutchauctionproposal",
+  pwn_contractsv1_3simpleloandutchauctionproposal:
+    'pwn_contracts.v1_3simpleloandutchauctionproposal',
 } as const;

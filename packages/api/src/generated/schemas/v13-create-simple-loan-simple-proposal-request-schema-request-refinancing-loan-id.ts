@@ -5,5 +5,4 @@
  */
 
 export type V13CreateSimpleLoanSimpleProposalRequestSchemaRequestRefinancingLoanId =
-	| number
-	| string;
+  number | string;

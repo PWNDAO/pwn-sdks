@@ -3,13 +3,13 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ReputationParameterResponseBase } from "./reputation-parameter-response-base";
-import type { ReputationParameterResponseLinear } from "./reputation-parameter-response-linear";
-import type { ReputationParameterResponseMultiplier } from "./reputation-parameter-response-multiplier";
+import type { ReputationParameterResponseBase } from './reputation-parameter-response-base';
+import type { ReputationParameterResponseMultiplier } from './reputation-parameter-response-multiplier';
+import type { ReputationParameterResponseLinear } from './reputation-parameter-response-linear';
 
 export interface ReputationParameterResponse {
-	parameterName: string;
-	base: ReputationParameterResponseBase;
-	multiplier: ReputationParameterResponseMultiplier;
-	linear: ReputationParameterResponseLinear;
+  parameterName: string;
+  base: ReputationParameterResponseBase;
+  multiplier: ReputationParameterResponseMultiplier;
+  linear: ReputationParameterResponseLinear;
 }

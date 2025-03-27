@@ -5,5 +5,5 @@
  */
 
 export type NFTAssetCollectionDetailWithStatsSchemaTotalNftsUpdatedTime =
-	| string
-	| null;
+  | string
+  | null;

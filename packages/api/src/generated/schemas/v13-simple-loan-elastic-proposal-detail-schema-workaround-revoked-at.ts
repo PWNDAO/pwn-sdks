@@ -5,5 +5,5 @@
  */
 
 export type V13SimpleLoanElasticProposalDetailSchemaWorkaroundRevokedAt =
-	| number
-	| null;
+  | number
+  | null;

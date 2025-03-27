@@ -3,8 +3,8 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { UserPositionTokenBalance } from "./user-position-token-balance";
+import type { UserPositionTokenBalance } from './user-position-token-balance';
 
 export type UserPositionSchemaResponseAnyOf = {
-	[key: string]: UserPositionTokenBalance[];
+  [key: string]: UserPositionTokenBalance[];
 };

@@ -5,5 +5,5 @@
  */
 
 export type NFTAssetCollectionDetailWithStatsSchemaIsTopCollection =
-	| boolean
-	| null;
+  | boolean
+  | null;

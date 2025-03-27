@@ -5,5 +5,5 @@
  */
 
 export type ThesisCreditStatsSchemaWorkaroundProposalsNonceSpace =
-	| string
-	| null;
+  | string
+  | null;

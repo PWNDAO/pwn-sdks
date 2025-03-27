@@ -3,21 +3,21 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { SafeOffchainDataRequestName } from "./safe-offchain-data-request-name";
-import type { SafeOffchainDataRequestTransactionHash } from "./safe-offchain-data-request-transaction-hash";
+import type { SafeOffchainDataRequestName } from './safe-offchain-data-request-name';
+import type { SafeOffchainDataRequestTransactionHash } from './safe-offchain-data-request-transaction-hash';
 
 export interface SafeOffchainDataRequest {
-	/** @minLength 1 */
-	name?: SafeOffchainDataRequestName;
-	/**
-	 * @minimum -2147483648
-	 * @maximum 2147483647
-	 */
-	chain_id: number;
-	transaction_hash?: SafeOffchainDataRequestTransactionHash;
-	/**
-	 * @minLength 1
-	 * @maxLength 66
-	 */
-	wallet_address: string;
+  /** @minLength 1 */
+  name?: SafeOffchainDataRequestName;
+  /**
+   * @minimum -2147483648
+   * @maximum 2147483647
+   */
+  chain_id: number;
+  transaction_hash?: SafeOffchainDataRequestTransactionHash;
+  /**
+   * @minLength 1
+   * @maxLength 66
+   */
+  wallet_address: string;
 }

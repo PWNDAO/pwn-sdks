@@ -3,7 +3,7 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AmountInEthAndUsd } from "./amount-in-eth-and-usd";
+import type { AmountInEthAndUsd } from './amount-in-eth-and-usd';
 
 export type AssetPriceSchemaWithAssetMetadataUnitPrice =
-	AmountInEthAndUsd | null;
+  AmountInEthAndUsd | null;

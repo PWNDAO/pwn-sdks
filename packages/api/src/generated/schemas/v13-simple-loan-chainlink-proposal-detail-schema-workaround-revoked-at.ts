@@ -5,5 +5,5 @@
  */
 
 export type V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundRevokedAt =
-	| number
-	| null;
+  | number
+  | null;

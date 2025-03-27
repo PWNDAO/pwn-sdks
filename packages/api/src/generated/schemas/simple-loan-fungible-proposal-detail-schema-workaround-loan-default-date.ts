@@ -5,5 +5,5 @@
  */
 
 export type SimpleLoanFungibleProposalDetailSchemaWorkaroundLoanDefaultDate =
-	| number
-	| null;
+  | number
+  | null;

@@ -8,8 +8,8 @@ export type PeriodEnum = (typeof PeriodEnum)[keyof typeof PeriodEnum];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PeriodEnum = {
-	"24h": "24h",
-	"7d": "7d",
-	"30d": "30d",
-	"1y": "1y",
+  '24h': '24h',
+  '7d': '7d',
+  '30d': '30d',
+  '1y': '1y',
 } as const;

@@ -5,5 +5,5 @@
  */
 
 export type V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundNonce =
-	| string
-	| null;
+  | string
+  | null;

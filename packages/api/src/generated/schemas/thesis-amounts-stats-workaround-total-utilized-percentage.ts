@@ -5,6 +5,6 @@
  */
 
 export type ThesisAmountsStatsWorkaroundTotalUtilizedPercentage =
-	| number
-	| string
-	| null;
+  | number
+  | string
+  | null;

@@ -5,6 +5,6 @@
  */
 
 export type NotificationUserUnseenNotificationsCountParams = {
-	include_testnets?: boolean;
-	subdomain?: string;
+  include_testnets?: boolean;
+  subdomain?: string;
 };

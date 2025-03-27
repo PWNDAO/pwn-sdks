@@ -3,8 +3,8 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { LendingProposalTermSuggestion } from "./lending-proposal-term-suggestion";
+import type { LendingProposalTermSuggestion } from './lending-proposal-term-suggestion';
 
 export interface LendingProposalTermSuggestionSchema {
-	marketTerms: LendingProposalTermSuggestion[];
+  marketTerms: LendingProposalTermSuggestion[];
 }

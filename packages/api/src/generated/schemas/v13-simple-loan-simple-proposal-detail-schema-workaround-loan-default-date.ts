@@ -5,5 +5,5 @@
  */
 
 export type V13SimpleLoanSimpleProposalDetailSchemaWorkaroundLoanDefaultDate =
-	| number
-	| null;
+  | number
+  | null;

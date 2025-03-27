@@ -3,19 +3,19 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { PassportProfileBio } from "./passport-profile-bio";
-import type { PassportProfileDataSources } from "./passport-profile-data-sources";
-import type { PassportProfileDisplayName } from "./passport-profile-display-name";
-import type { PassportProfileImageUrl } from "./passport-profile-image-url";
-import type { PassportProfileLocation } from "./passport-profile-location";
-import type { PassportProfileName } from "./passport-profile-name";
+import type { PassportProfileBio } from './passport-profile-bio';
+import type { PassportProfileDataSources } from './passport-profile-data-sources';
+import type { PassportProfileDisplayName } from './passport-profile-display-name';
+import type { PassportProfileImageUrl } from './passport-profile-image-url';
+import type { PassportProfileLocation } from './passport-profile-location';
+import type { PassportProfileName } from './passport-profile-name';
 
 export interface PassportProfile {
-	bio?: PassportProfileBio;
-	dataSources?: PassportProfileDataSources;
-	displayName?: PassportProfileDisplayName;
-	imageUrl?: PassportProfileImageUrl;
-	location?: PassportProfileLocation;
-	name?: PassportProfileName;
-	tags?: string[];
+  bio?: PassportProfileBio;
+  dataSources?: PassportProfileDataSources;
+  displayName?: PassportProfileDisplayName;
+  imageUrl?: PassportProfileImageUrl;
+  location?: PassportProfileLocation;
+  name?: PassportProfileName;
+  tags?: string[];
 }

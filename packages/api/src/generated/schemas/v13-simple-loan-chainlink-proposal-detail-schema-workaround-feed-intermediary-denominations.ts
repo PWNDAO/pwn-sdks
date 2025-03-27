@@ -5,5 +5,4 @@
  */
 
 export type V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundFeedIntermediaryDenominations =
-	| string[]
-	| null;
+  string[] | null;

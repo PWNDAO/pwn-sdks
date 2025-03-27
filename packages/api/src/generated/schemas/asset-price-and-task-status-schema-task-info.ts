@@ -3,6 +3,6 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { TaskStatusSchema } from "./task-status-schema";
+import type { TaskStatusSchema } from './task-status-schema';
 
 export type AssetPriceAndTaskStatusSchemaTaskInfo = TaskStatusSchema | null;

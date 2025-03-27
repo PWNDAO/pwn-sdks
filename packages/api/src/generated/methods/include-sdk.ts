@@ -4,228 +4,199 @@
  * OpenAPI spec version: 0.0.0
  */
 import type {
-	AssetDetail,
-	AssetPriceAndTaskStatusSchema,
-	CreateProposalRequestSchemaRequest,
-	CreateStrategy201,
-	CreateStrategy400,
-	CreateStrategy403,
-	CuratorGroupDetail,
-	ERC20AssetSchemaWithBalance,
-	FetchAssetMetadataParams,
-	FetchAssetPriceParams,
-	FetchNFTAssetCollectionMetadata2Params,
-	FetchNFTAssetCollectionMetadataParams,
-	FetchUserErc20sParams,
-	FetchUserNFTsResponse,
-	FetchUserNftsParams,
-	FreeUserNonceRetrieveParams,
-	FreeUserNonceSchemaWorkaround,
-	ListProposalsParams,
-	LoanDetailSchemaWorkaround,
-	MarkAsSeenBodyRequest,
-	NFTAssetCollectionDetailSchema,
-	NotificationSettings,
-	NotificationSettingsRequest,
-	NotificationUserUnseenNotificationsCountParams,
-	PaginatedCuratorGroupDetailList,
-	PaginatedProposalAndLoanListSchemaWorkaroundList,
-	PaginatedProposalDetailSchemaList,
-	PaginatedThesisSchemaWorkaroundList,
-	ProposalAndLoanListParams,
-	ProposalDetailSchema,
-	ProposalHashesListSchema,
-	ThesisCreateUpdateSchemaRequest,
-	ThesisDetail2Params,
-	ThesisDetailParams,
-	ThesisListParams,
-	ThesisSchemaWorkaround,
-	UnseenNotificationsCount,
-	UpdateStrategy200,
-	UpdateStrategy400,
-	UpdateStrategy403,
-	UpdateStrategy404,
-	UpdateStrategy2200,
-	UpdateStrategy2400,
-	UpdateStrategy2403,
-	UpdateStrategy2404,
-	UserProfileRequestRequest,
-	UserProfileResponse,
-	WalletRole,
-	Web3authCuratorGroupsListParams,
-} from "../schemas";
+  AssetDetail,
+  AssetPriceAndTaskStatusSchema,
+  CreateProposalRequestSchemaRequest,
+  CreateStrategy201,
+  CreateStrategy400,
+  CreateStrategy403,
+  CuratorGroupDetail,
+  ERC20AssetSchemaWithBalance,
+  FetchAssetMetadataParams,
+  FetchAssetPriceParams,
+  FetchNFTAssetCollectionMetadata2Params,
+  FetchNFTAssetCollectionMetadataParams,
+  FetchUserErc20sParams,
+  FetchUserNFTsResponse,
+  FetchUserNftsParams,
+  FreeUserNonceRetrieveParams,
+  FreeUserNonceSchemaWorkaround,
+  ListProposalsParams,
+  LoanDetailSchemaWorkaround,
+  MarkAsSeenBodyRequest,
+  NFTAssetCollectionDetailSchema,
+  NotificationSettings,
+  NotificationSettingsRequest,
+  NotificationUserUnseenNotificationsCountParams,
+  PaginatedCuratorGroupDetailList,
+  PaginatedProposalAndLoanListSchemaWorkaroundList,
+  PaginatedProposalDetailSchemaList,
+  PaginatedThesisSchemaWorkaroundList,
+  ProposalAndLoanListParams,
+  ProposalDetailSchema,
+  ProposalHashesListSchema,
+  ThesisCreateUpdateSchemaRequest,
+  ThesisDetail2Params,
+  ThesisDetailParams,
+  ThesisListParams,
+  ThesisSchemaWorkaround,
+  UnseenNotificationsCount,
+  UpdateStrategy200,
+  UpdateStrategy2200,
+  UpdateStrategy2400,
+  UpdateStrategy2403,
+  UpdateStrategy2404,
+  UpdateStrategy400,
+  UpdateStrategy403,
+  UpdateStrategy404,
+  UserProfileRequestRequest,
+  UserProfileResponse,
+  WalletRole,
+  Web3authCuratorGroupsListParams,
+} from '../schemas';
+
+import { customInstance } from '../../custom-instance';
 
 export type fetchAssetMetadataResponse200 = {
-	data: AssetDetail;
-	status: 200;
+  data: AssetDetail;
+  status: 200;
 };
 
 export type fetchAssetMetadataResponseComposite = fetchAssetMetadataResponse200;
 
 export type fetchAssetMetadataResponse = fetchAssetMetadataResponseComposite & {
-	headers: Headers;
+  headers: Headers;
 };
 
 export const getFetchAssetMetadataUrl = (
-	chainId: string,
-	address: string,
-	tokenId?: string,
-	params?: FetchAssetMetadataParams,
+  chainId: string,
+  address: string,
+  tokenId?: string,
+  params?: FetchAssetMetadataParams
 ) => {
-	const normalizedParams = new URLSearchParams();
+  const normalizedParams = new URLSearchParams();
 
-	for (const [key, value] of Object.entries(params || {})) {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	}
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
 
-	const stringifiedParams = normalizedParams.toString();
+  const stringifiedParams = normalizedParams.toString();
 
-	return stringifiedParams.length > 0
-		? `/api/v1/asset/asset/${chainId}/${address}/${tokenId}?${stringifiedParams}`
-		: `/api/v1/asset/asset/${chainId}/${address}/${tokenId}`;
+  return stringifiedParams.length > 0
+    ? `/api/v1/asset/asset/${chainId}/${address}/${tokenId}?${stringifiedParams}`
+    : `/api/v1/asset/asset/${chainId}/${address}/${tokenId}`;
 };
 
 export const fetchAssetMetadata = async (
-	chainId: string,
-	address: string,
-	tokenId?: string,
-	params?: FetchAssetMetadataParams,
-	options?: RequestInit,
+  chainId: string,
+  address: string,
+  tokenId?: string,
+  params?: FetchAssetMetadataParams,
+  options?: RequestInit
 ): Promise<fetchAssetMetadataResponse> => {
-	const res = await fetch(
-		getFetchAssetMetadataUrl(chainId, address, tokenId, params),
-		{
-			...options,
-			method: "GET",
-		},
-	);
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: fetchAssetMetadataResponse["data"] = body ? JSON.parse(body) : {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as fetchAssetMetadataResponse;
+  return customInstance<fetchAssetMetadataResponse>(
+    getFetchAssetMetadataUrl(chainId, address, tokenId, params),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 export type fetchNFTAssetCollectionMetadata2Response200 = {
-	data: NFTAssetCollectionDetailSchema;
-	status: 200;
+  data: NFTAssetCollectionDetailSchema;
+  status: 200;
 };
 
 export type fetchNFTAssetCollectionMetadata2ResponseComposite =
-	fetchNFTAssetCollectionMetadata2Response200;
+  fetchNFTAssetCollectionMetadata2Response200;
 
 export type fetchNFTAssetCollectionMetadata2Response =
-	fetchNFTAssetCollectionMetadata2ResponseComposite & {
-		headers: Headers;
-	};
+  fetchNFTAssetCollectionMetadata2ResponseComposite & {
+    headers: Headers;
+  };
 
 export const getFetchNFTAssetCollectionMetadata2Url = (
-	chainId: string,
-	address: string,
-	params?: FetchNFTAssetCollectionMetadata2Params,
+  chainId: string,
+  address: string,
+  params?: FetchNFTAssetCollectionMetadata2Params
 ) => {
-	const normalizedParams = new URLSearchParams();
+  const normalizedParams = new URLSearchParams();
 
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
 
-	const stringifiedParams = normalizedParams.toString();
+  const stringifiedParams = normalizedParams.toString();
 
-	return stringifiedParams.length > 0
-		? `/api/v1/asset/collection/${chainId}/${address}/?${stringifiedParams}`
-		: `/api/v1/asset/collection/${chainId}/${address}/`;
+  return stringifiedParams.length > 0
+    ? `/api/v1/asset/collection/${chainId}/${address}/?${stringifiedParams}`
+    : `/api/v1/asset/collection/${chainId}/${address}/`;
 };
 
 export const fetchNFTAssetCollectionMetadata2 = async (
-	chainId: string,
-	address: string,
-	params?: FetchNFTAssetCollectionMetadata2Params,
-	options?: RequestInit,
+  chainId: string,
+  address: string,
+  params?: FetchNFTAssetCollectionMetadata2Params,
+  options?: RequestInit
 ): Promise<fetchNFTAssetCollectionMetadata2Response> => {
-	const res = await fetch(
-		getFetchNFTAssetCollectionMetadata2Url(chainId, address, params),
-		{
-			...options,
-			method: "GET",
-		},
-	);
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: fetchNFTAssetCollectionMetadata2Response["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as fetchNFTAssetCollectionMetadata2Response;
+  return customInstance<fetchNFTAssetCollectionMetadata2Response>(
+    getFetchNFTAssetCollectionMetadata2Url(chainId, address, params),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 export type fetchNFTAssetCollectionMetadataResponse200 = {
-	data: NFTAssetCollectionDetailSchema;
-	status: 200;
+  data: NFTAssetCollectionDetailSchema;
+  status: 200;
 };
 
 export type fetchNFTAssetCollectionMetadataResponseComposite =
-	fetchNFTAssetCollectionMetadataResponse200;
+  fetchNFTAssetCollectionMetadataResponse200;
 
 export type fetchNFTAssetCollectionMetadataResponse =
-	fetchNFTAssetCollectionMetadataResponseComposite & {
-		headers: Headers;
-	};
+  fetchNFTAssetCollectionMetadataResponseComposite & {
+    headers: Headers;
+  };
 
 export const getFetchNFTAssetCollectionMetadataUrl = (
-	openseaSlug: string,
-	params?: FetchNFTAssetCollectionMetadataParams,
+  openseaSlug: string,
+  params?: FetchNFTAssetCollectionMetadataParams
 ) => {
-	const normalizedParams = new URLSearchParams();
+  const normalizedParams = new URLSearchParams();
 
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
 
-	const stringifiedParams = normalizedParams.toString();
+  const stringifiedParams = normalizedParams.toString();
 
-	return stringifiedParams.length > 0
-		? `/api/v1/asset/collection/slug/${openseaSlug}/?${stringifiedParams}`
-		: `/api/v1/asset/collection/slug/${openseaSlug}/`;
+  return stringifiedParams.length > 0
+    ? `/api/v1/asset/collection/slug/${openseaSlug}/?${stringifiedParams}`
+    : `/api/v1/asset/collection/slug/${openseaSlug}/`;
 };
 
 export const fetchNFTAssetCollectionMetadata = async (
-	openseaSlug: string,
-	params?: FetchNFTAssetCollectionMetadataParams,
-	options?: RequestInit,
+  openseaSlug: string,
+  params?: FetchNFTAssetCollectionMetadataParams,
+  options?: RequestInit
 ): Promise<fetchNFTAssetCollectionMetadataResponse> => {
-	const res = await fetch(
-		getFetchNFTAssetCollectionMetadataUrl(openseaSlug, params),
-		{
-			...options,
-			method: "GET",
-		},
-	);
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: fetchNFTAssetCollectionMetadataResponse["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as fetchNFTAssetCollectionMetadataResponse;
+  return customInstance<fetchNFTAssetCollectionMetadataResponse>(
+    getFetchNFTAssetCollectionMetadataUrl(openseaSlug, params),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 /**
@@ -236,1366 +207,1115 @@ HTTP Status:
     * TODO: get asset category (once asset_category_refactor is merged)
  */
 export type fetchAssetPriceResponse200 = {
-	data: AssetPriceAndTaskStatusSchema;
-	status: 200;
+  data: AssetPriceAndTaskStatusSchema;
+  status: 200;
 };
 
 export type fetchAssetPriceResponseComposite = fetchAssetPriceResponse200;
 
 export type fetchAssetPriceResponse = fetchAssetPriceResponseComposite & {
-	headers: Headers;
+  headers: Headers;
 };
 
 export const getFetchAssetPriceUrl = (
-	chainId: string,
-	contractAddress: string,
-	tokenId: string,
-	params?: FetchAssetPriceParams,
+  chainId: string,
+  contractAddress: string,
+  tokenId: string,
+  params?: FetchAssetPriceParams
 ) => {
-	const normalizedParams = new URLSearchParams();
+  const normalizedParams = new URLSearchParams();
 
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
 
-	const stringifiedParams = normalizedParams.toString();
+  const stringifiedParams = normalizedParams.toString();
 
-	return stringifiedParams.length > 0
-		? `/api/v1/asset/price/${chainId}/${contractAddress}/${tokenId}?${stringifiedParams}`
-		: `/api/v1/asset/price/${chainId}/${contractAddress}/${tokenId}`;
+  return stringifiedParams.length > 0
+    ? `/api/v1/asset/price/${chainId}/${contractAddress}/${tokenId}?${stringifiedParams}`
+    : `/api/v1/asset/price/${chainId}/${contractAddress}/${tokenId}`;
 };
 
 export const fetchAssetPrice = async (
-	chainId: string,
-	contractAddress: string,
-	tokenId: string,
-	params?: FetchAssetPriceParams,
-	options?: RequestInit,
+  chainId: string,
+  contractAddress: string,
+  tokenId: string,
+  params?: FetchAssetPriceParams,
+  options?: RequestInit
 ): Promise<fetchAssetPriceResponse> => {
-	const res = await fetch(
-		getFetchAssetPriceUrl(chainId, contractAddress, tokenId, params),
-		{
-			...options,
-			method: "GET",
-		},
-	);
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: fetchAssetPriceResponse["data"] = body ? JSON.parse(body) : {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as fetchAssetPriceResponse;
+  return customInstance<fetchAssetPriceResponse>(
+    getFetchAssetPriceUrl(chainId, contractAddress, tokenId, params),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 export type fetchUserErc20sResponse200 = {
-	data: ERC20AssetSchemaWithBalance[];
-	status: 200;
+  data: ERC20AssetSchemaWithBalance[];
+  status: 200;
 };
 
 export type fetchUserErc20sResponseComposite = fetchUserErc20sResponse200;
 
 export type fetchUserErc20sResponse = fetchUserErc20sResponseComposite & {
-	headers: Headers;
+  headers: Headers;
 };
 
 export const getFetchUserErc20sUrl = (
-	chainId: string,
-	userAddress: string,
-	params?: FetchUserErc20sParams,
+  chainId: string,
+  userAddress: string,
+  params?: FetchUserErc20sParams
 ) => {
-	const normalizedParams = new URLSearchParams();
+  const normalizedParams = new URLSearchParams();
 
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
 
-	const stringifiedParams = normalizedParams.toString();
+  const stringifiedParams = normalizedParams.toString();
 
-	return stringifiedParams.length > 0
-		? `/api/v1/asset/user-erc20s/${chainId}/${userAddress}/?${stringifiedParams}`
-		: `/api/v1/asset/user-erc20s/${chainId}/${userAddress}/`;
+  return stringifiedParams.length > 0
+    ? `/api/v1/asset/user-erc20s/${chainId}/${userAddress}/?${stringifiedParams}`
+    : `/api/v1/asset/user-erc20s/${chainId}/${userAddress}/`;
 };
 
 export const fetchUserErc20s = async (
-	chainId: string,
-	userAddress: string,
-	params?: FetchUserErc20sParams,
-	options?: RequestInit,
+  chainId: string,
+  userAddress: string,
+  params?: FetchUserErc20sParams,
+  options?: RequestInit
 ): Promise<fetchUserErc20sResponse> => {
-	const res = await fetch(getFetchUserErc20sUrl(chainId, userAddress, params), {
-		...options,
-		method: "GET",
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: fetchUserErc20sResponse["data"] = body ? JSON.parse(body) : {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as fetchUserErc20sResponse;
+  return customInstance<fetchUserErc20sResponse>(
+    getFetchUserErc20sUrl(chainId, userAddress, params),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 export type fetchUserNftsResponse200 = {
-	data: FetchUserNFTsResponse;
-	status: 200;
+  data: FetchUserNFTsResponse;
+  status: 200;
 };
 
 export type fetchUserNftsResponseComposite = fetchUserNftsResponse200;
 
 export type fetchUserNftsResponse = fetchUserNftsResponseComposite & {
-	headers: Headers;
+  headers: Headers;
 };
 
 export const getFetchUserNftsUrl = (
-	chainId: string,
-	userAddress: string,
-	params?: FetchUserNftsParams,
+  chainId: string,
+  userAddress: string,
+  params?: FetchUserNftsParams
 ) => {
-	const normalizedParams = new URLSearchParams();
+  const normalizedParams = new URLSearchParams();
 
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
 
-	const stringifiedParams = normalizedParams.toString();
+  const stringifiedParams = normalizedParams.toString();
 
-	return stringifiedParams.length > 0
-		? `/api/v1/asset/user-nfts/${chainId}/${userAddress}/?${stringifiedParams}`
-		: `/api/v1/asset/user-nfts/${chainId}/${userAddress}/`;
+  return stringifiedParams.length > 0
+    ? `/api/v1/asset/user-nfts/${chainId}/${userAddress}/?${stringifiedParams}`
+    : `/api/v1/asset/user-nfts/${chainId}/${userAddress}/`;
 };
 
 export const fetchUserNfts = async (
-	chainId: string,
-	userAddress: string,
-	params?: FetchUserNftsParams,
-	options?: RequestInit,
+  chainId: string,
+  userAddress: string,
+  params?: FetchUserNftsParams,
+  options?: RequestInit
 ): Promise<fetchUserNftsResponse> => {
-	const res = await fetch(getFetchUserNftsUrl(chainId, userAddress, params), {
-		...options,
-		method: "GET",
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: fetchUserNftsResponse["data"] = body ? JSON.parse(body) : {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as fetchUserNftsResponse;
+  return customInstance<fetchUserNftsResponse>(
+    getFetchUserNftsUrl(chainId, userAddress, params),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 export type notificationsMarkAsSeenAllResponse204 = {
-	data: undefined;
-	status: 204;
+  data: void;
+  status: 204;
 };
 
 export type notificationsMarkAsSeenAllResponseComposite =
-	notificationsMarkAsSeenAllResponse204;
+  notificationsMarkAsSeenAllResponse204;
 
 export type notificationsMarkAsSeenAllResponse =
-	notificationsMarkAsSeenAllResponseComposite & {
-		headers: Headers;
-	};
+  notificationsMarkAsSeenAllResponseComposite & {
+    headers: Headers;
+  };
 
 export const getNotificationsMarkAsSeenAllUrl = (recipientAddress: string) => {
-	return `/api/v1/notification/mark-as-seen-all/${recipientAddress}/`;
+  return `/api/v1/notification/mark-as-seen-all/${recipientAddress}/`;
 };
 
 export const notificationsMarkAsSeenAll = async (
-	recipientAddress: string,
-	options?: RequestInit,
+  recipientAddress: string,
+  options?: RequestInit
 ): Promise<notificationsMarkAsSeenAllResponse> => {
-	const res = await fetch(getNotificationsMarkAsSeenAllUrl(recipientAddress), {
-		...options,
-		method: "POST",
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: notificationsMarkAsSeenAllResponse["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as notificationsMarkAsSeenAllResponse;
+  return customInstance<notificationsMarkAsSeenAllResponse>(
+    getNotificationsMarkAsSeenAllUrl(recipientAddress),
+    {
+      ...options,
+      method: 'POST',
+    }
+  );
 };
 
 export type notificationsMarkAsSeenResponse204 = {
-	data: undefined;
-	status: 204;
+  data: void;
+  status: 204;
 };
 
 export type notificationsMarkAsSeenResponseComposite =
-	notificationsMarkAsSeenResponse204;
+  notificationsMarkAsSeenResponse204;
 
 export type notificationsMarkAsSeenResponse =
-	notificationsMarkAsSeenResponseComposite & {
-		headers: Headers;
-	};
+  notificationsMarkAsSeenResponseComposite & {
+    headers: Headers;
+  };
 
 export const getNotificationsMarkAsSeenUrl = (recipientAddress: string) => {
-	return `/api/v1/notification/mark-as-seen/${recipientAddress}/`;
+  return `/api/v1/notification/mark-as-seen/${recipientAddress}/`;
 };
 
 export const notificationsMarkAsSeen = async (
-	recipientAddress: string,
-	markAsSeenBodyRequest: MarkAsSeenBodyRequest,
-	options?: RequestInit,
+  recipientAddress: string,
+  markAsSeenBodyRequest: MarkAsSeenBodyRequest,
+  options?: RequestInit
 ): Promise<notificationsMarkAsSeenResponse> => {
-	const res = await fetch(getNotificationsMarkAsSeenUrl(recipientAddress), {
-		...options,
-		method: "POST",
-		headers: { "Content-Type": "application/json", ...options?.headers },
-		body: JSON.stringify(markAsSeenBodyRequest),
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: notificationsMarkAsSeenResponse["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as notificationsMarkAsSeenResponse;
+  return customInstance<notificationsMarkAsSeenResponse>(
+    getNotificationsMarkAsSeenUrl(recipientAddress),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(markAsSeenBodyRequest),
+    }
+  );
 };
 
 export type notificationUserUnseenNotificationsCountResponse200 = {
-	data: UnseenNotificationsCount;
-	status: 200;
+  data: UnseenNotificationsCount;
+  status: 200;
 };
 
 export type notificationUserUnseenNotificationsCountResponseComposite =
-	notificationUserUnseenNotificationsCountResponse200;
+  notificationUserUnseenNotificationsCountResponse200;
 
 export type notificationUserUnseenNotificationsCountResponse =
-	notificationUserUnseenNotificationsCountResponseComposite & {
-		headers: Headers;
-	};
+  notificationUserUnseenNotificationsCountResponseComposite & {
+    headers: Headers;
+  };
 
 export const getNotificationUserUnseenNotificationsCountUrl = (
-	recipientAddress: string,
-	params?: NotificationUserUnseenNotificationsCountParams,
+  recipientAddress: string,
+  params?: NotificationUserUnseenNotificationsCountParams
 ) => {
-	const normalizedParams = new URLSearchParams();
+  const normalizedParams = new URLSearchParams();
 
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
 
-	const stringifiedParams = normalizedParams.toString();
+  const stringifiedParams = normalizedParams.toString();
 
-	return stringifiedParams.length > 0
-		? `/api/v1/notification/user-unseen-notifications-count/${recipientAddress}/?${stringifiedParams}`
-		: `/api/v1/notification/user-unseen-notifications-count/${recipientAddress}/`;
+  return stringifiedParams.length > 0
+    ? `/api/v1/notification/user-unseen-notifications-count/${recipientAddress}/?${stringifiedParams}`
+    : `/api/v1/notification/user-unseen-notifications-count/${recipientAddress}/`;
 };
 
 export const notificationUserUnseenNotificationsCount = async (
-	recipientAddress: string,
-	params?: NotificationUserUnseenNotificationsCountParams,
-	options?: RequestInit,
+  recipientAddress: string,
+  params?: NotificationUserUnseenNotificationsCountParams,
+  options?: RequestInit
 ): Promise<notificationUserUnseenNotificationsCountResponse> => {
-	const res = await fetch(
-		getNotificationUserUnseenNotificationsCountUrl(recipientAddress, params),
-		{
-			...options,
-			method: "GET",
-		},
-	);
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: notificationUserUnseenNotificationsCountResponse["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as notificationUserUnseenNotificationsCountResponse;
+  return customInstance<notificationUserUnseenNotificationsCountResponse>(
+    getNotificationUserUnseenNotificationsCountUrl(recipientAddress, params),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 export type web3authCuratorGroupsListResponse200 = {
-	data: PaginatedCuratorGroupDetailList;
-	status: 200;
+  data: PaginatedCuratorGroupDetailList;
+  status: 200;
 };
 
 export type web3authCuratorGroupsListResponseComposite =
-	web3authCuratorGroupsListResponse200;
+  web3authCuratorGroupsListResponse200;
 
 export type web3authCuratorGroupsListResponse =
-	web3authCuratorGroupsListResponseComposite & {
-		headers: Headers;
-	};
+  web3authCuratorGroupsListResponseComposite & {
+    headers: Headers;
+  };
 
 export const getWeb3authCuratorGroupsListUrl = (
-	params?: Web3authCuratorGroupsListParams,
+  params?: Web3authCuratorGroupsListParams
 ) => {
-	const normalizedParams = new URLSearchParams();
+  const normalizedParams = new URLSearchParams();
 
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
 
-	const stringifiedParams = normalizedParams.toString();
+  const stringifiedParams = normalizedParams.toString();
 
-	return stringifiedParams.length > 0
-		? `/api/v1/web3auth/curator_groups/?${stringifiedParams}`
-		: "/api/v1/web3auth/curator_groups/";
+  return stringifiedParams.length > 0
+    ? `/api/v1/web3auth/curator_groups/?${stringifiedParams}`
+    : `/api/v1/web3auth/curator_groups/`;
 };
 
 export const web3authCuratorGroupsList = async (
-	params?: Web3authCuratorGroupsListParams,
-	options?: RequestInit,
+  params?: Web3authCuratorGroupsListParams,
+  options?: RequestInit
 ): Promise<web3authCuratorGroupsListResponse> => {
-	const res = await fetch(getWeb3authCuratorGroupsListUrl(params), {
-		...options,
-		method: "GET",
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: web3authCuratorGroupsListResponse["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as web3authCuratorGroupsListResponse;
+  return customInstance<web3authCuratorGroupsListResponse>(
+    getWeb3authCuratorGroupsListUrl(params),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 export type web3authCuratorGroupsRetrieveResponse200 = {
-	data: CuratorGroupDetail;
-	status: 200;
+  data: CuratorGroupDetail;
+  status: 200;
 };
 
 export type web3authCuratorGroupsRetrieveResponseComposite =
-	web3authCuratorGroupsRetrieveResponse200;
+  web3authCuratorGroupsRetrieveResponse200;
 
 export type web3authCuratorGroupsRetrieveResponse =
-	web3authCuratorGroupsRetrieveResponseComposite & {
-		headers: Headers;
-	};
+  web3authCuratorGroupsRetrieveResponseComposite & {
+    headers: Headers;
+  };
 
 export const getWeb3authCuratorGroupsRetrieveUrl = (name: string) => {
-	return `/api/v1/web3auth/curator_groups/${name}/`;
+  return `/api/v1/web3auth/curator_groups/${name}/`;
 };
 
 export const web3authCuratorGroupsRetrieve = async (
-	name: string,
-	options?: RequestInit,
+  name: string,
+  options?: RequestInit
 ): Promise<web3authCuratorGroupsRetrieveResponse> => {
-	const res = await fetch(getWeb3authCuratorGroupsRetrieveUrl(name), {
-		...options,
-		method: "GET",
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: web3authCuratorGroupsRetrieveResponse["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as web3authCuratorGroupsRetrieveResponse;
+  return customInstance<web3authCuratorGroupsRetrieveResponse>(
+    getWeb3authCuratorGroupsRetrieveUrl(name),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 /**
  * Returns full message to sign in response body.
  */
 export type web3authMessageToSignRetrieveResponse200 = {
-	data: string;
-	status: 200;
+  data: string;
+  status: 200;
 };
 
 export type web3authMessageToSignRetrieveResponseComposite =
-	web3authMessageToSignRetrieveResponse200;
+  web3authMessageToSignRetrieveResponse200;
 
 export type web3authMessageToSignRetrieveResponse =
-	web3authMessageToSignRetrieveResponseComposite & {
-		headers: Headers;
-	};
+  web3authMessageToSignRetrieveResponseComposite & {
+    headers: Headers;
+  };
 
 export const getWeb3authMessageToSignRetrieveUrl = (walletAddress: string) => {
-	return `/api/v1/web3auth/message_to_sign/${walletAddress}/`;
+  return `/api/v1/web3auth/message_to_sign/${walletAddress}/`;
 };
 
 export const web3authMessageToSignRetrieve = async (
-	walletAddress: string,
-	options?: RequestInit,
+  walletAddress: string,
+  options?: RequestInit
 ): Promise<web3authMessageToSignRetrieveResponse> => {
-	const res = await fetch(getWeb3authMessageToSignRetrieveUrl(walletAddress), {
-		...options,
-		method: "GET",
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: web3authMessageToSignRetrieveResponse["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as web3authMessageToSignRetrieveResponse;
+  return customInstance<web3authMessageToSignRetrieveResponse>(
+    getWeb3authMessageToSignRetrieveUrl(walletAddress),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 export type web3authNotificationSettingsRetrieveResponse200 = {
-	data: NotificationSettings;
-	status: 200;
+  data: NotificationSettings;
+  status: 200;
 };
 
 export type web3authNotificationSettingsRetrieveResponseComposite =
-	web3authNotificationSettingsRetrieveResponse200;
+  web3authNotificationSettingsRetrieveResponse200;
 
 export type web3authNotificationSettingsRetrieveResponse =
-	web3authNotificationSettingsRetrieveResponseComposite & {
-		headers: Headers;
-	};
+  web3authNotificationSettingsRetrieveResponseComposite & {
+    headers: Headers;
+  };
 
 export const getWeb3authNotificationSettingsRetrieveUrl = (
-	walletAddress: string,
+  walletAddress: string
 ) => {
-	return `/api/v1/web3auth/notification_settings/${walletAddress}/`;
+  return `/api/v1/web3auth/notification_settings/${walletAddress}/`;
 };
 
 export const web3authNotificationSettingsRetrieve = async (
-	walletAddress: string,
-	options?: RequestInit,
+  walletAddress: string,
+  options?: RequestInit
 ): Promise<web3authNotificationSettingsRetrieveResponse> => {
-	const res = await fetch(
-		getWeb3authNotificationSettingsRetrieveUrl(walletAddress),
-		{
-			...options,
-			method: "GET",
-		},
-	);
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: web3authNotificationSettingsRetrieveResponse["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as web3authNotificationSettingsRetrieveResponse;
+  return customInstance<web3authNotificationSettingsRetrieveResponse>(
+    getWeb3authNotificationSettingsRetrieveUrl(walletAddress),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 export type web3authNotificationSettingsCreateResponse200 = {
-	data: NotificationSettings;
-	status: 200;
+  data: NotificationSettings;
+  status: 200;
 };
 
 export type web3authNotificationSettingsCreateResponseComposite =
-	web3authNotificationSettingsCreateResponse200;
+  web3authNotificationSettingsCreateResponse200;
 
 export type web3authNotificationSettingsCreateResponse =
-	web3authNotificationSettingsCreateResponseComposite & {
-		headers: Headers;
-	};
+  web3authNotificationSettingsCreateResponseComposite & {
+    headers: Headers;
+  };
 
 export const getWeb3authNotificationSettingsCreateUrl = (
-	walletAddress: string,
+  walletAddress: string
 ) => {
-	return `/api/v1/web3auth/notification_settings/${walletAddress}/`;
+  return `/api/v1/web3auth/notification_settings/${walletAddress}/`;
 };
 
 export const web3authNotificationSettingsCreate = async (
-	walletAddress: string,
-	notificationSettingsRequest: NotificationSettingsRequest,
-	options?: RequestInit,
+  walletAddress: string,
+  notificationSettingsRequest: NotificationSettingsRequest,
+  options?: RequestInit
 ): Promise<web3authNotificationSettingsCreateResponse> => {
-	const res = await fetch(
-		getWeb3authNotificationSettingsCreateUrl(walletAddress),
-		{
-			...options,
-			method: "POST",
-			headers: { "Content-Type": "application/json", ...options?.headers },
-			body: JSON.stringify(notificationSettingsRequest),
-		},
-	);
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: web3authNotificationSettingsCreateResponse["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as web3authNotificationSettingsCreateResponse;
+  return customInstance<web3authNotificationSettingsCreateResponse>(
+    getWeb3authNotificationSettingsCreateUrl(walletAddress),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(notificationSettingsRequest),
+    }
+  );
 };
 
 export type web3authUserProfileRetrieveResponse200 = {
-	data: UserProfileResponse;
-	status: 200;
+  data: UserProfileResponse;
+  status: 200;
 };
 
 export type web3authUserProfileRetrieveResponseComposite =
-	web3authUserProfileRetrieveResponse200;
+  web3authUserProfileRetrieveResponse200;
 
 export type web3authUserProfileRetrieveResponse =
-	web3authUserProfileRetrieveResponseComposite & {
-		headers: Headers;
-	};
+  web3authUserProfileRetrieveResponseComposite & {
+    headers: Headers;
+  };
 
 export const getWeb3authUserProfileRetrieveUrl = (walletAddress: string) => {
-	return `/api/v1/web3auth/user_profile/${walletAddress}/`;
+  return `/api/v1/web3auth/user_profile/${walletAddress}/`;
 };
 
 export const web3authUserProfileRetrieve = async (
-	walletAddress: string,
-	options?: RequestInit,
+  walletAddress: string,
+  options?: RequestInit
 ): Promise<web3authUserProfileRetrieveResponse> => {
-	const res = await fetch(getWeb3authUserProfileRetrieveUrl(walletAddress), {
-		...options,
-		method: "GET",
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: web3authUserProfileRetrieveResponse["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as web3authUserProfileRetrieveResponse;
+  return customInstance<web3authUserProfileRetrieveResponse>(
+    getWeb3authUserProfileRetrieveUrl(walletAddress),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 export type web3authUserProfileCreateResponse200 = {
-	data: UserProfileResponse;
-	status: 200;
+  data: UserProfileResponse;
+  status: 200;
 };
 
 export type web3authUserProfileCreateResponseComposite =
-	web3authUserProfileCreateResponse200;
+  web3authUserProfileCreateResponse200;
 
 export type web3authUserProfileCreateResponse =
-	web3authUserProfileCreateResponseComposite & {
-		headers: Headers;
-	};
+  web3authUserProfileCreateResponseComposite & {
+    headers: Headers;
+  };
 
 export const getWeb3authUserProfileCreateUrl = (walletAddress: string) => {
-	return `/api/v1/web3auth/user_profile/${walletAddress}/`;
+  return `/api/v1/web3auth/user_profile/${walletAddress}/`;
 };
 
 export const web3authUserProfileCreate = async (
-	walletAddress: string,
-	userProfileRequestRequest: UserProfileRequestRequest,
-	options?: RequestInit,
+  walletAddress: string,
+  userProfileRequestRequest: UserProfileRequestRequest,
+  options?: RequestInit
 ): Promise<web3authUserProfileCreateResponse> => {
-	const res = await fetch(getWeb3authUserProfileCreateUrl(walletAddress), {
-		...options,
-		method: "POST",
-		headers: { "Content-Type": "application/json", ...options?.headers },
-		body: JSON.stringify(userProfileRequestRequest),
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: web3authUserProfileCreateResponse["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as web3authUserProfileCreateResponse;
+  return customInstance<web3authUserProfileCreateResponse>(
+    getWeb3authUserProfileCreateUrl(walletAddress),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(userProfileRequestRequest),
+    }
+  );
 };
 
 export type web3authWalletsRetrieveResponse200 = {
-	data: WalletRole;
-	status: 200;
+  data: WalletRole;
+  status: 200;
 };
 
 export type web3authWalletsRetrieveResponseComposite =
-	web3authWalletsRetrieveResponse200;
+  web3authWalletsRetrieveResponse200;
 
 export type web3authWalletsRetrieveResponse =
-	web3authWalletsRetrieveResponseComposite & {
-		headers: Headers;
-	};
+  web3authWalletsRetrieveResponseComposite & {
+    headers: Headers;
+  };
 
 export const getWeb3authWalletsRetrieveUrl = (walletAddress: string) => {
-	return `/api/v1/web3auth/wallets/${walletAddress}/`;
+  return `/api/v1/web3auth/wallets/${walletAddress}/`;
 };
 
 export const web3authWalletsRetrieve = async (
-	walletAddress: string,
-	options?: RequestInit,
+  walletAddress: string,
+  options?: RequestInit
 ): Promise<web3authWalletsRetrieveResponse> => {
-	const res = await fetch(getWeb3authWalletsRetrieveUrl(walletAddress), {
-		...options,
-		method: "GET",
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: web3authWalletsRetrieveResponse["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as web3authWalletsRetrieveResponse;
+  return customInstance<web3authWalletsRetrieveResponse>(
+    getWeb3authWalletsRetrieveUrl(walletAddress),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 export type allProposalHashesForRootResponse200 = {
-	data: ProposalHashesListSchema;
-	status: 200;
+  data: ProposalHashesListSchema;
+  status: 200;
 };
 
 export type allProposalHashesForRootResponseComposite =
-	allProposalHashesForRootResponse200;
+  allProposalHashesForRootResponse200;
 
 export type allProposalHashesForRootResponse =
-	allProposalHashesForRootResponseComposite & {
-		headers: Headers;
-	};
+  allProposalHashesForRootResponseComposite & {
+    headers: Headers;
+  };
 
 export const getAllProposalHashesForRootUrl = (
-	multiproposalMerkleRoot: string,
+  multiproposalMerkleRoot: string
 ) => {
-	return `/api/v2/pwn_contracts/all-proposal-hashes-for-root/${multiproposalMerkleRoot}/`;
+  return `/api/v2/pwn_contracts/all-proposal-hashes-for-root/${multiproposalMerkleRoot}/`;
 };
 
 export const allProposalHashesForRoot = async (
-	multiproposalMerkleRoot: string,
-	options?: RequestInit,
+  multiproposalMerkleRoot: string,
+  options?: RequestInit
 ): Promise<allProposalHashesForRootResponse> => {
-	const res = await fetch(
-		getAllProposalHashesForRootUrl(multiproposalMerkleRoot),
-		{
-			...options,
-			method: "GET",
-		},
-	);
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: allProposalHashesForRootResponse["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as allProposalHashesForRootResponse;
+  return customInstance<allProposalHashesForRootResponse>(
+    getAllProposalHashesForRootUrl(multiproposalMerkleRoot),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 export type proposalCreateBatchResponse201 = {
-	data: ProposalDetailSchema[];
-	status: 201;
+  data: ProposalDetailSchema[];
+  status: 201;
 };
 
 export type proposalCreateBatchResponseComposite =
-	proposalCreateBatchResponse201;
+  proposalCreateBatchResponse201;
 
 export type proposalCreateBatchResponse =
-	proposalCreateBatchResponseComposite & {
-		headers: Headers;
-	};
+  proposalCreateBatchResponseComposite & {
+    headers: Headers;
+  };
 
 export const getProposalCreateBatchUrl = () => {
-	return "/api/v2/pwn_contracts/create-proposal-batch";
+  return `/api/v2/pwn_contracts/create-proposal-batch`;
 };
 
 export const proposalCreateBatch = async (
-	createProposalRequestSchemaRequest: CreateProposalRequestSchemaRequest[],
-	options?: RequestInit,
+  createProposalRequestSchemaRequest: CreateProposalRequestSchemaRequest[],
+  options?: RequestInit
 ): Promise<proposalCreateBatchResponse> => {
-	const res = await fetch(getProposalCreateBatchUrl(), {
-		...options,
-		method: "POST",
-		headers: { "Content-Type": "application/json", ...options?.headers },
-		body: JSON.stringify(createProposalRequestSchemaRequest),
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: proposalCreateBatchResponse["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as proposalCreateBatchResponse;
+  return customInstance<proposalCreateBatchResponse>(
+    getProposalCreateBatchUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(createProposalRequestSchemaRequest),
+    }
+  );
 };
 
 export type proposalCreateBatch2Response201 = {
-	data: ProposalDetailSchema[];
-	status: 201;
+  data: ProposalDetailSchema[];
+  status: 201;
 };
 
 export type proposalCreateBatch2ResponseComposite =
-	proposalCreateBatch2Response201;
+  proposalCreateBatch2Response201;
 
 export type proposalCreateBatch2Response =
-	proposalCreateBatch2ResponseComposite & {
-		headers: Headers;
-	};
+  proposalCreateBatch2ResponseComposite & {
+    headers: Headers;
+  };
 
 export const getProposalCreateBatch2Url = () => {
-	return "/api/v2/pwn_contracts/create-proposal-batch/";
+  return `/api/v2/pwn_contracts/create-proposal-batch/`;
 };
 
 export const proposalCreateBatch2 = async (
-	createProposalRequestSchemaRequest: CreateProposalRequestSchemaRequest[],
-	options?: RequestInit,
+  createProposalRequestSchemaRequest: CreateProposalRequestSchemaRequest[],
+  options?: RequestInit
 ): Promise<proposalCreateBatch2Response> => {
-	const res = await fetch(getProposalCreateBatch2Url(), {
-		...options,
-		method: "POST",
-		headers: { "Content-Type": "application/json", ...options?.headers },
-		body: JSON.stringify(createProposalRequestSchemaRequest),
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: proposalCreateBatch2Response["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as proposalCreateBatch2Response;
+  return customInstance<proposalCreateBatch2Response>(
+    getProposalCreateBatch2Url(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(createProposalRequestSchemaRequest),
+    }
+  );
 };
 
 export type freeUserNonceRetrieveResponse200 = {
-	data: FreeUserNonceSchemaWorkaround;
-	status: 200;
+  data: FreeUserNonceSchemaWorkaround;
+  status: 200;
 };
 
 export type freeUserNonceRetrieveResponseComposite =
-	freeUserNonceRetrieveResponse200;
+  freeUserNonceRetrieveResponse200;
 
 export type freeUserNonceRetrieveResponse =
-	freeUserNonceRetrieveResponseComposite & {
-		headers: Headers;
-	};
+  freeUserNonceRetrieveResponseComposite & {
+    headers: Headers;
+  };
 
 export const getFreeUserNonceRetrieveUrl = (
-	chainId: string,
-	revokedNonceContractAddress: string,
-	userAddress: string,
-	params?: FreeUserNonceRetrieveParams,
+  chainId: string,
+  revokedNonceContractAddress: string,
+  userAddress: string,
+  params?: FreeUserNonceRetrieveParams
 ) => {
-	const normalizedParams = new URLSearchParams();
+  const normalizedParams = new URLSearchParams();
 
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
 
-	const stringifiedParams = normalizedParams.toString();
+  const stringifiedParams = normalizedParams.toString();
 
-	return stringifiedParams.length > 0
-		? `/api/v2/pwn_contracts/free-user-nonce/${chainId}/${revokedNonceContractAddress}/${userAddress}/?${stringifiedParams}`
-		: `/api/v2/pwn_contracts/free-user-nonce/${chainId}/${revokedNonceContractAddress}/${userAddress}/`;
+  return stringifiedParams.length > 0
+    ? `/api/v2/pwn_contracts/free-user-nonce/${chainId}/${revokedNonceContractAddress}/${userAddress}/?${stringifiedParams}`
+    : `/api/v2/pwn_contracts/free-user-nonce/${chainId}/${revokedNonceContractAddress}/${userAddress}/`;
 };
 
 export const freeUserNonceRetrieve = async (
-	chainId: string,
-	revokedNonceContractAddress: string,
-	userAddress: string,
-	params?: FreeUserNonceRetrieveParams,
-	options?: RequestInit,
+  chainId: string,
+  revokedNonceContractAddress: string,
+  userAddress: string,
+  params?: FreeUserNonceRetrieveParams,
+  options?: RequestInit
 ): Promise<freeUserNonceRetrieveResponse> => {
-	const res = await fetch(
-		getFreeUserNonceRetrieveUrl(
-			chainId,
-			revokedNonceContractAddress,
-			userAddress,
-			params,
-		),
-		{
-			...options,
-			method: "GET",
-		},
-	);
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: freeUserNonceRetrieveResponse["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as freeUserNonceRetrieveResponse;
+  return customInstance<freeUserNonceRetrieveResponse>(
+    getFreeUserNonceRetrieveUrl(
+      chainId,
+      revokedNonceContractAddress,
+      userAddress,
+      params
+    ),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 export type loanDetailResponse200 = {
-	data: LoanDetailSchemaWorkaround;
-	status: 200;
+  data: LoanDetailSchemaWorkaround;
+  status: 200;
 };
 
 export type loanDetailResponseComposite = loanDetailResponse200;
 
 export type loanDetailResponse = loanDetailResponseComposite & {
-	headers: Headers;
+  headers: Headers;
 };
 
 export const getLoanDetailUrl = (
-	chainId: string,
-	loanTokenContractAddress: string,
-	onChainId: string,
+  chainId: string,
+  loanTokenContractAddress: string,
+  onChainId: string
 ) => {
-	return `/api/v2/pwn_contracts/loan/${chainId}/${loanTokenContractAddress}/${onChainId}/`;
+  return `/api/v2/pwn_contracts/loan/${chainId}/${loanTokenContractAddress}/${onChainId}/`;
 };
 
 export const loanDetail = async (
-	chainId: string,
-	loanTokenContractAddress: string,
-	onChainId: string,
-	options?: RequestInit,
+  chainId: string,
+  loanTokenContractAddress: string,
+  onChainId: string,
+  options?: RequestInit
 ): Promise<loanDetailResponse> => {
-	const res = await fetch(
-		getLoanDetailUrl(chainId, loanTokenContractAddress, onChainId),
-		{
-			...options,
-			method: "GET",
-		},
-	);
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: loanDetailResponse["data"] = body ? JSON.parse(body) : {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as loanDetailResponse;
+  return customInstance<loanDetailResponse>(
+    getLoanDetailUrl(chainId, loanTokenContractAddress, onChainId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 export type proposalCreateResponse201 = {
-	data: ProposalDetailSchema;
-	status: 201;
+  data: ProposalDetailSchema;
+  status: 201;
 };
 
 export type proposalCreateResponseComposite = proposalCreateResponse201;
 
 export type proposalCreateResponse = proposalCreateResponseComposite & {
-	headers: Headers;
+  headers: Headers;
 };
 
 export const getProposalCreateUrl = () => {
-	return "/api/v2/pwn_contracts/proposal/";
+  return `/api/v2/pwn_contracts/proposal/`;
 };
 
 export const proposalCreate = async (
-	createProposalRequestSchemaRequest: CreateProposalRequestSchemaRequest,
-	options?: RequestInit,
+  createProposalRequestSchemaRequest: CreateProposalRequestSchemaRequest,
+  options?: RequestInit
 ): Promise<proposalCreateResponse> => {
-	const res = await fetch(getProposalCreateUrl(), {
-		...options,
-		method: "POST",
-		headers: { "Content-Type": "application/json", ...options?.headers },
-		body: JSON.stringify(createProposalRequestSchemaRequest),
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: proposalCreateResponse["data"] = body ? JSON.parse(body) : {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as proposalCreateResponse;
+  return customInstance<proposalCreateResponse>(getProposalCreateUrl(), {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(createProposalRequestSchemaRequest),
+  });
 };
 
 export type proposalAndLoanListResponse200 = {
-	data: PaginatedProposalAndLoanListSchemaWorkaroundList;
-	status: 200;
+  data: PaginatedProposalAndLoanListSchemaWorkaroundList;
+  status: 200;
 };
 
 export type proposalAndLoanListResponseComposite =
-	proposalAndLoanListResponse200;
+  proposalAndLoanListResponse200;
 
 export type proposalAndLoanListResponse =
-	proposalAndLoanListResponseComposite & {
-		headers: Headers;
-	};
+  proposalAndLoanListResponseComposite & {
+    headers: Headers;
+  };
 
 export const getProposalAndLoanListUrl = (
-	params?: ProposalAndLoanListParams,
+  params?: ProposalAndLoanListParams
 ) => {
-	const normalizedParams = new URLSearchParams();
+  const normalizedParams = new URLSearchParams();
 
-	Object.entries(params || {}).forEach(([key, value]) => {
-		const explodeParameters = ["chains", "statuses"];
+  Object.entries(params || {}).forEach(([key, value]) => {
+    const explodeParameters = ['chains', 'statuses'];
 
-		if (Array.isArray(value) && explodeParameters.includes(key)) {
-			value.forEach((v) =>
-				normalizedParams.append(key, v === null ? "null" : v.toString()),
-			);
-			return;
-		}
+    if (value instanceof Array && explodeParameters.includes(key)) {
+      value.forEach((v) =>
+        normalizedParams.append(key, v === null ? 'null' : v.toString())
+      );
+      return;
+    }
 
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
 
-	const stringifiedParams = normalizedParams.toString();
+  const stringifiedParams = normalizedParams.toString();
 
-	return stringifiedParams.length > 0
-		? `/api/v2/pwn_contracts/proposal-and-loan/?${stringifiedParams}`
-		: "/api/v2/pwn_contracts/proposal-and-loan/";
+  return stringifiedParams.length > 0
+    ? `/api/v2/pwn_contracts/proposal-and-loan/?${stringifiedParams}`
+    : `/api/v2/pwn_contracts/proposal-and-loan/`;
 };
 
 export const proposalAndLoanList = async (
-	params?: ProposalAndLoanListParams,
-	options?: RequestInit,
+  params?: ProposalAndLoanListParams,
+  options?: RequestInit
 ): Promise<proposalAndLoanListResponse> => {
-	const res = await fetch(getProposalAndLoanListUrl(params), {
-		...options,
-		method: "GET",
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: proposalAndLoanListResponse["data"] = body
-		? JSON.parse(body)
-		: {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as proposalAndLoanListResponse;
+  return customInstance<proposalAndLoanListResponse>(
+    getProposalAndLoanListUrl(params),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 export type proposalDetailResponse200 = {
-	data: ProposalDetailSchema;
-	status: 200;
+  data: ProposalDetailSchema;
+  status: 200;
 };
 
 export type proposalDetailResponseComposite = proposalDetailResponse200;
 
 export type proposalDetailResponse = proposalDetailResponseComposite & {
-	headers: Headers;
+  headers: Headers;
 };
 
 export const getProposalDetailUrl = (id: number) => {
-	return `/api/v2/pwn_contracts/proposal/${id}`;
+  return `/api/v2/pwn_contracts/proposal/${id}`;
 };
 
 export const proposalDetail = async (
-	id: number,
-	options?: RequestInit,
+  id: number,
+  options?: RequestInit
 ): Promise<proposalDetailResponse> => {
-	const res = await fetch(getProposalDetailUrl(id), {
-		...options,
-		method: "GET",
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: proposalDetailResponse["data"] = body ? JSON.parse(body) : {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as proposalDetailResponse;
+  return customInstance<proposalDetailResponse>(getProposalDetailUrl(id), {
+    ...options,
+    method: 'GET',
+  });
 };
 
 export type listProposalsResponse200 = {
-	data: PaginatedProposalDetailSchemaList;
-	status: 200;
+  data: PaginatedProposalDetailSchemaList;
+  status: 200;
 };
 
 export type listProposalsResponseComposite = listProposalsResponse200;
 
 export type listProposalsResponse = listProposalsResponseComposite & {
-	headers: Headers;
+  headers: Headers;
 };
 
 export const getListProposalsUrl = (params?: ListProposalsParams) => {
-	const normalizedParams = new URLSearchParams();
+  const normalizedParams = new URLSearchParams();
 
-	Object.entries(params || {}).forEach(([key, value]) => {
-		const explodeParameters = ["chains", "statuses"];
+  Object.entries(params || {}).forEach(([key, value]) => {
+    const explodeParameters = ['chains', 'statuses'];
 
-		if (Array.isArray(value) && explodeParameters.includes(key)) {
-			value.forEach((v) =>
-				normalizedParams.append(key, v === null ? "null" : v.toString()),
-			);
-			return;
-		}
+    if (value instanceof Array && explodeParameters.includes(key)) {
+      value.forEach((v) =>
+        normalizedParams.append(key, v === null ? 'null' : v.toString())
+      );
+      return;
+    }
 
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
 
-	const stringifiedParams = normalizedParams.toString();
+  const stringifiedParams = normalizedParams.toString();
 
-	return stringifiedParams.length > 0
-		? `/api/v2/pwn_contracts/proposals/?${stringifiedParams}`
-		: "/api/v2/pwn_contracts/proposals/";
+  return stringifiedParams.length > 0
+    ? `/api/v2/pwn_contracts/proposals/?${stringifiedParams}`
+    : `/api/v2/pwn_contracts/proposals/`;
 };
 
 export const listProposals = async (
-	params?: ListProposalsParams,
-	options?: RequestInit,
+  params?: ListProposalsParams,
+  options?: RequestInit
 ): Promise<listProposalsResponse> => {
-	const res = await fetch(getListProposalsUrl(params), {
-		...options,
-		method: "GET",
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: listProposalsResponse["data"] = body ? JSON.parse(body) : {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as listProposalsResponse;
+  return customInstance<listProposalsResponse>(getListProposalsUrl(params), {
+    ...options,
+    method: 'GET',
+  });
 };
 
 export type thesisListResponse200 = {
-	data: PaginatedThesisSchemaWorkaroundList;
-	status: 200;
+  data: PaginatedThesisSchemaWorkaroundList;
+  status: 200;
 };
 
 export type thesisListResponseComposite = thesisListResponse200;
 
 export type thesisListResponse = thesisListResponseComposite & {
-	headers: Headers;
+  headers: Headers;
 };
 
 export const getThesisListUrl = (params?: ThesisListParams) => {
-	const normalizedParams = new URLSearchParams();
+  const normalizedParams = new URLSearchParams();
 
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
 
-	const stringifiedParams = normalizedParams.toString();
+  const stringifiedParams = normalizedParams.toString();
 
-	return stringifiedParams.length > 0
-		? `/api/v2/pwn_contracts/thesis/?${stringifiedParams}`
-		: "/api/v2/pwn_contracts/thesis/";
+  return stringifiedParams.length > 0
+    ? `/api/v2/pwn_contracts/thesis/?${stringifiedParams}`
+    : `/api/v2/pwn_contracts/thesis/`;
 };
 
 export const thesisList = async (
-	params?: ThesisListParams,
-	options?: RequestInit,
+  params?: ThesisListParams,
+  options?: RequestInit
 ): Promise<thesisListResponse> => {
-	const res = await fetch(getThesisListUrl(params), {
-		...options,
-		method: "GET",
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: thesisListResponse["data"] = body ? JSON.parse(body) : {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as thesisListResponse;
+  return customInstance<thesisListResponse>(getThesisListUrl(params), {
+    ...options,
+    method: 'GET',
+  });
 };
 
 /**
  * Create a new Strategy
  */
 export type createStrategyResponse201 = {
-	data: CreateStrategy201;
-	status: 201;
+  data: CreateStrategy201;
+  status: 201;
 };
 
 export type createStrategyResponse400 = {
-	data: CreateStrategy400;
-	status: 400;
+  data: CreateStrategy400;
+  status: 400;
 };
 
 export type createStrategyResponse403 = {
-	data: CreateStrategy403;
-	status: 403;
+  data: CreateStrategy403;
+  status: 403;
 };
 
 export type createStrategyResponseComposite =
-	| createStrategyResponse201
-	| createStrategyResponse400
-	| createStrategyResponse403;
+  | createStrategyResponse201
+  | createStrategyResponse400
+  | createStrategyResponse403;
 
 export type createStrategyResponse = createStrategyResponseComposite & {
-	headers: Headers;
+  headers: Headers;
 };
 
 export const getCreateStrategyUrl = () => {
-	return "/api/v2/pwn_contracts/thesis/";
+  return `/api/v2/pwn_contracts/thesis/`;
 };
 
 export const createStrategy = async (
-	thesisCreateUpdateSchemaRequest: ThesisCreateUpdateSchemaRequest,
-	options?: RequestInit,
+  thesisCreateUpdateSchemaRequest: ThesisCreateUpdateSchemaRequest,
+  options?: RequestInit
 ): Promise<createStrategyResponse> => {
-	const res = await fetch(getCreateStrategyUrl(), {
-		...options,
-		method: "POST",
-		headers: { "Content-Type": "application/json", ...options?.headers },
-		body: JSON.stringify(thesisCreateUpdateSchemaRequest),
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: createStrategyResponse["data"] = body ? JSON.parse(body) : {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as createStrategyResponse;
+  return customInstance<createStrategyResponse>(getCreateStrategyUrl(), {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(thesisCreateUpdateSchemaRequest),
+  });
 };
 
 export type thesisDetailResponse200 = {
-	data: ThesisSchemaWorkaround;
-	status: 200;
+  data: ThesisSchemaWorkaround;
+  status: 200;
 };
 
 export type thesisDetailResponseComposite = thesisDetailResponse200;
 
 export type thesisDetailResponse = thesisDetailResponseComposite & {
-	headers: Headers;
+  headers: Headers;
 };
 
 export const getThesisDetailUrl = (id: string, params?: ThesisDetailParams) => {
-	const normalizedParams = new URLSearchParams();
+  const normalizedParams = new URLSearchParams();
 
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
 
-	const stringifiedParams = normalizedParams.toString();
+  const stringifiedParams = normalizedParams.toString();
 
-	return stringifiedParams.length > 0
-		? `/api/v2/pwn_contracts/thesis/${id}/?${stringifiedParams}`
-		: `/api/v2/pwn_contracts/thesis/${id}/`;
+  return stringifiedParams.length > 0
+    ? `/api/v2/pwn_contracts/thesis/${id}/?${stringifiedParams}`
+    : `/api/v2/pwn_contracts/thesis/${id}/`;
 };
 
 export const thesisDetail = async (
-	id: string,
-	params?: ThesisDetailParams,
-	options?: RequestInit,
+  id: string,
+  params?: ThesisDetailParams,
+  options?: RequestInit
 ): Promise<thesisDetailResponse> => {
-	const res = await fetch(getThesisDetailUrl(id, params), {
-		...options,
-		method: "GET",
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: thesisDetailResponse["data"] = body ? JSON.parse(body) : {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as thesisDetailResponse;
+  return customInstance<thesisDetailResponse>(getThesisDetailUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
 };
 
 /**
  * Update an existing Strategy
  */
 export type updateStrategyResponse200 = {
-	data: UpdateStrategy200;
-	status: 200;
+  data: UpdateStrategy200;
+  status: 200;
 };
 
 export type updateStrategyResponse400 = {
-	data: UpdateStrategy400;
-	status: 400;
+  data: UpdateStrategy400;
+  status: 400;
 };
 
 export type updateStrategyResponse403 = {
-	data: UpdateStrategy403;
-	status: 403;
+  data: UpdateStrategy403;
+  status: 403;
 };
 
 export type updateStrategyResponse404 = {
-	data: UpdateStrategy404;
-	status: 404;
+  data: UpdateStrategy404;
+  status: 404;
 };
 
 export type updateStrategyResponseComposite =
-	| updateStrategyResponse200
-	| updateStrategyResponse400
-	| updateStrategyResponse403
-	| updateStrategyResponse404;
+  | updateStrategyResponse200
+  | updateStrategyResponse400
+  | updateStrategyResponse403
+  | updateStrategyResponse404;
 
 export type updateStrategyResponse = updateStrategyResponseComposite & {
-	headers: Headers;
+  headers: Headers;
 };
 
 export const getUpdateStrategyUrl = (id: string) => {
-	return `/api/v2/pwn_contracts/thesis/${id}/`;
+  return `/api/v2/pwn_contracts/thesis/${id}/`;
 };
 
 export const updateStrategy = async (
-	id: string,
-	thesisCreateUpdateSchemaRequest: ThesisCreateUpdateSchemaRequest,
-	options?: RequestInit,
+  id: string,
+  thesisCreateUpdateSchemaRequest: ThesisCreateUpdateSchemaRequest,
+  options?: RequestInit
 ): Promise<updateStrategyResponse> => {
-	const res = await fetch(getUpdateStrategyUrl(id), {
-		...options,
-		method: "PUT",
-		headers: { "Content-Type": "application/json", ...options?.headers },
-		body: JSON.stringify(thesisCreateUpdateSchemaRequest),
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: updateStrategyResponse["data"] = body ? JSON.parse(body) : {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as updateStrategyResponse;
+  return customInstance<updateStrategyResponse>(getUpdateStrategyUrl(id), {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(thesisCreateUpdateSchemaRequest),
+  });
 };
 
 export type thesisDetail2Response200 = {
-	data: ThesisSchemaWorkaround;
-	status: 200;
+  data: ThesisSchemaWorkaround;
+  status: 200;
 };
 
 export type thesisDetail2ResponseComposite = thesisDetail2Response200;
 
 export type thesisDetail2Response = thesisDetail2ResponseComposite & {
-	headers: Headers;
+  headers: Headers;
 };
 
 export const getThesisDetail2Url = (
-	slug: string,
-	params?: ThesisDetail2Params,
+  slug: string,
+  params?: ThesisDetail2Params
 ) => {
-	const normalizedParams = new URLSearchParams();
+  const normalizedParams = new URLSearchParams();
 
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? "null" : value.toString());
-		}
-	});
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
+    }
+  });
 
-	const stringifiedParams = normalizedParams.toString();
+  const stringifiedParams = normalizedParams.toString();
 
-	return stringifiedParams.length > 0
-		? `/api/v2/pwn_contracts/thesis/${slug}/?${stringifiedParams}`
-		: `/api/v2/pwn_contracts/thesis/${slug}/`;
+  return stringifiedParams.length > 0
+    ? `/api/v2/pwn_contracts/thesis/${slug}/?${stringifiedParams}`
+    : `/api/v2/pwn_contracts/thesis/${slug}/`;
 };
 
 export const thesisDetail2 = async (
-	slug: string,
-	params?: ThesisDetail2Params,
-	options?: RequestInit,
+  slug: string,
+  params?: ThesisDetail2Params,
+  options?: RequestInit
 ): Promise<thesisDetail2Response> => {
-	const res = await fetch(getThesisDetail2Url(slug, params), {
-		...options,
-		method: "GET",
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: thesisDetail2Response["data"] = body ? JSON.parse(body) : {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as thesisDetail2Response;
+  return customInstance<thesisDetail2Response>(
+    getThesisDetail2Url(slug, params),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
 };
 
 /**
  * Update an existing Strategy
  */
 export type updateStrategy2Response200 = {
-	data: UpdateStrategy2200;
-	status: 200;
+  data: UpdateStrategy2200;
+  status: 200;
 };
 
 export type updateStrategy2Response400 = {
-	data: UpdateStrategy2400;
-	status: 400;
+  data: UpdateStrategy2400;
+  status: 400;
 };
 
 export type updateStrategy2Response403 = {
-	data: UpdateStrategy2403;
-	status: 403;
+  data: UpdateStrategy2403;
+  status: 403;
 };
 
 export type updateStrategy2Response404 = {
-	data: UpdateStrategy2404;
-	status: 404;
+  data: UpdateStrategy2404;
+  status: 404;
 };
 
 export type updateStrategy2ResponseComposite =
-	| updateStrategy2Response200
-	| updateStrategy2Response400
-	| updateStrategy2Response403
-	| updateStrategy2Response404;
+  | updateStrategy2Response200
+  | updateStrategy2Response400
+  | updateStrategy2Response403
+  | updateStrategy2Response404;
 
 export type updateStrategy2Response = updateStrategy2ResponseComposite & {
-	headers: Headers;
+  headers: Headers;
 };
 
 export const getUpdateStrategy2Url = (slug: string) => {
-	return `/api/v2/pwn_contracts/thesis/${slug}/`;
+  return `/api/v2/pwn_contracts/thesis/${slug}/`;
 };
 
 export const updateStrategy2 = async (
-	slug: string,
-	thesisCreateUpdateSchemaRequest: ThesisCreateUpdateSchemaRequest,
-	options?: RequestInit,
+  slug: string,
+  thesisCreateUpdateSchemaRequest: ThesisCreateUpdateSchemaRequest,
+  options?: RequestInit
 ): Promise<updateStrategy2Response> => {
-	const res = await fetch(getUpdateStrategy2Url(slug), {
-		...options,
-		method: "PUT",
-		headers: { "Content-Type": "application/json", ...options?.headers },
-		body: JSON.stringify(thesisCreateUpdateSchemaRequest),
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: updateStrategy2Response["data"] = body ? JSON.parse(body) : {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as updateStrategy2Response;
+  return customInstance<updateStrategy2Response>(getUpdateStrategy2Url(slug), {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(thesisCreateUpdateSchemaRequest),
+  });
 };

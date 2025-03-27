@@ -5,5 +5,5 @@
  */
 
 export type BetaProposalDetailSchemaWorkaroundMinCollateralAmount =
-	| string
-	| null;
+  | string
+  | null;

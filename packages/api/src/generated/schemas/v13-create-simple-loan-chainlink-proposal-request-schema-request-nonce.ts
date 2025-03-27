@@ -5,5 +5,5 @@
  */
 
 export type V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestNonce =
-	| number
-	| string;
+  | number
+  | string;

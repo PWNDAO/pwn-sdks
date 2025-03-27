@@ -5,5 +5,5 @@
  */
 
 export type V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundSignature =
-	| string
-	| null;
+  | string
+  | null;

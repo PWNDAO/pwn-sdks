@@ -5,7 +5,7 @@
  */
 
 export interface ActiveAllowancesSchemaWorkaround {
-	totalAllowance: string;
-	creditAllowance: string;
-	collateralAllowance: string;
+  totalAllowance: string;
+  creditAllowance: string;
+  collateralAllowance: string;
 }

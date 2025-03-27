@@ -5,5 +5,5 @@
  */
 
 export type V13SimpleLoanSimpleProposalDetailSchemaWorkaroundAllowedAcceptor =
-	| string
-	| null;
+  | string
+  | null;

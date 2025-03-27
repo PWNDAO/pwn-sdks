@@ -5,5 +5,5 @@
  */
 
 export type SimpleLoanListProposalDetailSchemaWorkaroundProposalId =
-	| string
-	| null;
+  | string
+  | null;

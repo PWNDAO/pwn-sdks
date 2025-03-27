@@ -3,31 +3,31 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ChainIdEnum } from "./chain-id-enum";
-import type { LLLSchemaWorkaroundApyUpdatedAt } from "./lllschema-workaround-apy-updated-at";
-import type { LLLSchemaWorkaroundBaseAsset } from "./lllschema-workaround-base-asset";
-import type { LLLSchemaWorkaroundBaseBorrowApy } from "./lllschema-workaround-base-borrow-apy";
-import type { LLLSchemaWorkaroundBaseSupplyApy } from "./lllschema-workaround-base-supply-apy";
-import type { LLLSchemaWorkaroundNetBorrowApy } from "./lllschema-workaround-net-borrow-apy";
-import type { LLLSchemaWorkaroundNetSupplyApy } from "./lllschema-workaround-net-supply-apy";
-import type { LLLSchemaWorkaroundPoolAddress } from "./lllschema-workaround-pool-address";
-import type { LLLSchemaWorkaroundPwnPoolAdapterAddress } from "./lllschema-workaround-pwn-pool-adapter-address";
-import type { LLLSchemaWorkaroundRewardsBorrowApy } from "./lllschema-workaround-rewards-borrow-apy";
-import type { LLLSchemaWorkaroundRewardsSupplyApy } from "./lllschema-workaround-rewards-supply-apy";
-import type { LLLSchemaWorkaroundUnderlyingAsset } from "./lllschema-workaround-underlying-asset";
+import type { ChainIdEnum } from './chain-id-enum';
+import type { LLLSchemaWorkaroundBaseAsset } from './lllschema-workaround-base-asset';
+import type { LLLSchemaWorkaroundUnderlyingAsset } from './lllschema-workaround-underlying-asset';
+import type { LLLSchemaWorkaroundPoolAddress } from './lllschema-workaround-pool-address';
+import type { LLLSchemaWorkaroundPwnPoolAdapterAddress } from './lllschema-workaround-pwn-pool-adapter-address';
+import type { LLLSchemaWorkaroundBaseSupplyApy } from './lllschema-workaround-base-supply-apy';
+import type { LLLSchemaWorkaroundRewardsSupplyApy } from './lllschema-workaround-rewards-supply-apy';
+import type { LLLSchemaWorkaroundNetSupplyApy } from './lllschema-workaround-net-supply-apy';
+import type { LLLSchemaWorkaroundBaseBorrowApy } from './lllschema-workaround-base-borrow-apy';
+import type { LLLSchemaWorkaroundRewardsBorrowApy } from './lllschema-workaround-rewards-borrow-apy';
+import type { LLLSchemaWorkaroundNetBorrowApy } from './lllschema-workaround-net-borrow-apy';
+import type { LLLSchemaWorkaroundApyUpdatedAt } from './lllschema-workaround-apy-updated-at';
 
 export interface LLLSchemaWorkaround {
-	chainId: ChainIdEnum;
-	baseAsset?: LLLSchemaWorkaroundBaseAsset;
-	underlyingAsset?: LLLSchemaWorkaroundUnderlyingAsset;
-	provider: string;
-	poolAddress?: LLLSchemaWorkaroundPoolAddress;
-	pwnPoolAdapterAddress?: LLLSchemaWorkaroundPwnPoolAdapterAddress;
-	baseSupplyApy?: LLLSchemaWorkaroundBaseSupplyApy;
-	rewardsSupplyApy?: LLLSchemaWorkaroundRewardsSupplyApy;
-	netSupplyApy?: LLLSchemaWorkaroundNetSupplyApy;
-	baseBorrowApy?: LLLSchemaWorkaroundBaseBorrowApy;
-	rewardsBorrowApy?: LLLSchemaWorkaroundRewardsBorrowApy;
-	netBorrowApy?: LLLSchemaWorkaroundNetBorrowApy;
-	apyUpdatedAt?: LLLSchemaWorkaroundApyUpdatedAt;
+  chainId: ChainIdEnum;
+  baseAsset?: LLLSchemaWorkaroundBaseAsset;
+  underlyingAsset?: LLLSchemaWorkaroundUnderlyingAsset;
+  provider: string;
+  poolAddress?: LLLSchemaWorkaroundPoolAddress;
+  pwnPoolAdapterAddress?: LLLSchemaWorkaroundPwnPoolAdapterAddress;
+  baseSupplyApy?: LLLSchemaWorkaroundBaseSupplyApy;
+  rewardsSupplyApy?: LLLSchemaWorkaroundRewardsSupplyApy;
+  netSupplyApy?: LLLSchemaWorkaroundNetSupplyApy;
+  baseBorrowApy?: LLLSchemaWorkaroundBaseBorrowApy;
+  rewardsBorrowApy?: LLLSchemaWorkaroundRewardsBorrowApy;
+  netBorrowApy?: LLLSchemaWorkaroundNetBorrowApy;
+  apyUpdatedAt?: LLLSchemaWorkaroundApyUpdatedAt;
 }

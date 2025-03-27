@@ -5,5 +5,4 @@
  */
 
 export type V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestCollateralId =
-	| number
-	| string;
+  number | string;
