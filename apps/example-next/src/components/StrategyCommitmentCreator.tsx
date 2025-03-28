@@ -13,6 +13,8 @@ import { useMakeProposals, useUserWithNonce } from "@pwndao/sdk-v1-react";
 import {
 	ElasticProposalContract,
 	type IProposalElasticAPIDeps,
+	ImplementedProposalTypes,
+	ProposalParamWithDeps,
 	SimpleLoanContract,
 	type Strategy,
 	createUtilizedCreditId,
@@ -47,17 +49,7 @@ export default function StrategyCommitmentCreator({
 		isSuccess,
 		error,
 		data: txHash,
-	} = useMakeProposals({
-		proposalType: ProposalType.Elastic,
-		api: {
-			persistProposal: API.post.persistProposal,
-			getAssetUsdUnitPrice: API.get.getAssetUsdUnitPrice,
-			persistProposals: API.post.persistProposals,
-			updateNonces: API.post.updateNonce,
-		} as IProposalElasticAPIDeps,
-		contract: new ElasticProposalContract(config),
-		loanContract: new SimpleLoanContract(config),
-	});
+	} = useMakeProposals();
 
 	const { userWithNonce: user } = useUserWithNonce([sepolia.id]);
 
@@ -70,29 +62,48 @@ export default function StrategyCommitmentCreator({
 			return;
 		}
 
-		try {
-			const res = await makeProposal({
-				terms: {
-					user: user,
-					creditAmount: BigInt(creditAmount),
-					ltv: strategy.terms.ltv,
-					apr: strategy.terms.apr,
-					duration: {
-						days: strategy.terms.durationDays,
-					},
-					expirationDays: strategy.terms.expirationDays,
-					utilizedCreditId: createUtilizedCreditId({
-						proposer: address,
-						availableCreditLimit: BigInt(creditAmount),
-					}),
-					minCreditAmountPercentage:
-						strategy.terms.minCreditAmountPercentage,
-					isOffer: true,
-					relatedStrategyId: strategy.terms.relatedStrategyId
+		const proposalsToCreate: ProposalParamWithDeps<ImplementedProposalTypes>[] = []
+
+		// TODO extend this example also for combined creation of elastic and chainlink proposals at once
+		for (const creditAsset of strategy.terms.creditAssets) {
+		  for (const collateralAsset of strategy.terms.collateralAssets) {
+			proposalsToCreate.push({
+			  type: ProposalType.Elastic,
+			  deps: {
+				api: {
+				  persistProposal: API.post.persistProposal,
+				  getAssetUsdUnitPrice: API.get.getAssetUsdUnitPrice,
+				  persistProposals: API.post.persistProposals,
+				  updateNonces: API.post.updateNonce,
+				} as IProposalElasticAPIDeps,
+				contract: new ElasticProposalContract(config),
+				loanContract: new SimpleLoanContract(config),
+			  },
+			  params: {
+				user: user,
+				creditAmount: BigInt(creditAmount),
+				ltv: strategy.terms.ltv,
+				apr: strategy.terms.apr,
+				duration: {
+				  days: strategy.terms.durationDays,
 				},
-				collateralAssets: strategy.terms.collateralAssets,
-				creditAssets: strategy.terms.creditAssets,
-			});
+				expirationDays: strategy.terms.expirationDays,
+				utilizedCreditId: createUtilizedCreditId({
+				  proposer: address,
+				  availableCreditLimit: BigInt(creditAmount),
+				}),
+				minCreditAmountPercentage: strategy.terms.minCreditAmountPercentage,
+				isOffer: true,
+				relatedStrategyId: strategy.id,
+				collateral: collateralAsset,
+				credit: creditAsset,
+			  }
+			})
+		  }
+		}
+
+		try {
+			const res = await makeProposal(proposalsToCreate)
 			console.log(res);
 		} catch (err) {
 			console.error("Error creating commitment:", err);

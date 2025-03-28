@@ -48,6 +48,7 @@
     "@nx/vue": "20.5.0",
     "@nx/web": "20.5.0",
     "@playwright/test": "^1.36.0",
+    "@safe-global/safe-core-sdk-types": "^5.1.0",
     "@swc-node/register": "~1.9.1",
     "@swc/cli": "~0.3.12",
     "@swc/core": "~1.5.7",
@@ -96,6 +97,7 @@
     "apps/example-next-e2e",
     "apps/example-vue",
     "apps/example-vue-e2e",
+    "apps/local",
     "sdk-docs"
   ],
   "nx": {

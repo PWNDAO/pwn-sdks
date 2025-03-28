@@ -11,7 +11,6 @@ import {
 import type {
   Hex,
   UserWithNonceManager,
-  Token,
 } from '@pwndao/sdk-core';
 import { ChainLinkProposal } from '../models/proposals/chainlink-proposal.js';
 import { getLoanContractAddress } from '@pwndao/sdk-core';
@@ -213,13 +212,7 @@ export const createChainLinkElasticProposal = async (
 /**
  * Parameters for creating a batch of elastic proposals
  */
-export type CreateChainLinkElasticProposalBatchParams = {
-  terms: Omit<BaseTerm, 'collateral' | 'credit'> & {
-    minCreditAmountPercentage: number;
-  };
-  collateralAssets: Token[];
-  creditAssets: Token[];
-};
+export type CreateChainLinkElasticProposalBatchParams = CreateChainLinkElasticProposalParams[];
 
 /**
  * Creates multiple elastic proposals in a batch
@@ -228,34 +221,35 @@ export type CreateChainLinkElasticProposalBatchParams = {
  * @param deps - RPC interface and contract
  * @returns Array of created elastic proposals
  */
-export const createChainLinkElasticProposalBatch = async (
-  params: CreateChainLinkElasticProposalBatchParams,
-  deps: ChainLinkElasticProposalDeps
-): Promise<ChainLinkProposal[]> => {
-  // Create a strategy term with the batch parameters
-  const dummyTerm: StrategyTerm = {
-    creditAssets: params.creditAssets,
-    collateralAssets: params.collateralAssets,
-    apr: params.terms.apr,
-    durationDays: params.terms.duration.days || 0,
-    ltv: params.terms.ltv,
-    expirationDays: params.terms.expirationDays,
-    minCreditAmountPercentage: params.terms.minCreditAmountPercentage,
-    relatedStrategyId: params.terms.relatedStrategyId
-  };
+// TODO do we even need this? or is it enough to handle batches inside of makeProposals?
+// export const createChainLinkElasticProposalBatch = async (
+//   params: CreateChainLinkElasticProposalBatchParams,
+//   deps: ChainLinkElasticProposalDeps
+// ): Promise<ChainLinkProposal[]> => {
+//   // Create a strategy term with the batch parameters
+//   const dummyTerm: StrategyTerm = {
+//     creditAssets: params.creditAssets,
+//     collateralAssets: params.collateralAssets,
+//     apr: params.terms.apr,
+//     durationDays: params.terms.duration.days || 0,
+//     ltv: params.terms.ltv,
+//     expirationDays: params.terms.expirationDays,
+//     minCreditAmountPercentage: params.terms.minCreditAmountPercentage,
+//     relatedStrategyId: params.terms.relatedStrategyId
+//   };
 
-  // Create a strategy and generate all proposals
-  const strategy = new ChainLinkProposalStrategy(
-    dummyTerm,
-    deps.contract,
-    deps.loanContract,
-  );
-  const proposals = await strategy.createLendingProposals(
-    params.terms.user,
-    params.terms.creditAmount,
-    params.terms.utilizedCreditId,
-    params.terms.isOffer,
-  );
+//   // Create a strategy and generate all proposals
+//   const strategy = new ChainLinkProposalStrategy(
+//     dummyTerm,
+//     deps.contract,
+//     deps.loanContract,
+//   );
+//   const proposals = await strategy.createLendingProposals(
+//     params.terms.user,
+//     params.terms.creditAmount,
+//     params.terms.utilizedCreditId,
+//     params.terms.isOffer,
+//   );
 
-  return proposals;
-};
+//   return proposals;
+// };

@@ -11,7 +11,6 @@ import type {
 	IProposalMisc,
 } from "../models/proposals/proposal-base.js";
 import type {
-	ProposalWithHash,
 	ProposalWithSignature,
 } from "../models/strategies/types.js";
 import type { Proposal } from "../models/strategies/types.js";
@@ -40,7 +39,6 @@ export interface IProposalContract<TProposal extends Proposal> {
 	createProposal(params: TProposal, deps: { persistProposal: IServerAPI["post"]["persistProposal"] }): Promise<ProposalWithSignature>;
 	createOnChainProposal(params: TProposal): Promise<ProposalWithSignature>;
 	getProposalHash(proposal: TProposal): Promise<Hex>;
-	createMultiProposal(proposals: ProposalWithHash[]): Promise<ProposalWithSignature[]>;
 }
 
 export type ProposalContract =
