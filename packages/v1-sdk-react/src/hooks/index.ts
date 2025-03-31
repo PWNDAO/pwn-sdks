@@ -4,3 +4,4 @@ export * from "./use-strategies";
 export * from "./use-strategy-proposals";
 export * from "./use-make-proposals";
 export * from "./use-revoke-nonces";
+export * from "./use-wallet-assets-from-events";

@@ -1,5 +1,18 @@
+import { makeProposals } from "./actions/make-proposals.js";
+import * as addresses from "./addresses.js";
+import type { ChainLinkElasticProposalDeps } from "./factories/create-chain-link-proposal.js";
 import { ChainLinkProposalStrategy } from "./factories/create-chain-link-proposal.js";
+import {
+	createElasticProposal,
+	createElasticProposalBatch,
+} from "./factories/create-elastic-proposal.js";
 import { ElasticProposalStrategy } from "./factories/create-elastic-proposal.js";
+import type { ElasticProposal } from "./models/proposals/elastic-proposal.js";
+import { ProposalType } from "./models/proposals/proposal-base.js";
+import type {
+	ProposalWithHash,
+	ProposalWithSignature,
+} from "./models/strategies/types.js";
 
 export * from "./models/terms.js";
 export * from "./models/strategies/types.js";
@@ -32,4 +45,35 @@ export * from "./contracts/index.js";
 export const strategies = {
 	elastic: ElasticProposalStrategy,
 	chainlink: ChainLinkProposalStrategy,
+};
+
+// Export wallet assets functionality
+export {
+	getWalletAssetsFromEvents,
+	type WalletAssets,
+} from "./utils/get-wallet-assets-from-events.js";
+export * from "./hooks/use-wallet-assets-from-events.js";
+export {
+	AssetStorage,
+	type AssetType,
+	type AssetKey,
+} from "./utils/pmt-storage.js";
+export {
+	erc20Abi,
+	erc721Abi,
+} from "./utils/abis.js";
+
+export type {
+	ElasticProposal,
+	ProposalWithHash,
+	ProposalWithSignature,
+	ChainLinkElasticProposalDeps,
+};
+
+export {
+	addresses,
+	createElasticProposal,
+	createElasticProposalBatch,
+	makeProposals,
+	ProposalType,
 };

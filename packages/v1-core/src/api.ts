@@ -33,8 +33,17 @@ export const API: IServerAPI = {
 		},
 		getStrategies: async (chainId: SupportedChain): Promise<Strategy[]> => {
 			const data = await thesisList({ chain_id: chainId });
+			console.log("data", data);
 			invariant(data.results !== undefined, "Error parsing response");
-			return data.results.map(parseBackendStrategiesResponse) ?? [];
+			console.log("data.results", data.results);
+			try {
+				const v = data.results.map(parseBackendStrategiesResponse) ?? [];
+				console.log("v", v);
+				return v;
+			} catch (e) {
+				console.error("Error parsing response", e);
+				return [];
+			}
 		},
 		proposalsByStrategy: async (
 			strategyId: string,

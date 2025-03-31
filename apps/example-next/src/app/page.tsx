@@ -56,6 +56,24 @@ export default function Index() {
 						</Button>
 					</CardFooter>
 				</Card>
+
+				<Card>
+					<CardHeader>
+						<CardTitle>Wallet Assets</CardTitle>
+						<CardDescription>Track and display wallet assets</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<p className="text-sm">
+							Scan the blockchain for wallet assets like native tokens, ERC-20
+							tokens and NFTs
+						</p>
+					</CardContent>
+					<CardFooter>
+						<Button asChild className="w-full">
+							<Link href="/wallet-assets">View Wallet Assets</Link>
+						</Button>
+					</CardFooter>
+				</Card>
 			</div>
 
 			<div className="border rounded-lg p-6 bg-muted/50 mt-auto">

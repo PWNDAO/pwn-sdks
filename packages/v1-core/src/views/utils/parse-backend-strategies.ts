@@ -4,11 +4,14 @@ import type {
 } from "@pwndao/api-sdk";
 import { ERC20Token } from "@pwndao/sdk-core";
 import invariant from "ts-invariant";
-import type { Strategy, StrategyTerm } from "../../models/strategies/types.js";
 import { MIN_CREDIT_CALCULATION_DENOMINATOR } from "../../factories/constants.js";
+import type { Strategy, StrategyTerm } from "../../models/strategies/types.js";
 
 type AssetModel = CollateralAssetInThesisSchemaWorkaround;
-type CreditAssetModel = Omit<AssetModel, "ltv" | "apr" | "allocationPercentage">;
+type CreditAssetModel = Omit<
+	AssetModel,
+	"ltv" | "apr" | "allocationPercentage"
+>;
 
 const parseStrategyToken = (token: AssetModel | CreditAssetModel) => {
 	invariant(token.decimals !== null, "token.decimals is required");
@@ -46,6 +49,7 @@ const generateLtvMapping = (
 export const parseBackendStrategiesResponse = (
 	backendData: ThesisSchemaWorkaround,
 ): Strategy => {
+	console.log("backendData", backendData);
 	const creditAssets = backendData.creditsStats?.map(
 		(v) => v.creditAssetMetadata,
 	);
@@ -62,10 +66,13 @@ export const parseBackendStrategiesResponse = (
 			backendData.collateralAssets?.map(parseStrategyToken) || [],
 		durationDays: backendData.loanDurationDays,
 		expirationDays: backendData.proposalExpirationDays,
-		minCreditAmountPercentage: backendData.minAllowedBorrowPercentage * MIN_CREDIT_CALCULATION_DENOMINATOR,
+		minCreditAmountPercentage:
+			backendData.minAllowedBorrowPercentage *
+			MIN_CREDIT_CALCULATION_DENOMINATOR,
 		id: backendData.id,
 		relatedStrategyId: backendData.id,
 	};
+	console.log("terms", terms);
 
 	return {
 		id: backendData.id,
