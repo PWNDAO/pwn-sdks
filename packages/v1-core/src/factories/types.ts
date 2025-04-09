@@ -38,7 +38,10 @@ export type BaseTerm = {
 export interface IServerAPI {
 	get: {
 		getStrategyDetail(strategyId: string): Promise<Strategy>;
-		getStrategies(chainId: SupportedChain): Promise<Strategy[]>;
+		getStrategies(
+			chainId: SupportedChain,
+			userAddress?: AddressString,
+		): Promise<Strategy[]>;
 		proposalsByStrategy(strategyId: string): Promise<ProposalWithSignature[]>;
 		/**
 		 * Returns the recent nonce for the user and the nonce space

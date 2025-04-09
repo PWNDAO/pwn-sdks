@@ -1,9 +1,9 @@
 import {
 	fetchAssetPrice,
 	freeUserNonceRetrieve,
-	proposalList,
 	proposalCreate,
 	proposalCreateBatch,
+	proposalList,
 	thesisDetail,
 	thesisList,
 } from "@pwndao/api-sdk";
@@ -31,8 +31,14 @@ export const API: IServerAPI = {
 			invariant(data !== undefined, "Error parsing response");
 			return parseBackendStrategiesResponse(data);
 		},
-		getStrategies: async (chainId: SupportedChain): Promise<Strategy[]> => {
-			const data = await thesisList({ chain_id: chainId });
+		getStrategies: async (
+			chainId: SupportedChain,
+			userAddress?: AddressString,
+		): Promise<Strategy[]> => {
+			const data = await thesisList({
+				chain_id: chainId,
+				user_address: userAddress,
+			});
 			invariant(data.results !== undefined, "Error parsing response");
 			return data.results.map(parseBackendStrategiesResponse) ?? [];
 		},
