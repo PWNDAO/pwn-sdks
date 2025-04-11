@@ -1,6 +1,6 @@
 {
   "name": "@pwndao/sdk-core",
-  "version": "0.0.1-beta.15",
+  "version": "0.0.1-beta-test-2",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
