@@ -41,7 +41,8 @@
     "@pwndao/sdk-core": "0.0.1-beta.20",
     "@pwndao/v1-core": "0.0.1-beta.20",
     "vitest": "^1.3.1",
-    "wagmi": "^2.14.13"
+    "wagmi": "^2.14.13",
+    "ts-invariant": "^0.10.3"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.67.3",
@@ -53,7 +54,7 @@
     "@testing-library/react": "^14.2.1",
     "jsdom": "^24.0.0",
     "prettier": "^2.6.2",
-    "react": "19.0.0",
+    "react": "^19.0.0",
     "vitest": "^1.3.1"
   }
 }

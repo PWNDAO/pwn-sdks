@@ -1,0 +1,11 @@
+{
+  "name": "@pwndao/subgraph",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/subgraph/src",
+  "projectType": "library",
+  "tags": [
+    "subgraph"
+  ],
+  "targets": {
+  }
+}

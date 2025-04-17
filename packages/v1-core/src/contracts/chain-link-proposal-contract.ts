@@ -1,5 +1,4 @@
 import { getChainLinkProposalContractAddress } from "@pwndao/sdk-core";
-import type { Config } from "@wagmi/core";
 import { getAccount } from "@wagmi/core";
 import type { Hex } from "viem";
 import type { Address } from "viem";
