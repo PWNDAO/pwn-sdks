@@ -3,7 +3,6 @@ import {
 	type Config,
 	getAccount,
 	getPublicClient,
-	getWalletClient,
 	readContract,
 	signTypedData,
 	watchContractEvent,

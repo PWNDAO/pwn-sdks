@@ -1,0 +1,97 @@
+# Define the structure of your queryable data
+
+type Account @entity(immutable: true) {
+  id: Bytes! # Ethereum address
+  proposalsAsBorrower: [Proposal!]! @derivedFrom(field: "borrower")
+  proposalsAsLender: [Proposal!]! @derivedFrom(field: "lender")
+  loansAsBorrower: [Loan!]! @derivedFrom(field: "borrower")
+  loansAsLender: [Loan!]! @derivedFrom(field: "lender")
+  erc20Balances: [ERC20Balance!]! @derivedFrom(field: "account")
+  nftBalances: [NFTBalance!]! @derivedFrom(field: "owner")
+}
+
+type Proposal @entity(immutable: true) {
+  id: ID! # Combination of chainId and proposalId from contract
+  proposalId: BigInt! # Proposal ID from contract event
+  chainId: BigInt! # Chain ID where proposal exists
+  contractAddress: Bytes! # Address of the specific proposal contract (e.g., SimpleLoanSimpleProposal)
+  borrower: Account! # Borrower address
+  lender: Account # Lender address (null until accepted)
+
+  collateralType: String! # ERC20, ERC721, ERC1155
+  collateralAddress: Bytes!
+  collateralTokenId: BigInt # Null for ERC20
+  collateralAmount: BigDecimal # Amount for ERC20
+
+  loanAmount: BigDecimal!
+  loanCurrency: Bytes! # Address of the loan currency (ERC20 token)
+  interestRate: BigDecimal # Or other interest/fee model details
+  duration: BigInt! # Loan duration in seconds
+
+  status: String! # PENDING, ACCEPTED, REPAID, LIQUIDATED, CANCELED
+  metadataURI: String # IPFS CID for richer proposal metadata
+
+  createdAtTimestamp: BigInt!
+  createdAtBlockNumber: BigInt!
+  transactionHash: Bytes!
+
+  loan: Loan # Link to the resulting loan if accepted
+}
+
+type Loan @entity(immutable: false) {
+  id: ID! # Combination of chainId and loanId from contract
+  loanId: BigInt! # Loan ID from contract event
+  chainId: BigInt!
+  contractAddress: Bytes! # Address of the specific loan contract (e.g., SimpleLoan)
+  proposal: Proposal! # Link back to the proposal
+
+  borrower: Account!
+  lender: Account!
+
+  startDate: BigInt!
+  dueDate: BigInt!
+  repaymentAmount: BigDecimal! # Total amount to repay (principal + interest/fees)
+
+  status: String! # ACTIVE, REPAID, LIQUIDATED, DEFAULTED
+
+  repaidAmount: BigDecimal # Amount repaid so far
+  repaidTimestamp: BigInt
+  liquidatedTimestamp: BigInt
+
+  # Consider adding fields related to collateral state during the loan
+}
+
+# --- Supporting Entities ---
+
+type ERC20Balance @entity(immutable: true) {
+  id: ID! # Combination of account address and token address
+  account: Account!
+  tokenAddress: Bytes!
+  amount: BigDecimal!
+  lastUpdatedBlock: BigInt!
+}
+
+type NFTBalance @entity(immutable: true) {
+  id: ID! # Combination of owner address, contract address, and token ID
+  owner: Account!
+  contractAddress: Bytes!
+  tokenId: BigInt!
+  tokenURI: String # Fetched from contract
+  metadata: NFTMetadata # Link to potentially fetched metadata
+  lastUpdatedBlock: BigInt!
+}
+
+type NFTMetadata @entity(immutable: true) {
+  id: ID! # Usually the tokenURI or CID
+  name: String
+  description: String
+  image: String
+  attributes: [NFTAttribute!]
+}
+
+type NFTAttribute @entity(immutable: true) {
+  id: ID!
+  metadata: NFTMetadata!
+  trait_type: String!
+  value: String!
+} 

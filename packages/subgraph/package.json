@@ -1,0 +1,30 @@
+{
+	"name": "@pwndao/subgraph",
+	"version": "0.0.1-beta.20",
+	"type": "module",
+	"license": "UNLICENSED",
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		"./package.json": "./package.json",
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"default": "./dist/index.js"
+		}
+	},
+	"scripts": {
+		"codegen": "nx exec -- graph codegen",
+		"build": "nx exec -- graph build",
+		"deploy": "nx exec -- graph deploy --node https://api.studio.thegraph.com/deploy/ pwn-test-proposals",
+		"create-local": "nx exec -- graph create --node http://localhost:8020/ pwn-test-proposals", 
+		"remove-local": "nx exec -- graph remove --node http://localhost:8020/ pwn-test-proposals",
+		"deploy-local": "nx exec -- graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 pwn-test-proposals"
+	},
+	"dependencies": {
+		"@graphprotocol/graph-cli": "0.97.0",
+		"@graphprotocol/graph-ts": "0.37.0"
+	},
+	"files": ["dist", "!**/*.tsbuildinfo"]
+}

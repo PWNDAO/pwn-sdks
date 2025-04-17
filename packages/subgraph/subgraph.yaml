@@ -1,0 +1,30 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  # Simple Loan Contract
+  - kind: ethereum/contract
+    name: PWN_SimpleLoan
+    network: base
+    source:
+      address: "0x719A69d0dc67bd3Aa7648D4694081B3c87952797" # Mainnet SimpleLoan from v1.3.json
+      abi: SimpleLoan
+      startBlock: 25032814 # TODO: Find actual deployment block
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: [ Loan, Account, Proposal ]
+      abis:
+        - name: SimpleLoan
+          file: ./abis/SimpleLoan.json
+        - name: SimpleLoanSimpleProposal # Needed for context?
+          file: ./abis/SimpleLoanSimpleProposal.json
+      eventHandlers:
+        - event: LOANCreated(indexed uint256,indexed bytes32,indexed address,uint256,(address,address,uint32,(uint8,address,uint256,uint256),(uint8,address,uint256,uint256),uint256,uint24,bytes32,bytes32),(address),bytes)
+          handler: handleLOANCreated # Use this instead of LoanStarted
+        - event: LOANPaidBack(indexed uint256)
+          handler: handleLOANPaidBack # Use this instead of LoanRepaid
+        - event: LOANClaimed(indexed uint256,indexed bool)
+          handler: handleLOANClaimed # Potential signal for liquidation/claim
+      file: ./src/loan-mapping.ts
