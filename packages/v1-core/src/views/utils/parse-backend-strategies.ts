@@ -2,10 +2,11 @@ import type {
 	CollateralAssetInThesisSchemaWorkaround,
 	ThesisSchemaWorkaround,
 } from "@pwndao/api-sdk";
-import { ERC20Token } from "@pwndao/sdk-core";
 import invariant from "ts-invariant";
-import type { Strategy, StrategyTerm } from "../../models/strategies/types.js";
 import { MIN_CREDIT_CALCULATION_DENOMINATOR } from "../../factories/constants.js";
+import { ProposalType } from "../../models/proposals/proposal-base.js";
+import type { Strategy, StrategyTerm } from "../../models/strategies/types.js";
+import { type AddressString, ERC20Token } from "@pwndao/sdk-core";
 
 type AssetModel = CollateralAssetInThesisSchemaWorkaround;
 type CreditAssetModel = Omit<AssetModel, "ltv" | "apr" | "allocationPercentage">;
@@ -14,10 +15,11 @@ const parseStrategyToken = (token: AssetModel | CreditAssetModel) => {
 	invariant(token.decimals !== null, "token.decimals is required");
 	return new ERC20Token(
 		token.chainId,
-		token.address,
+		token.address as AddressString,
 		token.decimals,
 		token.name ?? undefined,
 		token.symbol ?? undefined,
+		token.thumbnailUrl ?? undefined,
 	);
 };
 
@@ -64,19 +66,21 @@ export const parseBackendStrategiesResponse = (
 		expirationDays: backendData.proposalExpirationDays,
 		minCreditAmountPercentage: backendData.minAllowedBorrowPercentage * MIN_CREDIT_CALCULATION_DENOMINATOR,
 		id: backendData.id,
+		relatedStrategyId: backendData.id,
 	};
 
 	return {
 		id: backendData.id,
 		name: backendData.title,
 		description: backendData.description,
-		terms,
+		terms: terms as StrategyTerm,
 		curator: backendData.curator && {
 			id: backendData.curator.id,
 			name: backendData.curator.name,
 			avatar: backendData.curator.avatar,
 			description: backendData.curator.description,
 		},
+		type: backendData.thesisType === 1 ? ProposalType.Elastic : ProposalType.ChainLink,
 		lendingStats: {
 			totalCommittedAmount: backendData.creditsStats.reduce(
 				(acc, v) => acc + BigInt(v.amountsStats.totalCommittedAmount || 0),

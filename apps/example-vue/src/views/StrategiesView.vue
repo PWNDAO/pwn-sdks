@@ -10,7 +10,7 @@ import {
 import { useStrategies } from "@pwndao/sdk-v1-vue";
 import { formatUnits } from "viem";
 
-const chainId = 1; // mainnet
+const chainId = 11155111; // sepolia
 const { data: strategies, isLoading, error } = useStrategies(chainId);
 </script>
 

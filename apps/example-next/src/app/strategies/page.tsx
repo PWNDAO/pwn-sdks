@@ -15,7 +15,7 @@ import Link from "next/link";
 import { formatUnits } from "viem";
 
 export default function StrategiesPage() {
-	const { data: strategies, isLoading } = useStrategies(SupportedChain.World);
+	const { data: strategies, isLoading } = useStrategies(SupportedChain.Sepolia);
 
 	return (
 		<div className="container mx-auto px-4 py-8">

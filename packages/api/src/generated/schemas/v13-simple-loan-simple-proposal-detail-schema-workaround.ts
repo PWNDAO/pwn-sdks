@@ -20,7 +20,9 @@ import type { V13SimpleLoanSimpleProposalDetailSchemaWorkaroundNonce } from "./v
 import type { V13SimpleLoanSimpleProposalDetailSchemaWorkaroundNonceSpace } from "./v13-simple-loan-simple-proposal-detail-schema-workaround-nonce-space";
 import type { V13SimpleLoanSimpleProposalDetailSchemaWorkaroundProposalContractAddress } from "./v13-simple-loan-simple-proposal-detail-schema-workaround-proposal-contract-address";
 import type { V13SimpleLoanSimpleProposalDetailSchemaWorkaroundProposalId } from "./v13-simple-loan-simple-proposal-detail-schema-workaround-proposal-id";
+import type { V13SimpleLoanSimpleProposalDetailSchemaWorkaroundProposalSpecificData } from "./v13-simple-loan-simple-proposal-detail-schema-workaround-proposal-specific-data";
 import type { V13SimpleLoanSimpleProposalDetailSchemaWorkaroundProposerSpecHash } from "./v13-simple-loan-simple-proposal-detail-schema-workaround-proposer-spec-hash";
+import type { V13SimpleLoanSimpleProposalDetailSchemaWorkaroundReferrer } from "./v13-simple-loan-simple-proposal-detail-schema-workaround-referrer";
 import type { V13SimpleLoanSimpleProposalDetailSchemaWorkaroundRefinancingLoanId } from "./v13-simple-loan-simple-proposal-detail-schema-workaround-refinancing-loan-id";
 import type { V13SimpleLoanSimpleProposalDetailSchemaWorkaroundRelatedThesisId } from "./v13-simple-loan-simple-proposal-detail-schema-workaround-related-thesis-id";
 import type { V13SimpleLoanSimpleProposalDetailSchemaWorkaroundRevokedAt } from "./v13-simple-loan-simple-proposal-detail-schema-workaround-revoked-at";
@@ -52,6 +54,7 @@ export interface V13SimpleLoanSimpleProposalDetailSchemaWorkaround {
 	sourceOfFunds?: V13SimpleLoanSimpleProposalDetailSchemaWorkaroundSourceOfFunds;
 	relatedThesisId?: V13SimpleLoanSimpleProposalDetailSchemaWorkaroundRelatedThesisId;
 	createdFromProposalId?: V13SimpleLoanSimpleProposalDetailSchemaWorkaroundCreatedFromProposalId;
+	proposalSpecificData?: V13SimpleLoanSimpleProposalDetailSchemaWorkaroundProposalSpecificData;
 	checkCollateralStateFingerprint: boolean;
 	collateralStateFingerprint: V13SimpleLoanSimpleProposalDetailSchemaWorkaroundCollateralStateFingerprint;
 	availableCreditLimit: string;
@@ -66,6 +69,7 @@ export interface V13SimpleLoanSimpleProposalDetailSchemaWorkaround {
 	hash: V13SimpleLoanSimpleProposalDetailSchemaWorkaroundHash;
 	createdAt: number;
 	revokedAt: V13SimpleLoanSimpleProposalDetailSchemaWorkaroundRevokedAt;
+	referrer: V13SimpleLoanSimpleProposalDetailSchemaWorkaroundReferrer;
 	durationOrDate: number;
 	utilizedCreditId: V13SimpleLoanSimpleProposalDetailSchemaWorkaroundUtilizedCreditId;
 }

@@ -29,5 +29,6 @@ export abstract class BaseAsset implements IBaseAsset {
 		public category: MultiTokenCategory,
 		public name?: string,
 		public symbol?: string,
+		public icon?: string,
 	) {}
 }

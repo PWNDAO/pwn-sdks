@@ -1,45 +1,31 @@
 "use client";
 
+import type { UserWithNonceManager } from "@pwndao/sdk-core";
 import type {
-	CreateElasticProposalBatchParams,
-	IProposalChainLinkContract,
-	IProposalElasticAPIDeps,
-	IProposalElasticContract,
-	ProposalType,
+	ImplementedProposalTypes,
+	ProposalParamWithDeps,
 	ProposalWithSignature,
 } from "@pwndao/v1-core";
 import { makeProposals } from "@pwndao/v1-core";
 import { useMutation } from "@tanstack/react-query";
+import invariant from "ts-invariant";
+import { useConfig } from "wagmi";
 
-export type ElasticProposalProps = {
-	proposalType: ProposalType.Elastic;
-	api: IProposalElasticAPIDeps;
-	contract: IProposalElasticContract;
-};
+export const useMakeProposals = (
+	user: UserWithNonceManager | undefined,
+) => {
+	const config = useConfig();
 
-export type ChainLinkProposalProps = {
-	proposalType: ProposalType.ChainLink;
-	api: IProposalElasticAPIDeps;
-	contract: IProposalChainLinkContract;
-};
-
-type Props = ElasticProposalProps | ChainLinkProposalProps;
-
-type ProposalParams = CreateElasticProposalBatchParams;
-
-export const useMakeProposals = (proposalParams: Props) => {
-	return useMutation<ProposalWithSignature[], Error, ProposalParams>({
-		mutationFn: async (params: ProposalParams) => {
-			const proposals = await makeProposals<typeof proposalParams.proposalType>(
-				proposalParams.proposalType,
-				params,
-				{
-					api: proposalParams.api,
-					contract: proposalParams.contract as IProposalElasticContract,
-				},
-			);
-
-			return proposals;
+	return useMutation<
+		ProposalWithSignature[],
+		Error,
+		ProposalParamWithDeps<ImplementedProposalTypes>[]
+	>({
+		mutationFn: async (
+			params: ProposalParamWithDeps<ImplementedProposalTypes>[],
+		) => {
+			invariant(user, "User is required");
+			return await makeProposals(config, params, user);
 		},
 		onSuccess: (data) => {
 			console.log(data);

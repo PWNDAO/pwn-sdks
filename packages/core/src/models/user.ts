@@ -58,7 +58,7 @@ export class UserWithNonceManager {
 	 * Returns number of nonces that have been used by the user.
 	 * @returns {Partial<Record<SupportedChain, bigint>>}
 	 */
-	getUsedNonces() {
+	getUsedNonces(): Partial<Record<SupportedChain, bigint>> {
 		const usedNoncesResult: Partial<Record<SupportedChain, bigint>> = {};
 
 		for (const chain in this.nonces) {

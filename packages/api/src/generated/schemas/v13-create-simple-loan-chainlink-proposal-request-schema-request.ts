@@ -6,7 +6,6 @@ import type { ChainIdEnum } from "./chain-id-enum";
  * OpenAPI spec version: 0.0.0
  */
 import type { V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestAvailableCreditLimit } from "./v13-create-simple-loan-chainlink-proposal-request-schema-request-available-credit-limit";
-import type { V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestCollateralAmount } from "./v13-create-simple-loan-chainlink-proposal-request-schema-request-collateral-amount";
 import type { V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestCollateralId } from "./v13-create-simple-loan-chainlink-proposal-request-schema-request-collateral-id";
 import type { V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestFeedIntermediaryDenominations } from "./v13-create-simple-loan-chainlink-proposal-request-schema-request-feed-intermediary-denominations";
 import type { V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestFeedInvertFlags } from "./v13-create-simple-loan-chainlink-proposal-request-schema-request-feed-invert-flags";
@@ -16,6 +15,7 @@ import type { V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestMinCreditA
 import type { V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestMultiproposalMerkleRoot } from "./v13-create-simple-loan-chainlink-proposal-request-schema-request-multiproposal-merkle-root";
 import type { V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestNonce } from "./v13-create-simple-loan-chainlink-proposal-request-schema-request-nonce";
 import type { V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestNonceSpace } from "./v13-create-simple-loan-chainlink-proposal-request-schema-request-nonce-space";
+import type { V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestReferrer } from "./v13-create-simple-loan-chainlink-proposal-request-schema-request-referrer";
 import type { V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestRefinancingLoanId } from "./v13-create-simple-loan-chainlink-proposal-request-schema-request-refinancing-loan-id";
 import type { V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestRelatedThesisId } from "./v13-create-simple-loan-chainlink-proposal-request-schema-request-related-thesis-id";
 import type { V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestSourceOfFunds } from "./v13-create-simple-loan-chainlink-proposal-request-schema-request-source-of-funds";
@@ -37,7 +37,6 @@ export interface V13CreateSimpleLoanChainlinkProposalRequestSchemaRequest {
 	collateral_category: AssetCategory;
 	collateral_address: string;
 	collateral_id: V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestCollateralId;
-	collateral_amount: V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestCollateralAmount;
 	min_credit_amount: V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestMinCreditAmount;
 	fixed_interest_amount: V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestFixedInterestAmount;
 	accruing_interest_apr: number;
@@ -45,6 +44,8 @@ export interface V13CreateSimpleLoanChainlinkProposalRequestSchemaRequest {
 	feed_intermediary_denominations: V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestFeedIntermediaryDenominations;
 	feed_invert_flags: V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestFeedInvertFlags;
 	loan_to_value: number;
+	expiration: number;
+	utilized_credit_id: string;
 	chain_id: ChainIdEnum;
 	proposal_contract_address: string;
 	multiproposal_merkle_root: V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestMultiproposalMerkleRoot;
@@ -54,4 +55,5 @@ export interface V13CreateSimpleLoanChainlinkProposalRequestSchemaRequest {
 	is_on_chain: boolean;
 	source_of_funds?: V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestSourceOfFunds;
 	related_thesis_id?: V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestRelatedThesisId;
+	referrer?: V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestReferrer;
 }

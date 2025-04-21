@@ -20,7 +20,9 @@ import type { V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundNonce } fro
 import type { V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundNonceSpace } from "./v13-simple-loan-dutch-auction-proposal-detail-schema-workaround-nonce-space";
 import type { V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundProposalContractAddress } from "./v13-simple-loan-dutch-auction-proposal-detail-schema-workaround-proposal-contract-address";
 import type { V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundProposalId } from "./v13-simple-loan-dutch-auction-proposal-detail-schema-workaround-proposal-id";
+import type { V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundProposalSpecificData } from "./v13-simple-loan-dutch-auction-proposal-detail-schema-workaround-proposal-specific-data";
 import type { V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundProposerSpecHash } from "./v13-simple-loan-dutch-auction-proposal-detail-schema-workaround-proposer-spec-hash";
+import type { V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundReferrer } from "./v13-simple-loan-dutch-auction-proposal-detail-schema-workaround-referrer";
 import type { V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundRefinancingLoanId } from "./v13-simple-loan-dutch-auction-proposal-detail-schema-workaround-refinancing-loan-id";
 import type { V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundRelatedThesisId } from "./v13-simple-loan-dutch-auction-proposal-detail-schema-workaround-related-thesis-id";
 import type { V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundRevokedAt } from "./v13-simple-loan-dutch-auction-proposal-detail-schema-workaround-revoked-at";
@@ -51,6 +53,7 @@ export interface V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaround {
 	sourceOfFunds?: V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundSourceOfFunds;
 	relatedThesisId?: V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundRelatedThesisId;
 	createdFromProposalId?: V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundCreatedFromProposalId;
+	proposalSpecificData?: V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundProposalSpecificData;
 	checkCollateralStateFingerprint: boolean;
 	collateralStateFingerprint: V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundCollateralStateFingerprint;
 	availableCreditLimit: string;
@@ -65,6 +68,7 @@ export interface V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaround {
 	hash: V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundHash;
 	createdAt: number;
 	revokedAt: V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundRevokedAt;
+	referrer: V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundReferrer;
 	auctionStart: number;
 	durationOrDate: number;
 }

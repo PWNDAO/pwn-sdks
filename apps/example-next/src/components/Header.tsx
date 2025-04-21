@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import ConnectButton from "./ConnectButton";
 
 export default function Header() {
 	return (
@@ -24,6 +25,7 @@ export default function Header() {
 						</nav>
 					</div>
 					<div className="flex items-center space-x-4">
+						<ConnectButton />
 						<Link
 							href="https://github.com/pwndao"
 							target="_blank"

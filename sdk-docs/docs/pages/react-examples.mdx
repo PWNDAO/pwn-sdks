@@ -136,14 +136,8 @@ import { useState } from 'react';
 import { useAccount, useConfig } from 'wagmi';
 import { sepolia } from 'wagmi/chains';
 import { useMakeProposals, useUserWithNonce } from '@pwndao/sdk-v1-react';
-import {
-  ElasticProposalContract,
-  IProposalElasticAPIDeps,
-  Strategy,
-  ProposalType,
-  createUtilizedCreditId,
-  API
-} from '@pwndao/v1-core';
+import { createElasticProposals } from '@pwndao/v1-core';
+import type { Strategy } from '@pwndao/v1-core';
 
 interface Props {
   strategy: Strategy;
@@ -152,106 +146,222 @@ interface Props {
 export default function StrategyCommitmentCreator({ strategy }: Props) {
   const { address, isConnected } = useAccount();
   const [creditAmount, setCreditAmount] = useState('100');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const config = useConfig();
 
+  const { userWithNonce: user } = useUserWithNonce([sepolia.id]);
   const {
     mutateAsync: makeProposal,
     isPending: isLoading,
     isSuccess,
     error,
-  } = useMakeProposals({
-    proposalType: ProposalType.Elastic,
-    api: {
-      persistProposal: API.post.persistProposal,
-      getAssetUsdUnitPrice: API.get.getAssetUsdUnitPrice,
-      persistProposals: API.post.persistProposals,
-      updateNonces: API.post.updateNonce,
-    } as IProposalElasticAPIDeps,
-    contract: new ElasticProposalContract(config),
-  });
-
-  const { userWithNonce: user } = useUserWithNonce([sepolia.id]);
+    data: txHash,
+  } = useMakeProposals(user);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isConnected || !user) return;
+    setErrorMessage(null);
+
+    if (!isConnected || !address || !user) {
+      return;
+    }
 
     try {
-      await makeProposal({
-        terms: {
-          user: user,
-          creditAmount: BigInt(creditAmount),
-          ltv: strategy.terms.ltv,
-          apr: strategy.terms.apr,
-          duration: {
-            days: strategy.terms.durationDays,
-          },
-          expirationDays: strategy.terms.expirationDays,
-          utilizedCreditId: createUtilizedCreditId({
-            proposer: address,
-            availableCreditLimit: BigInt(creditAmount),
-          }),
-          minCreditAmountPercentage: strategy.terms.minCreditAmountPercentage,
-        },
-        collateralAssets: strategy.terms.collateralAssets,
-        creditAssets: strategy.terms.creditAssets,
-      });
+      // Create proposals with proper parameters
+      const proposalsToCreate = createElasticProposals(
+        strategy,
+        address,
+        creditAmount,
+        config,
+      );
+
+      const res = await makeProposal(proposalsToCreate);
+      console.log("Proposals created successfully:", res);
     } catch (err) {
-      console.error('Error creating commitment:', err);
+      console.error("Error creating commitment:", err);
+      setErrorMessage(err instanceof Error ? err.message : "An unknown error occurred");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Credit Amount</label>
-        <input
-          type="text"
-          value={creditAmount}
-          onChange={(e) => setCreditAmount(e.target.value)}
-          placeholder="Enter amount"
-        />
-      </div>
-
-      <div>
-        <h3>Strategy Terms</h3>
+    <div>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Credit Amount Input */}
         <div>
-          <div>APR: {strategy.terms.apr[Object.keys(strategy.terms.apr)[0]]}%</div>
-          <div>LTV: {strategy.terms.ltv[Object.keys(strategy.terms.ltv)[0]]}%</div>
-          <div>Duration: {strategy.terms.durationDays} days</div>
+          <label>Credit Amount</label>
+          <input
+            type="text"
+            value={creditAmount}
+            onChange={(e) => setCreditAmount(e.target.value)}
+            placeholder="Enter amount"
+            required
+          />
         </div>
-      </div>
 
-      <button type="submit" disabled={isLoading || !isConnected}>
-        {isLoading ? 'Creating Commitment...' : 'Create Commitment'}
-      </button>
+        {/* Strategy Terms Display */}
+        <div>
+          <h3>Strategy Terms</h3>
+          <div>
+            <div>APR: {strategy.terms.apr[Object.keys(strategy.terms.apr)[0]]}%</div>
+            <div>LTV: {strategy.terms.ltv[Object.keys(strategy.terms.ltv)[0]]}%</div>
+            <div>Duration: {strategy.terms.durationDays} days</div>
+            <div>Expiration: {strategy.terms.expirationDays} days</div>
+          </div>
+        </div>
 
-      {isSuccess && <div>Commitment created successfully!</div>}
-      {error && <div>Error: {error.message}</div>}
-    </form>
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={isLoading || (!isConnected && !address)}
+        >
+          {isLoading
+            ? "Creating Commitment..."
+            : !isConnected
+              ? "Connect Wallet to Continue"
+              : "Create Commitment"}
+        </button>
+      </form>
+
+      {/* Transaction Status */}
+      {isLoading && (
+        <div>
+          <p>Transaction in progress...</p>
+        </div>
+      )}
+
+      {isSuccess && (
+        <div>
+          <p>Commitment created successfully!</p>
+          {txHash && (
+            <p>
+              Transaction Hash:
+              <a
+                href={`https://sepolia.etherscan.io/tx/${txHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {JSON.stringify(txHash)}
+              </a>
+            </p>
+          )}
+        </div>
+      )}
+
+      {(error || errorMessage) && (
+        <div>
+          <p>Error creating commitment:</p>
+          <p>{errorMessage || error?.message || String(error)}</p>
+        </div>
+      )}
+    </div>
   );
 }
 ```
 
+## 4. Custom Authentication with useUserNonces
+
+When using World App's MiniKit for authentication instead of Wagmi, you can use the `useUserNonces` hook to manage user nonces across different chains. This is particularly useful when building mini apps for World App:
+
+```tsx
+import { useUserNonces } from '@pwndao/sdk-v1-react';
+import { SupportedChain } from '@pwndao/sdk-core';
+import { MiniKit } from '@worldcoin/minikit-js';
+import { useEffect, useState } from 'react';
+
+function WorldAppAuthComponent() {
+  const [address, setAddress] = useState<string>();
+  const chainIds = [SupportedChain.World, SupportedChain.Sepolia];
+  
+  useEffect(() => {
+    // Initialize MiniKit
+    MiniKit.install();
+  }, []);
+
+  // Get user address using MiniKit's Wallet Auth
+  const handleAuth = async () => {
+    if (!MiniKit.isInstalled()) {
+      console.error('Please open this app in World App');
+      return;
+    }
+
+    try {
+      const response = await MiniKit.walletAuth();
+      setAddress(response.address);
+    } catch (err) {
+      console.error('Authentication failed:', err);
+    }
+  };
+  
+  const { data: userWithNonces, isLoading, error } = useUserNonces(
+    address,
+    chainIds
+  );
+
+  if (!MiniKit.isInstalled()) {
+    return <div>Please open this app in World App</div>;
+  }
+
+  if (!address) {
+    return (
+      <button onClick={handleAuth}>
+        Authenticate with World App
+      </button>
+    );
+  }
+
+  if (isLoading) return <div>Loading user nonces...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  return (
+    <div>
+      <h2>User Nonces</h2>
+      <div>Connected Address: {address}</div>
+      {userWithNonces && (
+        <div>
+          {chainIds.map(chainId => (
+            <div key={chainId}>
+              Chain {chainId}: Nonce {userWithNonces.nonces[chainId]}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+The `useUserNonces` hook is particularly useful when:
+- Building mini apps for World App using MiniKit
+- Need to track user nonces across multiple chains
+- Implementing custom authentication flows outside of Wagmi
+- Managing proposal sequences with proper nonce tracking
+
+The hook automatically handles:
+- Fetching user nonces for specified chains
+- Keeping nonces in sync across multiple chains
+- Caching nonce data using TanStack Query
+
+For more information about MiniKit integration, visit the [World App Mini Apps documentation](https://docs.world.org/mini-apps/quick-start/installing).
+
 ## Important Considerations
 
-1. **Next.js App Router**
-   - All components are marked with 'use client' as they use React hooks
-   - Follows Next.js 13+ app directory structure
-   - Uses server and client components appropriately
+1. **Multi-Proposal Support**
+   - Uses `createElasticProposals` to generate multiple proposals
+   - Handles batch proposal creation in a single transaction
+   - Manages nonces automatically across chains
 
-2. **React Query Integration**
-   - Uses TanStack Query for efficient data management
-   - Handles caching and request deduplication
-   - Provides loading and error states
+2. **Error Handling**
+   - Implements comprehensive error handling
+   - Shows user-friendly error messages
+   - Handles both transaction and validation errors
 
-3. **Wallet Integration**
-   - Uses Wagmi for wallet connection
-   - Handles wallet states and chain management
-   - Implements proper error handling for wallet interactions
+3. **Transaction Status**
+   - Displays loading state during transaction
+   - Shows success message with transaction hash
+   - Provides etherscan link for transaction tracking
 
 4. **Type Safety**
-   - Fully typed using TypeScript
+   - Uses TypeScript for type safety
    - Leverages SDK types for consistency
    - Provides proper type inference
 

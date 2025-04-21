@@ -19,7 +19,9 @@ import type { SimpleLoanFungibleProposalDetailSchemaWorkaroundNonce } from "./si
 import type { SimpleLoanFungibleProposalDetailSchemaWorkaroundNonceSpace } from "./simple-loan-fungible-proposal-detail-schema-workaround-nonce-space";
 import type { SimpleLoanFungibleProposalDetailSchemaWorkaroundProposalContractAddress } from "./simple-loan-fungible-proposal-detail-schema-workaround-proposal-contract-address";
 import type { SimpleLoanFungibleProposalDetailSchemaWorkaroundProposalId } from "./simple-loan-fungible-proposal-detail-schema-workaround-proposal-id";
+import type { SimpleLoanFungibleProposalDetailSchemaWorkaroundProposalSpecificData } from "./simple-loan-fungible-proposal-detail-schema-workaround-proposal-specific-data";
 import type { SimpleLoanFungibleProposalDetailSchemaWorkaroundProposerSpecHash } from "./simple-loan-fungible-proposal-detail-schema-workaround-proposer-spec-hash";
+import type { SimpleLoanFungibleProposalDetailSchemaWorkaroundReferrer } from "./simple-loan-fungible-proposal-detail-schema-workaround-referrer";
 import type { SimpleLoanFungibleProposalDetailSchemaWorkaroundRefinancingLoanId } from "./simple-loan-fungible-proposal-detail-schema-workaround-refinancing-loan-id";
 import type { SimpleLoanFungibleProposalDetailSchemaWorkaroundRelatedThesisId } from "./simple-loan-fungible-proposal-detail-schema-workaround-related-thesis-id";
 import type { SimpleLoanFungibleProposalDetailSchemaWorkaroundRevokedAt } from "./simple-loan-fungible-proposal-detail-schema-workaround-revoked-at";
@@ -50,6 +52,7 @@ export interface SimpleLoanFungibleProposalDetailSchemaWorkaround {
 	sourceOfFunds?: SimpleLoanFungibleProposalDetailSchemaWorkaroundSourceOfFunds;
 	relatedThesisId?: SimpleLoanFungibleProposalDetailSchemaWorkaroundRelatedThesisId;
 	createdFromProposalId?: SimpleLoanFungibleProposalDetailSchemaWorkaroundCreatedFromProposalId;
+	proposalSpecificData?: SimpleLoanFungibleProposalDetailSchemaWorkaroundProposalSpecificData;
 	checkCollateralStateFingerprint: boolean;
 	collateralStateFingerprint: SimpleLoanFungibleProposalDetailSchemaWorkaroundCollateralStateFingerprint;
 	availableCreditLimit: string;
@@ -64,4 +67,5 @@ export interface SimpleLoanFungibleProposalDetailSchemaWorkaround {
 	hash: SimpleLoanFungibleProposalDetailSchemaWorkaroundHash;
 	createdAt: number;
 	revokedAt: SimpleLoanFungibleProposalDetailSchemaWorkaroundRevokedAt;
+	referrer: SimpleLoanFungibleProposalDetailSchemaWorkaroundReferrer;
 }

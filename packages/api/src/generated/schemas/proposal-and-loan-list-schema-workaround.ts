@@ -15,6 +15,7 @@ import type { ProposalAndLoanListSchemaWorkaroundMinCreditAmount } from "./propo
 import type { ProposalAndLoanListSchemaWorkaroundOnChainId } from "./proposal-and-loan-list-schema-workaround-on-chain-id";
 import type { ProposalAndLoanListSchemaWorkaroundProposalContractAddress } from "./proposal-and-loan-list-schema-workaround-proposal-contract-address";
 import type { ProposalAndLoanListSchemaWorkaroundProposalId } from "./proposal-and-loan-list-schema-workaround-proposal-id";
+import type { ProposalAndLoanListSchemaWorkaroundProposalSpecificData } from "./proposal-and-loan-list-schema-workaround-proposal-specific-data";
 import type { ProposalAndLoanListSchemaWorkaroundRelatedThesisId } from "./proposal-and-loan-list-schema-workaround-related-thesis-id";
 import type { ProposalAndLoanListSchemaWorkaroundSourceOfFunds } from "./proposal-and-loan-list-schema-workaround-source-of-funds";
 import type { ProposalAndLoanListSchemaWorkaroundStatus } from "./proposal-and-loan-list-schema-workaround-status";
@@ -43,4 +44,5 @@ export interface ProposalAndLoanListSchemaWorkaround {
 	sourceOfFunds?: ProposalAndLoanListSchemaWorkaroundSourceOfFunds;
 	relatedThesisId?: ProposalAndLoanListSchemaWorkaroundRelatedThesisId;
 	createdFromProposalId?: ProposalAndLoanListSchemaWorkaroundCreatedFromProposalId;
+	proposalSpecificData?: ProposalAndLoanListSchemaWorkaroundProposalSpecificData;
 }

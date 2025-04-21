@@ -87,14 +87,17 @@ Strategies are the foundation of PwnDAO's lending protocol. They define:
 Example of working with strategies:
 
 ```typescript
-import { useStrategies } from '@pwndao/sdk-v1-react'; // or sdk-v1-vue
+import { useStrategies, useStrategy } from '@pwndao/sdk-v1-react'; // or sdk-v1-vue
 import { SupportedChain } from '@pwndao/v1-core';
 
 // Fetch all available strategies
 const { data: strategies } = useStrategies(SupportedChain.World);
 
+// Fetch a specific strategy
+const { data: strategy } = useStrategy('strategy-id');
+
 // Access strategy information
-strategies?.forEach(strategy => {
+if (strategy) {
   console.log({
     name: strategy.name,
     apr: strategy.terms.apr,
@@ -102,43 +105,89 @@ strategies?.forEach(strategy => {
     assets: {
       credit: strategy.terms.creditAssets,
       collateral: strategy.terms.collateralAssets
+    },
+    stats: {
+      lending: {
+        totalCommitted: strategy.lendingStats.totalCommittedAmount,
+        totalUtilized: strategy.lendingStats.totalUtilizedAmount,
+        totalAvailable: strategy.lendingStats.totalAvailableAmount,
+      },
+      borrowing: {
+        totalBorrowed: strategy.borrowingStats.totalBorrowedAmount,
+        totalRepaid: strategy.borrowingStats.totalRepaidAmount,
+        activeAmount: strategy.borrowingStats.activeBorrowedAmount,
+      }
     }
   });
-});
+}
 ```
 
 ### 2. Proposals
 
-Proposals are requests for loans or lending commitments. They include:
-- Credit amount and asset
-- Collateral amount and asset
-- Terms acceptance
-- Duration and expiration
+Proposals are requests for loans or lending commitments. The SDK supports creating multiple proposals in a single transaction and managing them efficiently.
 
-Example of creating a proposal:
+Example of creating proposals:
 
 ```typescript
-import { useMakeProposals } from '@pwndao/sdk-v1-react'; // or sdk-v1-vue
-import { ProposalType } from '@pwndao/v1-core';
+import { useMakeProposals, useUserWithNonce } from '@pwndao/sdk-v1-react'; // or sdk-v1-vue
+import { createElasticProposals } from '@pwndao/v1-core';
+import { useAccount, useConfig } from 'wagmi';
+import { sepolia } from 'wagmi/chains';
 
-const { mutateAsync: makeProposal } = useMakeProposals({
-  proposalType: ProposalType.Elastic,
-  // ... configuration
-});
+// Setup user with nonce management
+const { userWithNonce: user } = useUserWithNonce([sepolia.id]);
+const { address } = useAccount();
+const config = useConfig();
 
-// Create a proposal
-await makeProposal({
-  terms: {
-    creditAmount: BigInt("1000000000000000000"), // 1 ETH
-    ltv: strategy.terms.ltv,
-    apr: strategy.terms.apr,
-    duration: { days: 30 },
-    // ... other terms
-  },
-  collateralAssets: strategy.terms.collateralAssets,
-  creditAssets: strategy.terms.creditAssets,
-});
+// Initialize proposal creation hook
+const { mutateAsync: makeProposal } = useMakeProposals(user);
+
+// Create proposals
+try {
+  const proposalsToCreate = createElasticProposals(
+    strategy,
+    address,
+    creditAmount,
+    config,
+  );
+
+  const result = await makeProposal(proposalsToCreate);
+  console.log("Proposals created:", result);
+} catch (error) {
+  console.error("Error creating proposals:", error);
+}
 ```
+
+### 3. Revoking Nonces
+
+The SDK supports revoking proposal nonces for security purposes:
+
+```typescript
+import { useRevokeNonces } from '@pwndao/sdk-v1-react'; // or sdk-v1-vue
+import { SupportedChain } from '@pwndao/sdk-core';
+import { useAccount } from 'wagmi';
+
+const { address } = useAccount();
+const { mutateAsync: revokeNonces } = useRevokeNonces();
+
+try {
+  await revokeNonces({
+    proposalNonces: [1n, 2n], // Array of nonces to revoke
+    chainId: SupportedChain.Sepolia,
+    owner: address,
+    nonceSpace: 0n, // The nonce space these nonces belong to
+  });
+  console.log("Nonces revoked successfully");
+} catch (error) {
+  console.error("Error revoking nonces:", error);
+}
+```
+
+This is particularly useful when you need to:
+- Invalidate pending proposals
+- Protect against unauthorized proposal submissions
+- Clean up unused nonces
+- Manage nonce spaces across different chains
 
 ## Next Steps
 

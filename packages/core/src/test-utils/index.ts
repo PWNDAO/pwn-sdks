@@ -3,6 +3,8 @@ import { SupportedChain } from "../chains.js";
 import { ERC20Token } from "../models/token.js";
 import { User, UserWithNonceManager } from "../models/user.js";
 import type { AddressString } from "../types.js";
+import { PoolToken } from "../models/pool-token.js";
+import type { SupportedProtocol } from "../models/pool-token.js";
 
 export const generateAddress = () => {
 	return faker.finance.ethereumAddress() as AddressString;
@@ -54,4 +56,17 @@ export const getMockToken = (
 ) => {
 	const defaultAddress = address ?? generateAddress();
 	return new ERC20Token(chain, defaultAddress, decimals, name, symbol);
+};
+
+export const getMockPoolToken = (
+	underlyingAddress: AddressString,
+	protocol: SupportedProtocol,
+	chain: SupportedChain = SupportedChain.Ethereum,
+	address: AddressString | null = null,
+	decimals = 18,
+	name = "PWND Test Token",
+	symbol = "PWND",
+) => {
+	const defaultAddress = address ?? generateAddress();
+	return new PoolToken(chain, defaultAddress, underlyingAddress, decimals, protocol, name, symbol);
 };

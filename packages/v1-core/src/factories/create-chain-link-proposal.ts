@@ -3,84 +3,116 @@ import type {
 	Hex,
 	UserWithNonceManager,
 } from "@pwndao/sdk-core";
-import { getLoanContractAddress } from "@pwndao/sdk-core";
+import {
+	getLoanContractAddress,
+	getUniqueCreditCollateralKey,
+	isPoolToken,
+} from "@pwndao/sdk-core";
+import type { Config } from "@wagmi/core";
+import invariant from "ts-invariant";
+import type {
+	ImplementedProposalTypes,
+	ProposalParamWithDeps,
+} from "../actions/types.js";
+import { API } from "../api.js";
+import {
+	ChainLinkProposalContract,
+	type IProposalChainLinkContract,
+} from "../contracts/chain-link-proposal-contract.js";
+import { SimpleLoanContract } from "../contracts/simple-loan-contract.js";
 import { ChainLinkProposal } from "../models/proposals/chainlink-proposal.js";
-import type { IOracleProposalBase } from "../models/proposals/proposal-base.js";
+import {
+	type IOracleProposalBase,
+	ProposalType,
+} from "../models/proposals/proposal-base.js";
 import type {
 	IProposalStrategy,
-	ProposalWithHash,
-	ProposalWithSignature,
+	Strategy,
 	StrategyTerm,
 } from "../models/strategies/types.js";
 import {
-	type IProposalContract,
+	type ChainsWithChainLinkFeedSupport,
+	getFeedData,
+} from "../utils/chainlink-feeds.js";
+import {
+	calculateDurationInSeconds,
+	calculateExpirationTimestamp,
+	calculateMinCreditAmount,
+	formatLtvForContract,
+	getLtvValue,
+} from "../utils/proposal-calculations.js";
+import { createUtilizedCreditId } from "../utils/shared-credit.js";
+import {
+	type ILoanContract,
 	getLendingCommonProposalFields,
 } from "./helpers.js";
 import type { BaseTerm, IServerAPI } from "./types.js";
-import { MIN_CREDIT_CALCULATION_DENOMINATOR } from "./constants.js";
 
-export interface IProposalChainLinkContract extends IProposalContract {
-	getProposalHash(proposal: ChainLinkProposal): Promise<Hex>;
-	getCollateralAmount(
-		creditAddress: AddressString,
-		creditAmount: bigint,
-		collateralAddress: AddressString,
-		feedIntermediaryDenominations: AddressString[],
-		feedInvertFlags: boolean[],
-	): Promise<bigint>;
-	createProposal(proposal: ChainLinkProposal): Promise<ProposalWithSignature>;
-	createMultiProposal(
-		proposals: ProposalWithHash[],
-	): Promise<ProposalWithSignature[]>;
-}
-
-export interface IProposalChainLinkAPIDeps {
-	getAssetUsdUnitPrice: IServerAPI["get"]["getAssetUsdUnitPrice"];
-	persistProposal: IServerAPI["post"]["persistProposal"];
-	persistProposals: IServerAPI["post"]["persistProposals"];
-	updateNonces: IServerAPI["post"]["updateNonce"];
-}
+export type CreateChainLinkElasticProposalParams = BaseTerm & {
+	minCreditAmountPercentage: number;
+	minCreditAmount?: bigint;
+};
 
 export class ChainLinkProposalStrategy
 	implements IProposalStrategy<IOracleProposalBase>
 {
 	constructor(
 		public term: StrategyTerm,
-		public api: IProposalChainLinkAPIDeps,
 		public contract: IProposalChainLinkContract,
+		public loanContract: ILoanContract,
 	) {}
 
 	async implementChainLinkProposal(
 		params: CreateChainLinkElasticProposalParams,
-		api: IProposalChainLinkAPIDeps,
 		contract: IProposalChainLinkContract,
-	): Promise<ChainLinkProposal> {
+		user: UserWithNonceManager,
+	): Promise<ChainLinkProposal | undefined> {
 		// Calculate expiration timestamp
-		const expiration =
-			Math.floor(Date.now() / 1000) + params.expirationDays * 24 * 60 * 60;
+		const expiration = calculateExpirationTimestamp(params.expirationDays);
 
 		// Get duration in seconds or timestamp
-		let durationOrDate: number;
-		if (params.duration.days !== undefined) {
-			durationOrDate = params.duration.days * 24 * 60 * 60;
-		} else {
-			durationOrDate = Math.floor(params.duration.date.getTime() / 1000);
-		}
+		const durationOrDate = calculateDurationInSeconds(params.duration);
 
-		// Calculate the required collateral amount using ChainLink
-		// note: not being used in the proposal data in some of the proposal types
-		const collateralAmount = await contract.getCollateralAmount(
-			params.credit.address,
-			params.creditAmount,
-			params.collateral.address,
-			[], // feedIntermediaryDenominations - empty for simplicity
-			[], // feedInvertFlags - empty for simplicity
+		// Get LTV value for the credit-collateral pair
+		const ltv = getLtvValue(
+			params.ltv,
+			params.credit,
+			params.collateral,
+			getUniqueCreditCollateralKey,
 		);
+
+		invariant(ltv, "LTV is undefined");
+
+		// Get feed data for ChainLink proposal
+		const feedData = getFeedData(
+			params.collateral.chainId as ChainsWithChainLinkFeedSupport,
+			params.collateral.address,
+			"underlyingAddress" in params.credit && params.credit.underlyingAddress
+				? params.credit.underlyingAddress
+				: params.credit.address,
+		);
+		invariant(
+			feedData,
+			"We did not find a suitable price feed. Create classic elastic proposal instead.",
+		);
+
+		const minCreditAmount =
+			params.minCreditAmount && !params.minCreditAmountPercentage
+				? params.minCreditAmount
+				: params.minCreditAmountPercentage
+					? calculateMinCreditAmount(
+							params.creditAmount,
+							params.minCreditAmountPercentage,
+						)
+					: undefined;
+		invariant(minCreditAmount, "Min credit amount is undefined");
 
 		// Get common proposal fields
 		const commonFields = await getLendingCommonProposalFields(
 			{
-				user: params.user,
+				nonce: user.getNextNonce(params.collateral.chainId),
+				nonceSpace: user.getNonceSpace(params.collateral.chainId),
+				user,
 				collateral: params.collateral,
 				credit: params.credit,
 				creditAmount: params.creditAmount,
@@ -89,46 +121,55 @@ export class ChainLinkProposalStrategy
 				apr: params.apr,
 				expiration,
 				loanContract: getLoanContractAddress(params.collateral.chainId),
-				relatedStrategyId: this.term.id,
+				relatedStrategyId: this.term.relatedStrategyId,
+				sourceOfFunds: params.sourceOfFunds,
 			},
 			{
 				contract: contract,
+				loanContract: this.loanContract,
 			},
 		);
 
-		// Create and return the ChainLink proposal
+		// Create and return the ChainLink proposal with formatted LTV for contract
 		return new ChainLinkProposal(
 			{
 				...commonFields,
-				feedIntermediaryDenominations: [],
-				feedInvertFlags: [],
-				loanToValue: BigInt(
-					params.ltv[
-						`${params.collateral.address}/${params.collateral.chainId}-${params.credit.address}/${params.credit.chainId}`
-					],
-				),
-				minCreditAmount: collateralAmount,
+				feedIntermediaryDenominations: feedData.feedIntermediaryDenominations,
+				feedInvertFlags: feedData.feedInvertFlags,
+				loanToValue: formatLtvForContract(ltv),
+				minCreditAmount,
 				chainId: params.collateral.chainId,
+				isOffer: params.isOffer,
 			},
 			params.collateral.chainId,
 		);
 	}
 
 	getProposalsParams(
-		user: UserWithNonceManager,
 		creditAmount: bigint,
 		utilizedCreditId: Hex,
+		isOffer: boolean,
+		sourceOfFunds: AddressString | null,
+		minCreditAmount?: bigint,
 	): CreateChainLinkElasticProposalParams[] {
 		const result: CreateChainLinkElasticProposalParams[] = [];
+
 		for (const credit of this.term.creditAssets) {
+			if (
+				(!minCreditAmount && !this.term.minCreditAmountPercentage) ||
+				(minCreditAmount && this.term.minCreditAmountPercentage)
+			) {
+				throw new Error(
+					"Either minCreditAmountPercentage or minCreditAmount must be provided for this proposal type",
+				);
+			}
+
 			for (const collateral of this.term.collateralAssets) {
 				result.push({
 					collateral,
 					credit,
-					user,
 					creditAmount,
 					utilizedCreditId,
-
 					apr: this.term.apr,
 					duration: {
 						days: this.term.durationDays,
@@ -136,9 +177,11 @@ export class ChainLinkProposalStrategy
 					},
 					ltv: this.term.ltv,
 					expirationDays: this.term.expirationDays,
-					minCreditAmountPercentage: this.term.minCreditAmountPercentage / MIN_CREDIT_CALCULATION_DENOMINATOR,
+					minCreditAmountPercentage: this.term.minCreditAmountPercentage || 0,
+					minCreditAmount,
 					relatedStrategyId: this.term.id,
-					isOffer: this.term.isOffer
+					isOffer,
+					sourceOfFunds,
 				});
 			}
 		}
@@ -150,11 +193,16 @@ export class ChainLinkProposalStrategy
 		user: UserWithNonceManager,
 		creditAmount: bigint,
 		utilizedCreditId: Hex,
+		isOffer: boolean,
+		sourceOfFunds: AddressString | null,
+		minCreditAmount?: bigint,
 	): Promise<ChainLinkProposal[]> {
 		const paramsArray = this.getProposalsParams(
-			user,
 			creditAmount,
 			utilizedCreditId,
+			isOffer,
+			sourceOfFunds,
+			minCreditAmount
 		);
 		const result: ChainLinkProposal[] = [];
 
@@ -164,8 +212,8 @@ export class ChainLinkProposalStrategy
 					// Use the shared implementation directly
 					return await this.implementChainLinkProposal(
 						params,
-						this.api,
 						this.contract,
+						user,
 					);
 				} catch (error) {
 					console.error("Error creating ChainLink proposal:", error);
@@ -175,7 +223,7 @@ export class ChainLinkProposalStrategy
 		);
 
 		for (const proposal of proposals) {
-			if (proposal.status === "fulfilled") {
+			if (proposal.status === "fulfilled" && proposal.value) {
 				result.push(proposal.value);
 			}
 		}
@@ -184,16 +232,24 @@ export class ChainLinkProposalStrategy
 	}
 }
 
-export type CreateChainLinkElasticProposalParams = BaseTerm & {
-	minCreditAmountPercentage: number;
+// TODO create some base interface that contains all the necessary
+//  API deps for e.g. makeProposal / makeProposals functions (and some other shared functions?)?
+export interface IProposalChainLinkAPIDeps {
+	persistProposal: IServerAPI["post"]["persistProposal"];
+	persistProposals: IServerAPI["post"]["persistProposals"];
+	updateNonces: IServerAPI["post"]["updateNonce"];
+}
+
+export type ChainLinkElasticProposalDeps = {
+	api: IProposalChainLinkAPIDeps;
+	contract: IProposalChainLinkContract;
+	loanContract: ILoanContract;
 };
 
 export const createChainLinkElasticProposal = async (
 	params: CreateChainLinkElasticProposalParams,
-	deps: {
-		api: IProposalChainLinkAPIDeps;
-		contract: IProposalChainLinkContract;
-	},
+	deps: ChainLinkElasticProposalDeps,
+	user: UserWithNonceManager,
 ): Promise<ChainLinkProposal> => {
 	// Create a dummy StrategyTerm with just enough data for the strategy to work
 	const dummyTerm: StrategyTerm = {
@@ -204,19 +260,82 @@ export const createChainLinkElasticProposal = async (
 		ltv: params.ltv,
 		expirationDays: params.expirationDays,
 		minCreditAmountPercentage: params.minCreditAmountPercentage,
-		isOffer: params.isOffer,
-		relatedStrategyId: params.relatedStrategyId
+		relatedStrategyId: params.relatedStrategyId,
 	};
 
 	const strategy = new ChainLinkProposalStrategy(
 		dummyTerm,
-		deps.api,
 		deps.contract as IProposalChainLinkContract,
+		deps.loanContract,
 	);
 	const proposals = await strategy.createLendingProposals(
-		params.user,
+		user,
 		params.creditAmount,
 		params.utilizedCreditId,
+		params.isOffer,
+		params.sourceOfFunds,
+		params.minCreditAmount,
 	);
 	return proposals[0];
+};
+
+/**
+ * Parameters for creating a batch of elastic proposals
+ */
+export type CreateChainLinkElasticProposalBatchParams =
+	CreateChainLinkElasticProposalParams[];
+
+export const createChainLinkProposals = (
+	strategy: Strategy,
+	address: AddressString,
+	creditAmount: string,
+	minCreditAmount: string,
+	config: Config,
+	isOffer = true,
+) => {
+	const proposals: ProposalParamWithDeps<ImplementedProposalTypes>[] = [];
+
+	const apiDeps = {
+		persistProposal: API.post.persistProposal,
+		persistProposals: API.post.persistProposals,
+		updateNonces: API.post.updateNonce,
+	} as IProposalChainLinkAPIDeps;
+
+	for (const creditAsset of strategy.terms.creditAssets) {
+		const utilizedCreditId = createUtilizedCreditId({
+			proposer: address,
+			availableCreditLimit: BigInt(creditAmount),
+		});
+
+		for (const collateralAsset of strategy.terms.collateralAssets) {
+			proposals.push({
+				type: ProposalType.ChainLink,
+				deps: {
+					api: apiDeps,
+					contract: new ChainLinkProposalContract(config),
+					loanContract: new SimpleLoanContract(config),
+				},
+				params: {
+					creditAmount: BigInt(creditAmount),
+					ltv: strategy.terms.ltv,
+					apr: strategy.terms.apr,
+					duration: {
+						days: strategy.terms.durationDays,
+					},
+					expirationDays: strategy.terms.expirationDays,
+					utilizedCreditId: utilizedCreditId,
+					minCreditAmountPercentage:
+						strategy.terms.minCreditAmountPercentage || 0,
+					minCreditAmount: BigInt(minCreditAmount),
+					relatedStrategyId: strategy.id,
+					collateral: collateralAsset,
+					credit: creditAsset,
+					isOffer,
+					sourceOfFunds: isPoolToken(creditAsset)
+						? creditAsset.underlyingAddress
+						: null,
+				},
+			});
+		}
+	}
 };

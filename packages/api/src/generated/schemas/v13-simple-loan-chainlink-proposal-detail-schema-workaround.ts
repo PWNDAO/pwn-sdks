@@ -22,7 +22,9 @@ import type { V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundNonce } from "
 import type { V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundNonceSpace } from "./v13-simple-loan-chainlink-proposal-detail-schema-workaround-nonce-space";
 import type { V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundProposalContractAddress } from "./v13-simple-loan-chainlink-proposal-detail-schema-workaround-proposal-contract-address";
 import type { V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundProposalId } from "./v13-simple-loan-chainlink-proposal-detail-schema-workaround-proposal-id";
+import type { V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundProposalSpecificData } from "./v13-simple-loan-chainlink-proposal-detail-schema-workaround-proposal-specific-data";
 import type { V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundProposerSpecHash } from "./v13-simple-loan-chainlink-proposal-detail-schema-workaround-proposer-spec-hash";
+import type { V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundReferrer } from "./v13-simple-loan-chainlink-proposal-detail-schema-workaround-referrer";
 import type { V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundRefinancingLoanId } from "./v13-simple-loan-chainlink-proposal-detail-schema-workaround-refinancing-loan-id";
 import type { V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundRelatedThesisId } from "./v13-simple-loan-chainlink-proposal-detail-schema-workaround-related-thesis-id";
 import type { V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundRevokedAt } from "./v13-simple-loan-chainlink-proposal-detail-schema-workaround-revoked-at";
@@ -54,6 +56,7 @@ export interface V13SimpleLoanChainlinkProposalDetailSchemaWorkaround {
 	sourceOfFunds?: V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundSourceOfFunds;
 	relatedThesisId?: V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundRelatedThesisId;
 	createdFromProposalId?: V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundCreatedFromProposalId;
+	proposalSpecificData?: V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundProposalSpecificData;
 	checkCollateralStateFingerprint: boolean;
 	collateralStateFingerprint: V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundCollateralStateFingerprint;
 	availableCreditLimit: string;
@@ -68,6 +71,7 @@ export interface V13SimpleLoanChainlinkProposalDetailSchemaWorkaround {
 	hash: V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundHash;
 	createdAt: number;
 	revokedAt: V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundRevokedAt;
+	referrer: V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundReferrer;
 	durationOrDate: number;
 	utilizedCreditId: V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundUtilizedCreditId;
 	feedIntermediaryDenominations: V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundFeedIntermediaryDenominations;

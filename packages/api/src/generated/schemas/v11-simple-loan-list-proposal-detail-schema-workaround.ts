@@ -21,7 +21,9 @@ import type { V11SimpleLoanListProposalDetailSchemaWorkaroundNonce } from "./v11
 import type { V11SimpleLoanListProposalDetailSchemaWorkaroundNonceSpace } from "./v11-simple-loan-list-proposal-detail-schema-workaround-nonce-space";
 import type { V11SimpleLoanListProposalDetailSchemaWorkaroundProposalContractAddress } from "./v11-simple-loan-list-proposal-detail-schema-workaround-proposal-contract-address";
 import type { V11SimpleLoanListProposalDetailSchemaWorkaroundProposalId } from "./v11-simple-loan-list-proposal-detail-schema-workaround-proposal-id";
+import type { V11SimpleLoanListProposalDetailSchemaWorkaroundProposalSpecificData } from "./v11-simple-loan-list-proposal-detail-schema-workaround-proposal-specific-data";
 import type { V11SimpleLoanListProposalDetailSchemaWorkaroundProposerSpecHash } from "./v11-simple-loan-list-proposal-detail-schema-workaround-proposer-spec-hash";
+import type { V11SimpleLoanListProposalDetailSchemaWorkaroundReferrer } from "./v11-simple-loan-list-proposal-detail-schema-workaround-referrer";
 import type { V11SimpleLoanListProposalDetailSchemaWorkaroundRefinancingLoanId } from "./v11-simple-loan-list-proposal-detail-schema-workaround-refinancing-loan-id";
 import type { V11SimpleLoanListProposalDetailSchemaWorkaroundRelatedThesisId } from "./v11-simple-loan-list-proposal-detail-schema-workaround-related-thesis-id";
 import type { V11SimpleLoanListProposalDetailSchemaWorkaroundRevokedAt } from "./v11-simple-loan-list-proposal-detail-schema-workaround-revoked-at";
@@ -52,6 +54,7 @@ export interface V11SimpleLoanListProposalDetailSchemaWorkaround {
 	sourceOfFunds?: V11SimpleLoanListProposalDetailSchemaWorkaroundSourceOfFunds;
 	relatedThesisId?: V11SimpleLoanListProposalDetailSchemaWorkaroundRelatedThesisId;
 	createdFromProposalId?: V11SimpleLoanListProposalDetailSchemaWorkaroundCreatedFromProposalId;
+	proposalSpecificData?: V11SimpleLoanListProposalDetailSchemaWorkaroundProposalSpecificData;
 	checkCollateralStateFingerprint: boolean;
 	collateralStateFingerprint: V11SimpleLoanListProposalDetailSchemaWorkaroundCollateralStateFingerprint;
 	availableCreditLimit: string;
@@ -66,5 +69,6 @@ export interface V11SimpleLoanListProposalDetailSchemaWorkaround {
 	hash: V11SimpleLoanListProposalDetailSchemaWorkaroundHash;
 	createdAt: number;
 	revokedAt: V11SimpleLoanListProposalDetailSchemaWorkaroundRevokedAt;
+	referrer: V11SimpleLoanListProposalDetailSchemaWorkaroundReferrer;
 	collateralIdsWhitelistMerkleRoot: V11SimpleLoanListProposalDetailSchemaWorkaroundCollateralIdsWhitelistMerkleRoot;
 }

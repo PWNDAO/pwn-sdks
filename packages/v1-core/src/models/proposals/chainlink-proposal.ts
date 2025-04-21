@@ -12,7 +12,7 @@ import { type IOracleProposalBase, ProposalType } from "./proposal-base.js";
 export class ChainLinkProposal implements IOracleProposalBase {
 	type = ProposalType.ChainLink as const;
 
-	ERC712_TYPES = {
+	static ERC712_TYPES = {
 		Proposal: [
 			{ name: "collateralCategory", type: "uint8" },
 			{ name: "collateralAddress", type: "address" },
@@ -20,7 +20,9 @@ export class ChainLinkProposal implements IOracleProposalBase {
 			{ name: "checkCollateralStateFingerprint", type: "bool" },
 			{ name: "collateralStateFingerprint", type: "bytes32" },
 			{ name: "creditAddress", type: "address" },
-			{ name: "creditPerCollateralUnit", type: "uint256" },
+			{ name: "feedIntermediaryDenominations", type: "address[]" },
+			{ name: "feedInvertFlags", type: "bool[]" },
+			{ name: "loanToValue", type: "uint256" },
 			{ name: "minCreditAmount", type: "uint256" },
 			{ name: "availableCreditLimit", type: "uint256" },
 			{ name: "utilizedCreditId", type: "bytes32" },
@@ -74,6 +76,7 @@ export class ChainLinkProposal implements IOracleProposalBase {
 		this.type = ProposalType.ChainLink;
 		this.chainId = chainId;
 		this.relatedStrategyId = proposal.relatedStrategyId;
+		this.sourceOfFunds = proposal.sourceOfFunds;
 	}
 
 	createProposalStruct(): V1_3SimpleLoanElasticChainlinkProposalStruct {
@@ -136,4 +139,5 @@ export class ChainLinkProposal implements IOracleProposalBase {
 
 	chainId: SupportedChain;
 	relatedStrategyId?: string;
+	sourceOfFunds: AddressString | null;
 }

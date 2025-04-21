@@ -18,7 +18,9 @@ import type { BetaProposalDetailSchemaWorkaroundNonce } from "./beta-proposal-de
 import type { BetaProposalDetailSchemaWorkaroundNonceSpace } from "./beta-proposal-detail-schema-workaround-nonce-space";
 import type { BetaProposalDetailSchemaWorkaroundProposalContractAddress } from "./beta-proposal-detail-schema-workaround-proposal-contract-address";
 import type { BetaProposalDetailSchemaWorkaroundProposalId } from "./beta-proposal-detail-schema-workaround-proposal-id";
+import type { BetaProposalDetailSchemaWorkaroundProposalSpecificData } from "./beta-proposal-detail-schema-workaround-proposal-specific-data";
 import type { BetaProposalDetailSchemaWorkaroundProposerSpecHash } from "./beta-proposal-detail-schema-workaround-proposer-spec-hash";
+import type { BetaProposalDetailSchemaWorkaroundReferrer } from "./beta-proposal-detail-schema-workaround-referrer";
 import type { BetaProposalDetailSchemaWorkaroundRefinancingLoanId } from "./beta-proposal-detail-schema-workaround-refinancing-loan-id";
 import type { BetaProposalDetailSchemaWorkaroundRelatedThesisId } from "./beta-proposal-detail-schema-workaround-related-thesis-id";
 import type { BetaProposalDetailSchemaWorkaroundRevokedAt } from "./beta-proposal-detail-schema-workaround-revoked-at";
@@ -51,6 +53,7 @@ export interface BetaProposalDetailSchemaWorkaround {
 	sourceOfFunds?: BetaProposalDetailSchemaWorkaroundSourceOfFunds;
 	relatedThesisId?: BetaProposalDetailSchemaWorkaroundRelatedThesisId;
 	createdFromProposalId?: BetaProposalDetailSchemaWorkaroundCreatedFromProposalId;
+	proposalSpecificData?: BetaProposalDetailSchemaWorkaroundProposalSpecificData;
 	checkCollateralStateFingerprint: boolean;
 	collateralStateFingerprint: BetaProposalDetailSchemaWorkaroundCollateralStateFingerprint;
 	availableCreditLimit: string;
@@ -65,4 +68,5 @@ export interface BetaProposalDetailSchemaWorkaround {
 	hash: BetaProposalDetailSchemaWorkaroundHash;
 	createdAt: number;
 	revokedAt: BetaProposalDetailSchemaWorkaroundRevokedAt;
+	referrer: BetaProposalDetailSchemaWorkaroundReferrer;
 }

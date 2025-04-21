@@ -15,6 +15,7 @@ import type { CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestMinCreditA
 import type { CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestMultiproposalMerkleRoot } from "./create-simple-loan-dutch-auction-proposal-request-schema-request-multiproposal-merkle-root";
 import type { CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestNonce } from "./create-simple-loan-dutch-auction-proposal-request-schema-request-nonce";
 import type { CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestNonceSpace } from "./create-simple-loan-dutch-auction-proposal-request-schema-request-nonce-space";
+import type { CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestReferrer } from "./create-simple-loan-dutch-auction-proposal-request-schema-request-referrer";
 import type { CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestRefinancingLoanId } from "./create-simple-loan-dutch-auction-proposal-request-schema-request-refinancing-loan-id";
 import type { CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestRelatedThesisId } from "./create-simple-loan-dutch-auction-proposal-request-schema-request-related-thesis-id";
 import type { CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestSourceOfFunds } from "./create-simple-loan-dutch-auction-proposal-request-schema-request-source-of-funds";
@@ -53,4 +54,5 @@ export interface CreateSimpleLoanDutchAuctionProposalRequestSchemaRequest {
 	is_on_chain: boolean;
 	source_of_funds?: CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestSourceOfFunds;
 	related_thesis_id?: CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestRelatedThesisId;
+	referrer?: CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestReferrer;
 }

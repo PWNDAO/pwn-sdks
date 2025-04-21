@@ -21,7 +21,9 @@ import type { SimpleLoanListProposalDetailSchemaWorkaroundNonce } from "./simple
 import type { SimpleLoanListProposalDetailSchemaWorkaroundNonceSpace } from "./simple-loan-list-proposal-detail-schema-workaround-nonce-space";
 import type { SimpleLoanListProposalDetailSchemaWorkaroundProposalContractAddress } from "./simple-loan-list-proposal-detail-schema-workaround-proposal-contract-address";
 import type { SimpleLoanListProposalDetailSchemaWorkaroundProposalId } from "./simple-loan-list-proposal-detail-schema-workaround-proposal-id";
+import type { SimpleLoanListProposalDetailSchemaWorkaroundProposalSpecificData } from "./simple-loan-list-proposal-detail-schema-workaround-proposal-specific-data";
 import type { SimpleLoanListProposalDetailSchemaWorkaroundProposerSpecHash } from "./simple-loan-list-proposal-detail-schema-workaround-proposer-spec-hash";
+import type { SimpleLoanListProposalDetailSchemaWorkaroundReferrer } from "./simple-loan-list-proposal-detail-schema-workaround-referrer";
 import type { SimpleLoanListProposalDetailSchemaWorkaroundRefinancingLoanId } from "./simple-loan-list-proposal-detail-schema-workaround-refinancing-loan-id";
 import type { SimpleLoanListProposalDetailSchemaWorkaroundRelatedThesisId } from "./simple-loan-list-proposal-detail-schema-workaround-related-thesis-id";
 import type { SimpleLoanListProposalDetailSchemaWorkaroundRevokedAt } from "./simple-loan-list-proposal-detail-schema-workaround-revoked-at";
@@ -52,6 +54,7 @@ export interface SimpleLoanListProposalDetailSchemaWorkaround {
 	sourceOfFunds?: SimpleLoanListProposalDetailSchemaWorkaroundSourceOfFunds;
 	relatedThesisId?: SimpleLoanListProposalDetailSchemaWorkaroundRelatedThesisId;
 	createdFromProposalId?: SimpleLoanListProposalDetailSchemaWorkaroundCreatedFromProposalId;
+	proposalSpecificData?: SimpleLoanListProposalDetailSchemaWorkaroundProposalSpecificData;
 	checkCollateralStateFingerprint: boolean;
 	collateralStateFingerprint: SimpleLoanListProposalDetailSchemaWorkaroundCollateralStateFingerprint;
 	availableCreditLimit: string;
@@ -66,5 +69,6 @@ export interface SimpleLoanListProposalDetailSchemaWorkaround {
 	hash: SimpleLoanListProposalDetailSchemaWorkaroundHash;
 	createdAt: number;
 	revokedAt: SimpleLoanListProposalDetailSchemaWorkaroundRevokedAt;
+	referrer: SimpleLoanListProposalDetailSchemaWorkaroundReferrer;
 	collateralIdsWhitelistMerkleRoot: SimpleLoanListProposalDetailSchemaWorkaroundCollateralIdsWhitelistMerkleRoot;
 }

@@ -1,5 +1,6 @@
 import type {
 	AddressString,
+	ERC20TokenLike,
 	Hex,
 	SupportedChain,
 	Token,
@@ -15,7 +16,7 @@ import type {
 import type { ProposalType } from "../proposals/proposal-base.js";
 
 export interface StrategyTerm {
-	creditAssets: Token[];
+	creditAssets: ERC20TokenLike[];
 	collateralAssets: Token[];
 	apr: Record<string, number>;
 	ltv: Record<string, number>;
@@ -25,10 +26,9 @@ export interface StrategyTerm {
 	 * The minimum credit amount percentage for a proposal to be created
 	 * With 1e4 precision
 	 */
-	minCreditAmountPercentage: number;
+	minCreditAmountPercentage?: number;
 	id?: string; // if provided it's strategy id
 	relatedStrategyId?: string;
-	isOffer: boolean;
 }
 
 export interface IProposalStrategy<
@@ -36,15 +36,20 @@ export interface IProposalStrategy<
 > {
 	term: StrategyTerm;
 	getProposalsParams(
-		user: UserWithNonceManager,
 		creditAmount: bigint,
 		utilizedCreditId: Hex,
+		isOffer: boolean,
+		sourceOfFunds: AddressString | null,
+		minCreditAmount?: bigint,
 	): CreateElasticProposalParams[];
 
 	createLendingProposals(
 		user: UserWithNonceManager,
 		creditAmount: bigint,
 		utilizedCreditId: Hex,
+		isOffer: boolean,
+		sourceOfFunds: AddressString | null,
+		minCreditAmount: bigint,
 	): Promise<T[]>;
 }
 
@@ -59,6 +64,7 @@ export type Strategy = {
 		avatar: string | null;
 		description: string;
 	} | null;
+	type: ProposalType;
 	lendingStats: {
 		totalCommittedAmount: bigint;
 		totalUtilizedAmount: bigint;
@@ -80,7 +86,8 @@ export type ProposalWithHash = Proposal & {
 
 export type ProposalWithSignature = ProposalWithHash & {
 	chainId: SupportedChain;
-	signature: Hex;
+	// null for on-chain proposals
+	signature: Hex | null;
 	isOnChain: boolean;
 	sourceOfFunds?: AddressString;
 	multiproposalMerkleRoot?: Hex;

@@ -8,4 +8,4 @@ Run `nx build pwn-v1-sdk-core` to build the library.
 
 ## Running unit tests
 
-Run `nx test pwn-v1-sdk-core` to execute the unit tests via [Vitest](https://vitest.dev/).
+Run `bunx nx test @pwndao/v1-core` to execute the unit tests via [Vitest](https://vitest.dev/).

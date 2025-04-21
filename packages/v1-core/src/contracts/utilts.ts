@@ -1,7 +1,7 @@
 import { SimpleMerkleTree } from "@openzeppelin/merkle-tree";
 import type { Hex } from "@pwndao/sdk-core";
-import { allProposalHashesForRoot } from "../../../api/src/generated/index.js";
 import type { ProposalWithSignature } from "../models/strategies/types.js";
+import { allProposalHashesForRoot } from "@pwndao/api-sdk";
 
 export const getInclusionProof = async (
 	proposalWithHash: ProposalWithSignature,

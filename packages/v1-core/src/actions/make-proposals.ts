@@ -1,65 +1,91 @@
-import type { SupportedChain } from "@pwndao/sdk-core";
+import type { SupportedChain, UserWithNonceManager } from "@pwndao/sdk-core";
+import type { Config } from "@wagmi/core";
 import type { ProposalWithHash } from "src/models/strategies/types.js";
 import invariant from "ts-invariant";
+import { createChainLinkElasticProposal } from "../factories/create-chain-link-proposal.js";
+import type { ChainLinkElasticProposalDeps } from "../factories/create-chain-link-proposal.js";
 import {
 	type ElasticProposalDeps,
-	createElasticProposalBatch,
+	createElasticProposal,
 } from "../factories/create-elastic-proposal.js";
 import { ProposalType } from "../models/proposals/proposal-base.js";
+import { makeProposal } from "./make-proposal.js";
+import type {
+	ImplementedProposalTypes,
+	ProposalParamWithDeps,
+} from "./types.js";
 
-const proposalTypes = {
-	[ProposalType.Elastic]: createElasticProposalBatch,
-	[ProposalType.ChainLink]: () => {
-		throw new Error("Not implemented");
-	},
-	[ProposalType.DutchAuction]: () => {
-		throw new Error("Not implemented");
-	},
-	[ProposalType.Simple]: () => {
-		throw new Error("Not implemented");
-	},
-};
-
-export const makeProposals = async <T extends ProposalType>(
-	proposalType: T,
-	proposalParams: Parameters<(typeof proposalTypes)[T]>[0],
-	deps: Parameters<(typeof proposalTypes)[T]>[1],
+export const makeProposals = async <T extends ImplementedProposalTypes>(
+	config: Config,
+	proposalParams: ProposalParamWithDeps<T>[],
+	user: UserWithNonceManager,
 ) => {
-	invariant(
-		proposalTypes[proposalType],
-		`Proposal type ${proposalType} not found`,
-	);
-	invariant(proposalParams, "Proposal params are required");
-	invariant(deps, "Deps are required");
+	invariant(config, "Config is required");
+	invariant(proposalParams?.length > 0, "Proposal params are required");
 
-	const proposals = await proposalTypes[proposalType](
-		proposalParams,
-		deps as unknown as ElasticProposalDeps,
-	);
+	// Fallback to makeProposal for single proposals
+	if (proposalParams.length === 1) {
+		const singleProposal = proposalParams[0];
+		return [await makeProposal(
+			user,
+			singleProposal.type,
+			singleProposal.params,
+			singleProposal.deps,
+		)];
+	}
 
-	const proposalHashes = await Promise.all(
-		proposals.map((proposal) => deps.contract.getProposalHash(proposal)),
-	);
+	const proposals: ProposalWithHash[] = [];
 
-	const proposalWithHash = proposals.map((proposal, index) => ({
-		...proposal,
-		hash: proposalHashes[index],
-	})) as ProposalWithHash[];
+	for (const proposalParam of proposalParams) {
+		switch (proposalParam.type) {
+			case ProposalType.Elastic: {
+				const elasticDeps = proposalParam.deps as ElasticProposalDeps;
+				const filledProposal = await createElasticProposal(
+					proposalParam.params,
+					elasticDeps,
+					user,
+				);
+				const proposalWithHash = {
+					...filledProposal,
+					hash: await elasticDeps.contract.getProposalHash(filledProposal),
+				} as ProposalWithHash;
+				proposals.push(proposalWithHash);
+				break;
+			}
+			case ProposalType.ChainLink: {
+				const chainLinkDeps =
+					proposalParam.deps as ChainLinkElasticProposalDeps;
+				const filledProposal = await createChainLinkElasticProposal(
+					proposalParam.params,
+					chainLinkDeps,
+					user,
+				);
+				const proposalWithHash = {
+					...filledProposal,
+					hash: await chainLinkDeps.contract.getProposalHash(filledProposal),
+				} as ProposalWithHash;
+				proposals.push(proposalWithHash);
+				break;
+			}
+			default: {
+				throw new Error(
+					`Not implemented for proposal type ${proposalParam.type}`,
+				);
+			}
+		}
+	}
+
+	const deps = proposalParams[0].deps;
 
 	const proposalsWithSignature =
-		await deps.contract.createMultiProposal(proposalWithHash);
+		await deps.contract.createMultiProposal(proposals);
 
-	const usedNonces = proposalParams.terms.user.getUsedNonces();
-
+	const usedNonces = user.getUsedNonces();
 	for (const chain in usedNonces) {
 		const _chain = Number(chain) as SupportedChain;
 		if (!usedNonces[_chain]) continue;
 
-		await deps.api.updateNonces(
-			proposalParams.terms.user.address,
-			_chain,
-			usedNonces[_chain],
-		);
+		await deps.api.updateNonces(user.address, _chain, usedNonces[_chain]);
 	}
 
 	await deps.api.persistProposals(proposalsWithSignature);

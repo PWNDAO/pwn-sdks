@@ -14,6 +14,7 @@ import type { V13CreateSimpleLoanSimpleProposalRequestSchemaRequestHash } from "
 import type { V13CreateSimpleLoanSimpleProposalRequestSchemaRequestMultiproposalMerkleRoot } from "./v13-create-simple-loan-simple-proposal-request-schema-request-multiproposal-merkle-root";
 import type { V13CreateSimpleLoanSimpleProposalRequestSchemaRequestNonce } from "./v13-create-simple-loan-simple-proposal-request-schema-request-nonce";
 import type { V13CreateSimpleLoanSimpleProposalRequestSchemaRequestNonceSpace } from "./v13-create-simple-loan-simple-proposal-request-schema-request-nonce-space";
+import type { V13CreateSimpleLoanSimpleProposalRequestSchemaRequestReferrer } from "./v13-create-simple-loan-simple-proposal-request-schema-request-referrer";
 import type { V13CreateSimpleLoanSimpleProposalRequestSchemaRequestRefinancingLoanId } from "./v13-create-simple-loan-simple-proposal-request-schema-request-refinancing-loan-id";
 import type { V13CreateSimpleLoanSimpleProposalRequestSchemaRequestRelatedThesisId } from "./v13-create-simple-loan-simple-proposal-request-schema-request-related-thesis-id";
 import type { V13CreateSimpleLoanSimpleProposalRequestSchemaRequestSourceOfFunds } from "./v13-create-simple-loan-simple-proposal-request-schema-request-source-of-funds";
@@ -52,4 +53,5 @@ export interface V13CreateSimpleLoanSimpleProposalRequestSchemaRequest {
 	is_on_chain: boolean;
 	source_of_funds?: V13CreateSimpleLoanSimpleProposalRequestSchemaRequestSourceOfFunds;
 	related_thesis_id?: V13CreateSimpleLoanSimpleProposalRequestSchemaRequestRelatedThesisId;
+	referrer?: V13CreateSimpleLoanSimpleProposalRequestSchemaRequestReferrer;
 }

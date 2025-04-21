@@ -1,27 +1,28 @@
+import type { Metadata } from "next";
 import "./global.css";
-import Header from "@/components/Header";
-import type { ReactNode } from "react";
-import { Providers } from "./providers";
 
-export const metadata = {
-	title: "PWN SDK Examples",
-	description: "Example components to interact with the PWN Protocol",
+import Header from "@/components/Header";
+import ContextProvider from "@/context";
+import { headers } from "next/headers"; // added
+
+export const metadata: Metadata = {
+	title: "AppKit Example App",
+	description: "Powered by Reown",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
-}: {
-	children: ReactNode;
-}) {
+}: Readonly<{
+	children: React.ReactNode;
+}>) {
+	const headersObj = await headers();
+	const cookies = headersObj.get("cookie");
+
 	return (
 		<html lang="en">
 			<body>
-				<Providers>
-					<div className="min-h-screen flex flex-col">
-						<Header />
-						<main className="flex-1">{children}</main>
-					</div>
-				</Providers>
+				<Header />
+				<ContextProvider cookies={cookies}>{children}</ContextProvider>
 			</body>
 		</html>
 	);

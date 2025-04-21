@@ -12,7 +12,7 @@ import { type IElasticProposalBase, ProposalType } from "./proposal-base.js";
 export class ElasticProposal implements IElasticProposalBase {
 	type = ProposalType.Elastic as const;
 
-	ERC712_TYPES = {
+	static ERC712_TYPES = {
 		Proposal: [
 			{ name: "collateralCategory", type: "uint8" },
 			{ name: "collateralAddress", type: "address" },
@@ -102,6 +102,7 @@ export class ElasticProposal implements IElasticProposalBase {
 		this.chainId = chainId;
 
 		this.relatedStrategyId = proposal.relatedStrategyId;
+		this.sourceOfFunds = proposal.sourceOfFunds;
 	}
 
 	creditPerCollateralUnit: bigint;
@@ -132,4 +133,5 @@ export class ElasticProposal implements IElasticProposalBase {
 	loanContract: AddressString;
 
 	relatedStrategyId?: string;
+	sourceOfFunds: AddressString | null;
 }

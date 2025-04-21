@@ -1,12 +1,44 @@
-# PWNDAO SDK
+# PWNDAO SDK (Beta)
 
 [![CI and Publish](https://github.com/PWNDAO/pwn-sdks/actions/workflows/ci-and-publish.yml/badge.svg)](https://github.com/PWNDAO/pwn-sdks/actions/workflows/ci-and-publish.yml)
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+> ⚠️ **Beta Notice**: This SDK is currently in beta and under active development. APIs and functionality may change as we continue to improve and expand the capabilities.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+## Features
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/js?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+The PWN SDK provides a comprehensive set of tools for interacting with the PWN protocol:
+
+- **Proposal Management**: Create, view, and manage lending proposals with ease
+- **Strategy Integration**: Access and implement various lending strategies
+- **API Access**: Direct integration with PWN's API for data retrieval and management
+- **Web3 Integration**: Seamless connection with web3 wallets and blockchain interactions
+
+## Contributing
+
+We welcome contributions from the community! PWN features an incentive program for contributors:
+
+🏆 **Contributor Incentives Program**
+- Active contributors can earn rewards for meaningful contributions
+- Opportunities to join the PWN DAO governance
+- Recognition in the PWN community
+
+## Support & Feedback
+
+Having questions, feature requests, or found a bug? We're here to help!
+
+- 🐛 **Found a bug?** [Open an issue](https://github.com/PWNDAO/pwn-sdks/issues/new?labels=bug)
+- 💡 **Have a feature request?** [Submit it here](https://github.com/PWNDAO/pwn-sdks/issues/new?labels=enhancement)
+- ❓ **Questions?** [Start a discussion](https://github.com/PWNDAO/pwn-sdks/discussions/new)
+
+## Packages
+
+This monorepo contains the following packages:
+
+- [@pwndao/core](./packages/core/README.md) - Core functionality and utilities
+- [@pwndao/v1-core](./packages/v1-core/README.md) - V1 Core functionality and utilities
+- [@pwndao/api](./packages/api/README.md) - Core functionality and utilities
+- [@pwndao/v1-sdk-react](./packages/v1-sdk-react/README.md) - React SDK for PWN integration
+- [@pwndao/v1-sdk-vue](./packages/v1-sdk-vue/README.md) - Vue SDK for PWN integration
 
 ## Run tasks
 
@@ -35,60 +67,13 @@ To run any task with Nx use:
 bunx nx <target> <project-name>
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Versioning and releasing
-
-To version and release the library use
-
-```
-bunx nx release
-```
-
-Pass `--dry-run` to see what would happen without actually releasing the library.
-
-[Learn more about Nx release &raquo;](hhttps://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Keep TypeScript project references up to date
-
-Nx automatically updates TypeScript [project references](https://www.typescriptlang.org/docs/handbook/project-references.html) in `tsconfig.json` files to ensure they remain accurate based on your project dependencies (`import` or `require` statements). This sync is automatically done when running tasks such as `build` or `typecheck`, which require updated references to function correctly.
-
-To manually trigger the process to sync the project graph dependencies information to the TypeScript project references, run the following command:
+To create a release:
 
 ```sh
-npx nx sync
+export HUSKY=0 # disable pre-commit hooks
+bunx nx release --skip-publish # after selecting a version this will automatiac
+unset HUSKY
 ```
 
-You can enforce that the TypeScript project references are always in the correct state when running in CI by adding a step to your CI job configuration that runs the following command:
 
-```sh
-npx nx sync:check
-```
 
-[Learn more about nx sync](https://nx.dev/reference/nx-commands#sync)
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/nx-api/js?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)

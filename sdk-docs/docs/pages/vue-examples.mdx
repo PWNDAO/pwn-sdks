@@ -66,56 +66,241 @@ const getPairKey = (strategy) => {
 </script>
 ```
 
-## 3. Testing Strategy Hooks
+## 3. Creating Strategy Commitments
 
-Example of testing the strategy hook:
+Example of a component for creating strategy commitments:
 
-```typescript
-// use-strategy.test.ts
-import { mount } from '@vue/test-utils'
-import { useStrategy } from './use-strategy'
-import { VueQueryPlugin } from '@tanstack/vue-query'
-import { getStrategy } from '@pwndao/v1-core'
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useAccount, useConfig } from '@wagmi/vue';
+import { sepolia } from 'wagmi/chains';
+import { useMakeProposals, useUserWithNonce } from '@pwndao/sdk-v1-vue';
+import { createElasticProposals } from '@pwndao/v1-core';
+import type { Strategy } from '@pwndao/v1-core';
 
-vi.mock('@pwndao/v1-core', () => ({
-    getStrategy: vi.fn(),
-}))
+const props = defineProps<{
+  strategy: Strategy;
+}>();
 
-describe('useStrategy', () => {
-  it('should be a function', () => {
-    const wrapper = mount(useStrategy, {
-        global: {
-          plugins: [VueQueryPlugin],
-        }
-    })
+const { address, isConnected } = useAccount();
+const config = useConfig();
 
-    expect(useStrategy).toBeInstanceOf(Function)
-    expect(wrapper.vm).toBeDefined()
-    expect(getStrategy).toHaveBeenCalledWith('test')
-  })
-})
+// Form state
+const creditAmount = ref('100');
+const errorMessage = ref<string | null>(null);
+
+const { userWithNonce: user } = useUserWithNonce([sepolia.id]);
+const {
+  mutateAsync: makeProposal,
+  isPending: isLoading,
+  isSuccess,
+  error,
+  data: txHash,
+} = useMakeProposals(user);
+
+// Handle form submission
+const handleSubmit = async (e: Event) => {
+  e.preventDefault();
+  errorMessage.value = null;
+
+  if (!isConnected.value || !address.value || !user.value) {
+    return;
+  }
+
+  try {
+    // Create proposals with proper parameters
+    const proposalsToCreate = createElasticProposals(
+      props.strategy,
+      address.value,
+      creditAmount.value,
+      config,
+    );
+
+    const res = await makeProposal(proposalsToCreate);
+    console.log("Proposals created successfully:", res);
+  } catch (err) {
+    console.error("Error creating commitment:", err);
+    errorMessage.value = err instanceof Error ? err.message : "An unknown error occurred";
+  }
+};
+</script>
+
+<template>
+  <div>
+    <form @submit="handleSubmit" class="space-y-4">
+      <!-- Credit Amount Input -->
+      <div>
+        <label>Credit Amount</label>
+        <input
+          v-model="creditAmount"
+          type="text"
+          placeholder="Enter amount"
+          required
+        />
+      </div>
+
+      <!-- Strategy Terms Display -->
+      <div>
+        <h3>Strategy Terms</h3>
+        <div>
+          <div>APR: {{ strategy.terms.apr[Object.keys(strategy.terms.apr)[0]] }}%</div>
+          <div>LTV: {{ strategy.terms.ltv[Object.keys(strategy.terms.ltv)[0]] }}%</div>
+          <div>Duration: {{ strategy.terms.durationDays }} days</div>
+          <div>Expiration: {{ strategy.terms.expirationDays }} days</div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        :disabled="isLoading || (!isConnected && !address)"
+      >
+        {{ isLoading
+          ? 'Creating Commitment...'
+          : !isConnected
+            ? 'Connect Wallet to Continue'
+            : 'Create Commitment' }}
+      </button>
+    </form>
+
+    <!-- Transaction Status -->
+    <div v-if="isLoading" class="mt-6">
+      <p>Transaction in progress...</p>
+    </div>
+
+    <div v-if="isSuccess" class="mt-6">
+      <p>Commitment created successfully!</p>
+      <p v-if="txHash">
+        Transaction Hash:
+        <a
+          :href="`https://sepolia.etherscan.io/tx/${txHash}`"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {{ JSON.stringify(txHash) }}
+        </a>
+      </p>
+    </div>
+
+    <div v-if="error || errorMessage" class="mt-6">
+      <p>Error creating commitment:</p>
+      <p>{{ errorMessage || error?.message || String(error) }}</p>
+    </div>
+  </div>
+</template>
 ```
+
+## 4. Custom Authentication with useUserNonces
+
+When implementing World App's MiniKit for authentication instead of Wagmi, you can use the `useUserNonces` composable to manage user nonces across different chains. This is particularly useful when building mini apps for World App:
+
+```vue
+<script setup lang="ts">
+import { useUserNonces } from '@pwndao/sdk-v1-vue';
+import { SupportedChain } from '@pwndao/sdk-core';
+import { MiniKit } from '@worldcoin/minikit-js';
+import { ref, onMounted } from 'vue';
+
+// Reactive state for address
+const address = ref<string>();
+const chainIds = ref([SupportedChain.World, SupportedChain.Sepolia]);
+const isMinikitAvailable = ref(false);
+
+// Initialize MiniKit
+onMounted(() => {
+  MiniKit.install();
+  isMinikitAvailable.value = MiniKit.isInstalled();
+});
+
+// Handle World App authentication
+const handleAuth = async () => {
+  if (!isMinikitAvailable.value) {
+    console.error('Please open this app in World App');
+    return;
+  }
+
+  try {
+    const response = await MiniKit.walletAuth();
+    address.value = response.address;
+  } catch (err) {
+    console.error('Authentication failed:', err);
+  }
+};
+
+const { data: userWithNonces, isLoading, error } = useUserNonces(
+  address,
+  chainIds
+);
+</script>
+
+<template>
+  <div>
+    <div v-if="!isMinikitAvailable">
+      Please open this app in World App
+    </div>
+    <div v-else-if="!address">
+      <button @click="handleAuth">
+        Authenticate with World App
+      </button>
+    </div>
+    <div v-else>
+      <div v-if="isLoading">Loading user nonces...</div>
+      <div v-else-if="error">Error: {{ error.message }}</div>
+      <div v-else>
+        <h2>User Nonces</h2>
+        <div>Connected Address: {{ address }}</div>
+        <div v-if="userWithNonces">
+          <div v-for="chainId in chainIds" :key="chainId">
+            Chain {{ chainId }}: Nonce {{ userWithNonces.nonces[chainId] }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+```
+
+The `useUserNonces` composable is designed for:
+- Building mini apps for World App using MiniKit
+- Tracking user nonces across multiple chains
+- Custom authentication flows outside of Wagmi
+- Managing proposal sequences with proper nonce tracking
+
+Key features:
+- Reactive nonce tracking for specified chains
+- Automatic nonce synchronization
+- TanStack Query integration for efficient caching
+- Type-safe implementation with full TypeScript support
+- Seamless integration with World App's MiniKit
+
+For more information about MiniKit integration, visit the [World App Mini Apps documentation](https://docs.world.org/mini-apps/quick-start/installing).
 
 ## Important Considerations
 
-1. **Vue Query Integration**
-   - Uses TanStack Query (Vue Query) for efficient data management
-   - Handles caching and request deduplication automatically
-   - Provides loading and error states out of the box
+1. **Multi-Proposal Support**
+   - Uses `createElasticProposals` to generate multiple proposals
+   - Handles batch proposal creation in a single transaction
+   - Manages nonces automatically across chains
 
-2. **Composables Pattern**
-   - Follows Vue's Composition API best practices
-   - Creates reusable hooks for data fetching
-   - Separates concerns between data and presentation
+2. **Error Handling**
+   - Implements comprehensive error handling
+   - Shows user-friendly error messages
+   - Handles both transaction and validation errors
 
-3. **Type Safety**
-   - Fully typed using TypeScript
+3. **Transaction Status**
+   - Displays loading state during transaction
+   - Shows success message with transaction hash
+   - Provides etherscan link for transaction tracking
+
+4. **Type Safety**
+   - Uses TypeScript for type safety
    - Leverages SDK types for consistency
-   - Provides proper type inference in templates
+   - Provides proper type inference
 
-4. **Testing**
-   - Uses Vue Test Utils for component testing
-   - Implements proper mocking of SDK functions
-   - Tests both composables and components
+5. **Vue Composition API**
+   - Uses Vue 3 Composition API
+   - Implements reactive state management
+   - Follows Vue best practices for component organization
 
 For more detailed examples and advanced usage patterns, check out our [Vue Example App](https://github.com/pwndao/example-vue). 

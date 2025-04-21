@@ -1,10 +1,9 @@
-import { type SupportedChain, UserWithNonceManager } from "@pwndao/sdk-core";
+import { SupportedChain, UserWithNonceManager } from "@pwndao/sdk-core";
 import { generateAddress, getMockUser } from "@pwndao/sdk-core";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import type { IServerAPI } from "../factories/types.js";
 import { getUserWithNonce } from "./get-user-with-nonce.js";
 
-// Mock dependencies
 vi.mock("@pwndao/sdk-core", async (importOriginal) => {
 	const actual = await importOriginal();
 	return {
@@ -17,11 +16,9 @@ vi.mock("@pwndao/sdk-core", async (importOriginal) => {
 });
 
 describe("useGetUserWithNonce", () => {
-	// Setup mocks
 	const mockUser = getMockUser(generateAddress());
-	const mockChainIds: SupportedChain[] = [1, 137]; // Example chain IDs (e.g., Ethereum and Polygon)
+	const mockChainIds: SupportedChain[] = [SupportedChain.Ethereum, SupportedChain.Polygon];
 
-	// Mock API
 	const mockApi: IServerAPI = {
 		get: {
 			recentNonce: vi.fn(),
@@ -33,10 +30,9 @@ describe("useGetUserWithNonce", () => {
 	});
 
 	test("should fetch nonces for all chains and create UserWithNonceManager", async () => {
-		// Setup successful responses
-		mockApi.get.recentNonce.mockImplementation((address, chainId) => {
-			if (chainId === 1) return Promise.resolve(["100", "101"]);
-			if (chainId === 137) return Promise.resolve(["200", "201"]);
+		vi.mocked(mockApi.get.recentNonce).mockImplementation((address, chainId) => {
+			if (chainId === SupportedChain.Ethereum) return Promise.resolve([100n, 101n]);
+			if (chainId === SupportedChain.Polygon) return Promise.resolve([200n, 201n]);
 			return Promise.reject(new Error("Unsupported chain"));
 		});
 
@@ -44,29 +40,28 @@ describe("useGetUserWithNonce", () => {
 
 		// Verify API calls
 		expect(mockApi.get.recentNonce).toHaveBeenCalledTimes(2);
-		expect(mockApi.get.recentNonce).toHaveBeenCalledWith(mockUser.address, 1);
-		expect(mockApi.get.recentNonce).toHaveBeenCalledWith(mockUser.address, 137);
+		expect(mockApi.get.recentNonce).toHaveBeenCalledWith(mockUser.address, SupportedChain.Ethereum);
+		expect(mockApi.get.recentNonce).toHaveBeenCalledWith(mockUser.address, SupportedChain.Polygon);
 
 		// Verify UserWithNonceManager creation
 		expect(UserWithNonceManager).toHaveBeenCalledWith(mockUser, {
-			1: [BigInt(100), BigInt(101)],
-			137: [BigInt(200), BigInt(201)],
+			[SupportedChain.Ethereum]: [BigInt(100), BigInt(101)],
+			[SupportedChain.Polygon]: [BigInt(200), BigInt(201)],
 		});
 
 		// Verify the returned object
 		expect(result).toEqual({
 			user: mockUser,
 			nonces: {
-				1: [BigInt(100), BigInt(101)],
-				137: [BigInt(200), BigInt(201)],
+				[SupportedChain.Ethereum]: [BigInt(100), BigInt(101)],
+				[SupportedChain.Polygon]: [BigInt(200), BigInt(201)],
 			},
 		});
 	});
 
 	test("should handle failed nonce requests gracefully", async () => {
-		// Setup mixed responses - one successful, one failed
-		mockApi.get.recentNonce.mockImplementation((address, chainId) => {
-			if (chainId === 1) return Promise.resolve(["100", "101"]);
+		vi.mocked(mockApi.get.recentNonce).mockImplementation((address, chainId) => {
+			if (chainId === SupportedChain.Ethereum) return Promise.resolve([100n, 101n]);
 			return Promise.reject(new Error("Failed to fetch nonce"));
 		});
 

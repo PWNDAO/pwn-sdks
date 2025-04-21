@@ -1,15 +1,14 @@
 import type {
 	FreeUserNonceSchemaWorkaround,
-	proposalCreateBatchResponse,
-	proposalCreateResponse,
+	ProposalDetailSchema,
 } from "@pwndao/api-sdk";
 import type {
 	AddressString,
 	BaseAsset,
+	ERC20TokenLike,
 	Hex,
 	SupportedChain,
 	Token,
-	UserWithNonceManager,
 } from "@pwndao/sdk-core";
 import type {
 	ProposalWithSignature,
@@ -17,9 +16,10 @@ import type {
 } from "../models/strategies/types.js";
 
 export type BaseTerm = {
-	user: UserWithNonceManager;
+	// TODO if we wanna enable using pool hooks for collateral, we should also allow
+	//  PoolToken here, alongside the ERC20 and NFTs
 	collateral: Token;
-	credit: Token;
+	credit: ERC20TokenLike;
 	creditAmount: bigint;
 	ltv: Record<string, number>;
 	apr: Record<string, number>;
@@ -36,12 +36,16 @@ export type BaseTerm = {
 	utilizedCreditId: Hex;
 	relatedStrategyId?: string;
 	isOffer: boolean;
+	sourceOfFunds: AddressString | null;
 };
 
 export interface IServerAPI {
 	get: {
 		getStrategyDetail(strategyId: string): Promise<Strategy>;
-		getStrategies(chainId: SupportedChain): Promise<Strategy[]>;
+		getStrategies(
+			chainId: SupportedChain,
+			userAddress?: AddressString,
+		): Promise<Strategy[]>;
 		proposalsByStrategy(strategyId: string): Promise<ProposalWithSignature[]>;
 		/**
 		 * Returns the recent nonce for the user and the nonce space
@@ -58,10 +62,10 @@ export interface IServerAPI {
 	post: {
 		persistProposal: (
 			params: ProposalWithSignature,
-		) => Promise<proposalCreateResponse>;
+		) => Promise<ProposalDetailSchema>;
 		persistProposals: (
 			params: ProposalWithSignature[],
-		) => Promise<proposalCreateBatchResponse>;
+		) => Promise<ProposalDetailSchema[]>;
 		/**
 		 * Updates the nonce for the user and the chain
 		 * @param userAddress

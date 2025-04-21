@@ -29,7 +29,7 @@ describe("getStrategies", () => {
 		const result = await getStrategies(mockChainId);
 
 		expect(API.get.getStrategies).toHaveBeenCalledTimes(1);
-		expect(API.get.getStrategies).toHaveBeenCalledWith(mockChainId);
+		expect(API.get.getStrategies).toHaveBeenCalledWith(mockChainId, undefined);
 		expect(result).toEqual(mockStrategies);
 	});
 

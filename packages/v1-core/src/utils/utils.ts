@@ -83,8 +83,8 @@ export const encodeElasticProposalForBackend = (
 	return {
 		...baseData,
 		credit_per_collateral_unit: String(proposal.creditPerCollateralUnit),
-		relatedStrategyId: proposal.relatedStrategyId,
-		isOffer: proposal.isOffer
+		related_thesis_id: proposal.relatedStrategyId,
+		is_offer: proposal.isOffer
 	} as V13CreateSimpleLoanElasticProposalRequestSchemaRequest;
 };
 

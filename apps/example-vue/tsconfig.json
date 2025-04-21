@@ -4,13 +4,13 @@
   "include": [],
   "references": [
     {
-      "path": "../../packages/core"
-    },
-    {
       "path": "../../packages/v1-sdk-vue"
     },
     {
       "path": "../../packages/v1-core"
+    },
+    {
+      "path": "../../packages/core"
     },
     {
       "path": "./tsconfig.app.json"
@@ -24,7 +24,7 @@
     "paths": {
       "@/components/*": ["./src/components/*"],
       "@/views/*": ["./src/views/*"],
-      "@/utils/*": ["./src/utils/*"],
+      "@/utils/*": ["./src/utils/*"]
     }
   }
 }

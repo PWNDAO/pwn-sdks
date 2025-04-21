@@ -1,3 +1,4 @@
+import type { UserWithNonceManager } from "@pwndao/sdk-core";
 import type { ProposalWithSignature } from "src/models/strategies/types.js";
 import invariant from "ts-invariant";
 import { createChainLinkElasticProposal } from "../factories/create-chain-link-proposal.js";
@@ -16,6 +17,7 @@ const proposalTypes = {
 };
 
 export const makeProposal = async <T extends ProposalType>(
+	user: UserWithNonceManager | undefined,
 	proposalType: T,
 	proposalParams: Parameters<(typeof proposalTypes)[T]>[0],
 	deps: Parameters<(typeof proposalTypes)[T]>[1],
@@ -26,6 +28,13 @@ export const makeProposal = async <T extends ProposalType>(
 	);
 	invariant(proposalParams, "Proposal params are required");
 	invariant(deps, "Deps are required");
+	invariant(user, "User is required");
+
+	const userNoncesForProposals = user.nonces[proposalParams.credit.chainId];
+	invariant(
+		userNoncesForProposals,
+		`User nonces for proposals are required for chain ${proposalParams.credit.chainId}`,
+	);
 
 	let proposalWithSignature: ProposalWithSignature | null = null;
 
@@ -35,9 +44,14 @@ export const makeProposal = async <T extends ProposalType>(
 				typeof createElasticProposal
 			>[0];
 			const elasticDeps = deps as Parameters<typeof createElasticProposal>[1];
-			const proposal = await createElasticProposal(elasticParams, elasticDeps);
-			proposalWithSignature =
-				await elasticDeps.contract.createProposal(proposal);
+			const proposal = await createElasticProposal(
+				elasticParams,
+				elasticDeps,
+				user,
+			);
+			proposalWithSignature = await elasticDeps.contract.createProposal(
+				proposal,
+			);
 			break;
 		}
 		case ProposalType.ChainLink: {
@@ -50,9 +64,14 @@ export const makeProposal = async <T extends ProposalType>(
 			const proposal = await createChainLinkElasticProposal(
 				chainLinkParams,
 				chainLinkDeps,
+				user,
 			);
-			proposalWithSignature =
-				await chainLinkDeps.contract.createProposal(proposal);
+			proposalWithSignature = await chainLinkDeps.contract.createProposal(
+				proposal,
+				{
+					persistProposal: chainLinkDeps.api.persistProposal,
+				},
+			);
 			break;
 		}
 		case ProposalType.DutchAuction:

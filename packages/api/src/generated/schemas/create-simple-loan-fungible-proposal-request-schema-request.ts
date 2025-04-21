@@ -14,6 +14,7 @@ import type { CreateSimpleLoanFungibleProposalRequestSchemaRequestMinCollateralA
 import type { CreateSimpleLoanFungibleProposalRequestSchemaRequestMultiproposalMerkleRoot } from "./create-simple-loan-fungible-proposal-request-schema-request-multiproposal-merkle-root";
 import type { CreateSimpleLoanFungibleProposalRequestSchemaRequestNonce } from "./create-simple-loan-fungible-proposal-request-schema-request-nonce";
 import type { CreateSimpleLoanFungibleProposalRequestSchemaRequestNonceSpace } from "./create-simple-loan-fungible-proposal-request-schema-request-nonce-space";
+import type { CreateSimpleLoanFungibleProposalRequestSchemaRequestReferrer } from "./create-simple-loan-fungible-proposal-request-schema-request-referrer";
 import type { CreateSimpleLoanFungibleProposalRequestSchemaRequestRefinancingLoanId } from "./create-simple-loan-fungible-proposal-request-schema-request-refinancing-loan-id";
 import type { CreateSimpleLoanFungibleProposalRequestSchemaRequestRelatedThesisId } from "./create-simple-loan-fungible-proposal-request-schema-request-related-thesis-id";
 import type { CreateSimpleLoanFungibleProposalRequestSchemaRequestSourceOfFunds } from "./create-simple-loan-fungible-proposal-request-schema-request-source-of-funds";
@@ -52,4 +53,5 @@ export interface CreateSimpleLoanFungibleProposalRequestSchemaRequest {
 	is_on_chain: boolean;
 	source_of_funds?: CreateSimpleLoanFungibleProposalRequestSchemaRequestSourceOfFunds;
 	related_thesis_id?: CreateSimpleLoanFungibleProposalRequestSchemaRequestRelatedThesisId;
+	referrer?: CreateSimpleLoanFungibleProposalRequestSchemaRequestReferrer;
 }

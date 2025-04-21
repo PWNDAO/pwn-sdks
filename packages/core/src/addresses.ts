@@ -49,15 +49,17 @@ export const PWN_V1_2_STARKNET_CONTRACTS: V1_2_StarknetContracts = {
 		"0x00da94e7963078f0ad46b431e6d518c0bdb7415c54732d812bcf62c3a36dacf2",
 };
 
-export const PWN_V1_3_CONTRACTS: Omit<V1_3_Contracts, "tokenBundlerContract"> =
+/**
+ * ChainLink contracts are different for each chain
+ * https://github.com/PWNDAO/pwn_protocol/tree/318e5f19eda4e9d1616a9c3d975a84c5dfd768cf?tab=readme-ov-file#elastic-chainlink-proposal
+ */
+export const PWN_V1_3_CONTRACTS: Omit<V1_3_Contracts, "tokenBundlerContract" | "pwnSimpleLoanElasticChainlinkProposal"> =
 	{
 		utilizedCredit: "0x8E6F44DEa3c11d69C63655BDEcbA25Fa986BCE9D",
 		pwnSimpleLoan: "0x719A69d0dc67bd3Aa7648D4694081B3c87952797",
 		pwnSimpleLoanSimpleProposal: "0xe624E7D33baC728bE2bdB606Da0018B6E05A84D9",
 		pwnSimpleLoanListProposal: "0x7160Ec33788Df9AFb8AAEe777e7Ae21151B51eDd",
 		pwnSimpleLoanElasticProposal: "0xeC6390D4B22FFfD22E5C5FDB56DaF653C3Cd0626",
-		pwnSimpleLoanElasticChainlinkProposal:
-			"0x8F69B1DC4390a2BBf3d8297cd7165a33728D80A6",
 		pwnSimpleLoanDutchAuctionProposal:
 			"0x1b1394F436cAeaE139131E9bca6f5d5A2A7e1369",
 		pwnConfig: "0xd52a2898d61636bB3eEF0d145f05352FF543bdCC",
@@ -69,78 +71,83 @@ export const PWN_V1_3_CONTRACTS: Omit<V1_3_Contracts, "tokenBundlerContract"> =
 const MAINNET_CONTRACTS: V1_3_Contracts = {
 	...PWN_V1_3_CONTRACTS,
 	tokenBundlerContract: "0x19e3293196aee99BB3080f28B9D3b4ea7F232b8d",
+	pwnSimpleLoanElasticChainlinkProposal:
+		"0xBA58E16BE93dAdcBB74a194bDfD9E5933b24016B",
 };
 
 // Arbitrum contracts
 const ARBITRUM_CONTRACTS: V1_3_Contracts = {
 	...PWN_V1_3_CONTRACTS,
 	tokenBundlerContract: "0x448E3D0a4BAa00FE511a03E7B27177AeDE6d9636",
+	pwnSimpleLoanElasticChainlinkProposal: "0xc566994F7c9D65C58a8f0C16F91b00Da6aE32BB6"
 };
 
 // Optimism contracts
 const OPTIMISM_CONTRACTS: V1_3_Contracts = {
 	...PWN_V1_3_CONTRACTS,
 	tokenBundlerContract: "0x43Ffd9dF079451Fe7D16Ac2c51E13DF2a173B71E",
+	pwnSimpleLoanElasticChainlinkProposal: "0xC267A16836D475561b37e7166ABeB92d876C8A3c"
 };
 
 // Base contracts
 const BASE_CONTRACTS: V1_3_Contracts = {
 	...PWN_V1_3_CONTRACTS,
 	tokenBundlerContract: "0x6fD3f5439aB1C103599385929d5f4c19acdBd264",
+	pwnSimpleLoanElasticChainlinkProposal: "0xB6E4B8Ba8E26ac8d4979a8227DAda26bD3Ac9A10",
 };
 
 // Polygon contracts
 const POLYGON_CONTRACTS: V1_3_Contracts = {
 	...PWN_V1_3_CONTRACTS,
 	tokenBundlerContract: "0xe52405604bf644349f57b36ca6e85cf095fab8da",
+	pwnSimpleLoanElasticChainlinkProposal: "0x5A8164910e995781C154fb092653752cE6BCDCA7",
 };
 
 // Gnosis contracts
 const GNOSIS_CONTRACTS: V1_3_Contracts = {
 	...PWN_V1_3_CONTRACTS,
 	tokenBundlerContract: "0x431131622e088Fb0F9828Ca05b62210fc9eDcC04",
+	pwnSimpleLoanElasticChainlinkProposal: "0x1719591db6AD58643aD4804eF8C2f2E51768C30E",
 };
 
 // Worldchain contracts
 const WORLDCHAIN_CONTRACTS: V1_3_Contracts = {
 	...PWN_V1_3_CONTRACTS,
 	tokenBundlerContract: "0xc0aCA216Aa936511b24Ff238F610B02bE54e10AD",
+	pwnSimpleLoanElasticChainlinkProposal: ZERO_ADDRESS, // not deployed
 };
 
 // BSC contracts
 const BSC_CONTRACTS: V1_3_Contracts = {
 	...PWN_V1_3_CONTRACTS,
 	tokenBundlerContract: "0x4A75a527E97d853109aA6998a2B9E45a87A31e9f",
+	pwnSimpleLoanElasticChainlinkProposal: "0x79E1D066131C93610475C9AAEe3De861A8Cd2B71",
 };
 
 const CRONOS_CONTRACTS: V1_3_Contracts = {
 	...PWN_V1_3_CONTRACTS,
 	tokenBundlerContract: "0x973E09e96E64E4bf17e383a8A497Fb566284c707",
+	pwnSimpleLoanElasticChainlinkProposal: ZERO_ADDRESS, // not deployed
 };
 
 const UNICHAIN_CONSTANTS: V1_3_Contracts = {
 	...PWN_V1_3_CONTRACTS,
-	utilizedCredit: "0x585C2D4d5D84b296921BF96598961Eec6Ae5C09C",
-	pwnSimpleLoan: "0x322e86E6c813d77a904C5B4aa808a13E0AD4412f",
-	pwnSimpleLoanSimpleProposal: "0xCAec7F837930dC9fB36B0E584FEf498714B2a951",
-	pwnSimpleLoanListProposal: "0x2ECd36747A4a18Dc578798A79c87035D610EDE9F",
-	pwnSimpleLoanElasticProposal: "0x2Bf2dC42eF08FA2C5BD15f6aDca402bf2Be75A1A",
-	pwnSimpleLoanElasticChainlinkProposal: ZERO_ADDRESS, // not deployed
-	pwnSimpleLoanDutchAuctionProposal:
-		"0x469B2C01FBb8D2073562F4Fe28aaA67D59c05Dc2",
 	tokenBundlerContract: "0x354869495Fd916ADAFc0626C3d60115240dc06f1",
+	pwnSimpleLoanElasticChainlinkProposal: ZERO_ADDRESS, // not deployed
 };
 
 // Sepolia contracts
 const SEPOLIA_CONTRACTS: V1_3_Contracts = {
 	...PWN_V1_3_CONTRACTS,
-	tokenBundlerContract: "0x448E3D0a4BAa00FE511a03E7B27177AeDE6d9636",
+	tokenBundlerContract: "0x448E3D0a4BAa0A0FE511a03E7B27177AeDE6d9636",
+	pwnSimpleLoanElasticChainlinkProposal: "0xC46170F43b97faE1A8B507d6fdDaFfBb7527D61B",
 };
 
 // Unichain Sepolia contracts
 const UNICHAIN_SEPOLIA_CONTRACTS: V1_3_Contracts = {
 	...PWN_V1_3_CONTRACTS,
 	tokenBundlerContract: "0x1381F509f56f2aaA0faBD3012455901eA53F0BbD",
+	pwnSimpleLoanElasticChainlinkProposal: ZERO_ADDRESS, // not deployed
 };
 
 const STARKNET_CONTRACTS: V1_2_StarknetContracts = {

@@ -8,6 +8,10 @@ on:
       - v*.*.*
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   actions: read
   contents: read
@@ -15,6 +19,7 @@ permissions:
 
 jobs:
   ci:
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/'))
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -30,16 +35,15 @@ jobs:
 
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.2.5
+          bun-version: 1.2.9
 
       - run: bun install
       - uses: nrwl/nx-set-shas@v4
 
-      - run: bunx nx affected -t biome-lint test build --parallel=1 --verbose
+      - run: bunx nx affected -t biome-lint test build --parallel
 
   publish:
     name: Publish All Packages
-    needs: ci
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -58,7 +62,7 @@ jobs:
       - name: Install Bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.2.5
+          bun-version: 1.2.9
 
       - name: Install dependencies
         run: bun install
@@ -70,7 +74,7 @@ jobs:
 
       - name: Build All Packages
         id: build
-        run: bunx nx run-many -t build --exclude=/apps
+        run: bunx nx run-many -t build --parallel --exclude=/apps
         shell: bash
 
       - name: Publish All Packages

@@ -81,17 +81,44 @@ function useStrategy(strategyId: string) => {
 
 ### useMakeProposals
 
-Hook for creating new strategy proposals.
+Hook for creating new strategy proposals. Supports both single and multiple proposal creation.
 
 ```typescript
-function useMakeProposals(config: {
-  proposalType: ProposalType;
-  api: IProposalElasticAPIDeps;
-  contract: ElasticProposalContract;
-}) => {
-  mutateAsync: (params: ProposalParams) => Promise<void>;
+function useMakeProposals(user: UserWithNonceManager) => {
+  mutateAsync: (params: ProposalParamWithDeps<ImplementedProposalTypes>[]) => Promise<ProposalWithSignature[]>;
   isPending: boolean;
   isSuccess: boolean;
+  error: Error | null;
+  data: ProposalWithSignature[] | null;
+}
+```
+
+### useRevokeNonces
+
+Hook for revoking proposal nonces.
+
+```typescript
+function useRevokeNonces() => {
+  mutateAsync: (params: {
+    proposalNonces: bigint[];
+    chainId: SupportedChain;
+    owner: AddressString;
+    nonceSpace: bigint;
+  }) => Promise<void>;
+  isPending: boolean;
+  isSuccess: boolean;
+  error: Error | null;
+}
+```
+
+### useUserWithNonce
+
+Hook for managing user nonces across chains.
+
+```typescript
+function useUserWithNonce(chains: SupportedChain[]) => {
+  userWithNonce: UserWithNonceManager | null;
+  isLoading: boolean;
   error: Error | null;
 }
 ```
@@ -110,6 +137,38 @@ function useStrategy(strategyId: string) => {
 }
 ```
 
+### useMakeProposals
+
+Composable for creating new proposals.
+
+```typescript
+function useMakeProposals(user: UserWithNonceManager) => {
+  mutateAsync: (params: ProposalParamWithDeps<ImplementedProposalTypes>[]) => Promise<ProposalWithSignature[]>;
+  isPending: boolean;
+  isSuccess: boolean;
+  error: Error | null;
+  data: ProposalWithSignature[] | null;
+}
+```
+
+### useRevokeNonces
+
+Composable for revoking proposal nonces.
+
+```typescript
+function useRevokeNonces() => {
+  mutateAsync: (params: {
+    proposalNonces: bigint[];
+    chainId: SupportedChain;
+    owner: AddressString;
+    nonceSpace: bigint;
+  }) => Promise<void>;
+  isPending: boolean;
+  isSuccess: boolean;
+  error: Error | null;
+}
+```
+
 ## Core Functions
 
 ### getStrategy
@@ -120,16 +179,113 @@ Fetches a strategy by ID.
 async function getStrategy(strategyId: string): Promise<Strategy>
 ```
 
-### createUtilizedCreditId
+### createElasticProposals
 
-Creates a unique ID for a credit utilization.
+Helper function to create elastic proposal parameters.
 
 ```typescript
-function createUtilizedCreditId(params: {
-  proposer: string;
-  availableCreditLimit: bigint;
-}): string
+function createElasticProposals(
+  strategy: Strategy,
+  address: AddressString,
+  creditAmount: string,
+  config: Config,
+): ProposalParamWithDeps<ImplementedProposalTypes>[]
 ```
+
+### makeProposals
+
+Core function to create multiple proposals in a single transaction.
+
+```typescript
+async function makeProposals<T extends ImplementedProposalTypes>(
+  config: Config,
+  proposalParams: ProposalParamWithDeps<T>[],
+  user: UserWithNonceManager,
+): Promise<ProposalWithSignature[]>
+```
+
+### revokeProposals
+
+Core function to revoke proposal nonces.
+
+```typescript
+async function revokeProposals(
+  proposalNonces: bigint[],
+  chainId: SupportedChain,
+  owner: AddressString,
+  nonceSpace: bigint,
+  contract: RevokedNonceContract,
+): Promise<void>
+```
+
+## Types
+
+### ProposalParamWithDeps
+
+Type representing a proposal with its dependencies.
+
+```typescript
+interface ProposalParamWithDeps<T extends ImplementedProposalTypes> {
+  type: T;
+  params: Parameters<(typeof proposalTypes)[T]>[0];
+  deps: {
+    api: IProposalElasticAPIDeps;
+    contract: IProposalContract<any>;
+    loanContract: ILoanContract;
+  };
+}
+```
+
+### ProposalWithSignature
+
+Type representing a signed proposal.
+
+```typescript
+interface ProposalWithSignature extends ProposalWithHash {
+  signature: string | null;
+  isOnChain: boolean;
+}
+```
+
+### ProposalWithHash
+
+Type representing a proposal with its hash.
+
+```typescript
+interface ProposalWithHash extends Proposal {
+  hash: string;
+}
+```
+
+### UserWithNonceManager
+
+Type representing a user with nonce management capabilities.
+
+```typescript
+class UserWithNonceManager {
+  user: User;
+  nonces: Partial<Record<SupportedChain, [bigint, bigint]>>;
+  address: string;
+  
+  getNextNonce(chain: SupportedChain): bigint;
+  getNonceSpace(chain: SupportedChain): bigint;
+  getUsedNonces(): Partial<Record<SupportedChain, bigint>>;
+}
+```
+
+## Error Handling
+
+All hooks and functions may throw or return errors in the following cases:
+- Network errors
+- Invalid input parameters
+- Unauthorized access
+- Contract interaction failures
+- Wallet connection issues
+- Nonce management errors
+- Invalid nonce revocation attempts
+- Nonce space validation failures
+
+It's recommended to always implement proper error handling and loading states in your application.
 
 ## Constants
 
@@ -170,15 +326,4 @@ interface IProposalElasticAPIDeps {
   updateNonces: typeof API.post.updateNonce;
 }
 ```
-
-## Error Handling
-
-All hooks and functions may throw or return errors in the following cases:
-- Network errors
-- Invalid input parameters
-- Unauthorized access
-- Contract interaction failures
-- Wallet connection issues
-
-It's recommended to always implement proper error handling and loading states in your application.
 

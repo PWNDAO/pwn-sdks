@@ -19,7 +19,7 @@
           "lintFilePatterns": [
             "apps/example-next-e2e/**/*.ts"
           ],
-          "write": false,
+          "write": true,
           "unsafe": false
         }
       }

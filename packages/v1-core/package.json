@@ -1,6 +1,6 @@
 {
   "name": "@pwndao/v1-core",
-  "version": "0.0.1-alpha.3",
+  "version": "0.0.1-beta.24",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -18,16 +18,19 @@
     "!**/*.tsbuildinfo"
   ],
   "dependencies": {
+    "@moleculexyz/wagmi-safe-wait-for-tx": "^1.0.0",
     "@openzeppelin/merkle-tree": "^1.0.8",
-    "@pwndao/api-sdk": "workspace:*",
-    "@pwndao/sdk-core": "workspace:*",
+    "@pwndao/api-sdk": "0.0.1-beta.24",
+    "@pwndao/sdk-core": "0.0.1-beta.24",
+    "@safe-global/api-kit": "^3.0.1",
+    "@safe-global/protocol-kit": "^6.0.3",
     "@wagmi/cli": "^2.2.0",
     "@wagmi/core": "^2.16.7",
     "abitype": "^1.0.8",
+    "decimal.js": "^10.5.0",
     "ts-invariant": "^0.10.3",
     "viem": "^2.23.11",
-    "vitest": "^1.3.1",
-    "decimal.js": "^10.5.0"
+    "vitest": "^1.3.1"
   },
   "devDependencies": {
     "@wagmi/cli": "^2.2.0"

@@ -131,6 +131,12 @@ export interface ICommonProposalFields extends ProposalTerms, IProposalMisc {
 	 * Address of a loan contract that will create a loan from the proposal.
 	 */
 	loanContract: AddressString;
+	
+	/**
+	 * Address of a source of funds. This can be the lenders address, if the loan is funded directly,
+	 * or a pool address from with the funds are withdrawn on the lenders behalf.
+	 */
+	sourceOfFunds: AddressString | null;
 }
 
 export interface IElasticProposalBase

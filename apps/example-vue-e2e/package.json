@@ -16,7 +16,7 @@
           "lintFilePatterns": [
             "apps/example-vue-e2e/**/*.ts"
           ],
-          "write": false,
+          "write": true,
           "unsafe": false
         }
       }

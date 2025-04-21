@@ -13,6 +13,7 @@ import type { CreateSimpleLoanListProposalRequestSchemaRequestHash } from "./cre
 import type { CreateSimpleLoanListProposalRequestSchemaRequestMultiproposalMerkleRoot } from "./create-simple-loan-list-proposal-request-schema-request-multiproposal-merkle-root";
 import type { CreateSimpleLoanListProposalRequestSchemaRequestNonce } from "./create-simple-loan-list-proposal-request-schema-request-nonce";
 import type { CreateSimpleLoanListProposalRequestSchemaRequestNonceSpace } from "./create-simple-loan-list-proposal-request-schema-request-nonce-space";
+import type { CreateSimpleLoanListProposalRequestSchemaRequestReferrer } from "./create-simple-loan-list-proposal-request-schema-request-referrer";
 import type { CreateSimpleLoanListProposalRequestSchemaRequestRefinancingLoanId } from "./create-simple-loan-list-proposal-request-schema-request-refinancing-loan-id";
 import type { CreateSimpleLoanListProposalRequestSchemaRequestRelatedThesisId } from "./create-simple-loan-list-proposal-request-schema-request-related-thesis-id";
 import type { CreateSimpleLoanListProposalRequestSchemaRequestSourceOfFunds } from "./create-simple-loan-list-proposal-request-schema-request-source-of-funds";
@@ -51,4 +52,5 @@ export interface CreateSimpleLoanListProposalRequestSchemaRequest {
 	is_on_chain: boolean;
 	source_of_funds?: CreateSimpleLoanListProposalRequestSchemaRequestSourceOfFunds;
 	related_thesis_id?: CreateSimpleLoanListProposalRequestSchemaRequestRelatedThesisId;
+	referrer?: CreateSimpleLoanListProposalRequestSchemaRequestReferrer;
 }

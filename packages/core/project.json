@@ -16,7 +16,7 @@
         "lintFilePatterns": [
           "packages/core/src/**/*.ts"
         ],
-        "write": false,
+        "write": true,
         "unsafe": false
       }
     }

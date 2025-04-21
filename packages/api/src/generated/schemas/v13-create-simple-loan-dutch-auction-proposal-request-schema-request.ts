@@ -15,6 +15,7 @@ import type { V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestMinCred
 import type { V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestMultiproposalMerkleRoot } from "./v13-create-simple-loan-dutch-auction-proposal-request-schema-request-multiproposal-merkle-root";
 import type { V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestNonce } from "./v13-create-simple-loan-dutch-auction-proposal-request-schema-request-nonce";
 import type { V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestNonceSpace } from "./v13-create-simple-loan-dutch-auction-proposal-request-schema-request-nonce-space";
+import type { V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestReferrer } from "./v13-create-simple-loan-dutch-auction-proposal-request-schema-request-referrer";
 import type { V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestRefinancingLoanId } from "./v13-create-simple-loan-dutch-auction-proposal-request-schema-request-refinancing-loan-id";
 import type { V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestRelatedThesisId } from "./v13-create-simple-loan-dutch-auction-proposal-request-schema-request-related-thesis-id";
 import type { V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestSourceOfFunds } from "./v13-create-simple-loan-dutch-auction-proposal-request-schema-request-source-of-funds";
@@ -53,4 +54,5 @@ export interface V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequest {
 	is_on_chain: boolean;
 	source_of_funds?: V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestSourceOfFunds;
 	related_thesis_id?: V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestRelatedThesisId;
+	referrer?: V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestReferrer;
 }

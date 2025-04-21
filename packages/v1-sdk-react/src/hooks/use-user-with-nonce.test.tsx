@@ -1,13 +1,13 @@
 import { describe, it, expect, vi } from 'vitest';
+import type { Mock } from 'vitest';
 import { generateAddress, SupportedChain } from '@pwndao/sdk-core';
 import { API } from '@pwndao/v1-core';
 import { useUserWithNonce } from './use-user-with-nonce';
 import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient } from '@tanstack/query-core';
 import { QueryClientProvider } from '@tanstack/react-query';
-import React from 'react';
+import type React from 'react';
 
-// Mock modules before imports that use them
 vi.mock('wagmi', () => ({
   useAccount: vi.fn().mockReturnValue({ address: generateAddress(), isConnected: true }),
 }));
@@ -36,11 +36,9 @@ describe('useUserWithNonce', () => {
 
   it('should return the user with nonce', async () => {
 
-    API.get.recentNonce.mockResolvedValue([1n, 0n]);
+    (API.get.recentNonce as unknown as Mock).mockResolvedValue([1n, 0n]);
 
     const { result } = renderHook(() => useUserWithNonce([SupportedChain.Sepolia]), { wrapper });
-
-    console.log(result.current);
 
     await waitFor(() => expect(result.current.userWithNonce).toBeDefined());
     

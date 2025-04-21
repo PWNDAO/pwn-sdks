@@ -5,22 +5,27 @@ import type {
 	Token,
 	UserWithNonceManager,
 } from "@pwndao/sdk-core";
-import { ZERO_ADDRESS, ZERO_FINGERPRINT } from "@pwndao/sdk-core";
+import {
+	ZERO_ADDRESS,
+	ZERO_FINGERPRINT,
+	getUniqueCreditCollateralKey,
+	isPoolToken,
+} from "@pwndao/sdk-core";
+import type { IProposalChainLinkContract } from "../contracts/chain-link-proposal-contract.js";
+import type { IProposalElasticContract } from "../contracts/elastic-proposal-contract.js";
+import type { IServerAPI } from "../factories/types.js";
 import type {
 	ICommonProposalFields,
 	IProposalMisc,
 } from "../models/proposals/proposal-base.js";
-import type {
-	ProposalWithHash,
-	ProposalWithSignature,
-} from "../models/strategies/types.js";
+import type { ProposalWithHash, ProposalWithSignature } from "../models/strategies/types.js";
 import type { Proposal } from "../models/strategies/types.js";
 import type { ILenderSpec } from "../models/terms.js";
-import type { IProposalChainLinkContract } from "./create-chain-link-proposal.js";
-import type { IProposalElasticContract } from "./create-elastic-proposal.js";
 
 type CommonProposalFieldsParams = {
 	user: UserWithNonceManager;
+	nonce: bigint;
+	nonceSpace: bigint;
 	collateral: Token;
 	credit: Token;
 	creditAmount: bigint;
@@ -29,12 +34,20 @@ type CommonProposalFieldsParams = {
 	apr: number | Record<string, number>;
 	expiration: number;
 	loanContract: AddressString;
+	sourceOfFunds: AddressString | null;
 };
 
-export interface IProposalContract {
-	getProposerSpec(params: ILenderSpec, chainId: SupportedChain): Promise<Hex>;
-	createProposal(params: Proposal): Promise<ProposalWithSignature>;
-	getProposalHash(proposal: Proposal): Promise<Hex>;
+export interface ILoanContract {
+	getLenderSpecHash(params: ILenderSpec, chainId: SupportedChain): Promise<Hex>;
+}
+
+export interface IProposalContract<TProposal extends Proposal> {
+	createProposal(
+		params: TProposal,
+		deps: { persistProposal: IServerAPI["post"]["persistProposal"] },
+	): Promise<ProposalWithSignature>;
+	createOnChainProposal(params: TProposal): Promise<ProposalWithSignature>;
+	getProposalHash(proposal: TProposal): Promise<Hex>;
 	createMultiProposal(proposals: ProposalWithHash[]): Promise<ProposalWithSignature[]>;
 }
 
@@ -46,10 +59,13 @@ export const getLendingCommonProposalFields = async (
 	params: CommonProposalFieldsParams & IProposalMisc,
 	deps: {
 		contract: ProposalContract;
+		loanContract: ILoanContract;
 	},
 ): Promise<ICommonProposalFields> => {
 	const {
 		user,
+		nonce,
+		nonceSpace,
 		collateral,
 		credit,
 		creditAmount,
@@ -59,27 +75,28 @@ export const getLendingCommonProposalFields = async (
 		expiration,
 		loanContract,
 		relatedStrategyId,
+		sourceOfFunds,
 	} = params;
 
-	const proposerSpecHash = await deps.contract.getProposerSpec(
+	const proposerSpecHash = await deps.loanContract.getLenderSpecHash(
 		{
-			sourceOfFunds: user.address,
+			sourceOfFunds: isPoolToken(credit) ? credit.address : user.address,
 		},
 		params.collateral.chainId,
 	);
 
+	const creditAddress = isPoolToken(credit)
+		? credit.underlyingAddress
+		: credit.address;
+
 	const aprValue =
 		(typeof apr !== "number" &&
-			apr[
-				`${collateral.address}/${collateral.chainId}-${credit.address}/${credit.chainId}`
-			]) ||
+			apr[getUniqueCreditCollateralKey(credit, collateral)]) ||
 		(apr as number);
 
-	const interestAmount = creditAmount * (BigInt(aprValue) / BigInt(1e2));
-
 	return {
-		nonce: user.getNextNonce(params.collateral.chainId),
-		nonceSpace: user.getNonceSpace(params.collateral.chainId),
+		nonce,
+		nonceSpace,
 
 		collateralAddress: collateral.address,
 		collateralCategory: collateral.category,
@@ -88,7 +105,7 @@ export const getLendingCommonProposalFields = async (
 		checkCollateralStateFingerprint: false,
 		collateralStateFingerprint: ZERO_FINGERPRINT,
 
-		creditAddress: credit.address,
+		creditAddress,
 		availableCreditLimit: creditAmount,
 
 		utilizedCreditId,
@@ -100,7 +117,7 @@ export const getLendingCommonProposalFields = async (
 
 		refinancingLoanId: 0n, // creating new loan
 
-		fixedInterestAmount: interestAmount,
+		fixedInterestAmount: 0n,
 		accruingInterestAPR: aprValue,
 
 		expiration,
@@ -108,5 +125,6 @@ export const getLendingCommonProposalFields = async (
 		loanContract,
 
 		relatedStrategyId,
+		sourceOfFunds,
 	};
 };

@@ -1,5 +1,6 @@
 import type { ThesisCreateUpdateSchemaRequestAprMax } from "./thesis-create-update-schema-request-apr-max";
 import type { ThesisCreateUpdateSchemaRequestAprMin } from "./thesis-create-update-schema-request-apr-min";
+import type { ThesisCreateUpdateSchemaRequestChainId } from "./thesis-create-update-schema-request-chain-id";
 import type { ThesisCreateUpdateSchemaRequestCollateralAllocationPercentagesItem } from "./thesis-create-update-schema-request-collateral-allocation-percentages-item";
 import type { ThesisCreateUpdateSchemaRequestCollateralAprsItem } from "./thesis-create-update-schema-request-collateral-aprs-item";
 import type { ThesisCreateUpdateSchemaRequestCollateralLtvsItem } from "./thesis-create-update-schema-request-collateral-ltvs-item";
@@ -21,6 +22,7 @@ import type { ThesisCreateUpdateSchemaRequestIsUtilizedCredit } from "./thesis-c
  */
 import type { ThesisCreateUpdateSchemaRequestLtv } from "./thesis-create-update-schema-request-ltv";
 import type { ThesisCreateUpdateSchemaRequestMinAllowedBorrowPercentage } from "./thesis-create-update-schema-request-min-allowed-borrow-percentage";
+import type { ThesisCreateUpdateSchemaRequestThesisType } from "./thesis-create-update-schema-request-thesis-type";
 
 export interface ThesisCreateUpdateSchemaRequest {
 	title: string;
@@ -34,6 +36,7 @@ export interface ThesisCreateUpdateSchemaRequest {
 	is_active?: ThesisCreateUpdateSchemaRequestIsActive;
 	is_hidden?: ThesisCreateUpdateSchemaRequestIsHidden;
 	is_utilized_credit?: ThesisCreateUpdateSchemaRequestIsUtilizedCredit;
+	chain_id?: ThesisCreateUpdateSchemaRequestChainId;
 	collateral_chain_ids: number[];
 	collateral_contract_addresses: string[];
 	collateral_allocation_percentages: ThesisCreateUpdateSchemaRequestCollateralAllocationPercentagesItem[];
@@ -48,4 +51,5 @@ export interface ThesisCreateUpdateSchemaRequest {
 	custom_apr_credit_chain_ids?: ThesisCreateUpdateSchemaRequestCustomAprCreditChainIds;
 	custom_apr_credit_addresses?: ThesisCreateUpdateSchemaRequestCustomAprCreditAddresses;
 	custom_apr_values?: ThesisCreateUpdateSchemaRequestCustomAprValues;
+	thesis_type?: ThesisCreateUpdateSchemaRequestThesisType;
 }

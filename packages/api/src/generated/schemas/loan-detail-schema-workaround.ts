@@ -6,8 +6,10 @@ import type { AssetDetailSchemaWorkaround } from "./asset-detail-schema-workarou
  */
 import type { ChainIdEnum } from "./chain-id-enum";
 import type { CreditDataSchemaWorkaround } from "./credit-data-schema-workaround";
+import type { LoanDetailSchemaWorkaroundBorrowerReferrer } from "./loan-detail-schema-workaround-borrower-referrer";
 import type { LoanDetailSchemaWorkaroundClaimedAt } from "./loan-detail-schema-workaround-claimed-at";
 import type { LoanDetailSchemaWorkaroundCreatedFromProposalId } from "./loan-detail-schema-workaround-created-from-proposal-id";
+import type { LoanDetailSchemaWorkaroundLenderReferrer } from "./loan-detail-schema-workaround-lender-referrer";
 import type { LoanDetailSchemaWorkaroundLoanOwner } from "./loan-detail-schema-workaround-loan-owner";
 import type { LoanDetailSchemaWorkaroundLoanThatWasRefinancedId } from "./loan-detail-schema-workaround-loan-that-was-refinanced-id";
 import type { LoanDetailSchemaWorkaroundPaidBackAt } from "./loan-detail-schema-workaround-paid-back-at";
@@ -39,4 +41,6 @@ export interface LoanDetailSchemaWorkaround {
 	status: LoanStatus;
 	creditData: CreditDataSchemaWorkaround;
 	type: LoanDetailSchemaWorkaroundTypeEnum;
+	borrowerReferrer: LoanDetailSchemaWorkaroundBorrowerReferrer;
+	lenderReferrer: LoanDetailSchemaWorkaroundLenderReferrer;
 }

@@ -1,42 +1,32 @@
+import type { UserWithNonceManager } from "@pwndao/sdk-core";
 import type {
-	CreateElasticProposalBatchParams,
-	IProposalChainLinkContract,
-	IProposalElasticAPIDeps,
-	IProposalElasticContract,
-	ProposalType,
+	ImplementedProposalTypes,
+	ProposalParamWithDeps,
 	ProposalWithSignature,
 } from "@pwndao/v1-core";
 import { makeProposals } from "@pwndao/v1-core";
 import { useMutation } from "@tanstack/vue-query";
+import { useConfig } from "@wagmi/vue";
+import invariant from "ts-invariant";
+import { type MaybeRefOrGetter, toRaw, toValue } from "vue";
 
-export type ElasticProposalProps = {
-	proposalType: ProposalType.Elastic;
-	api: IProposalElasticAPIDeps;
-	contract: IProposalElasticContract;
-};
+export const useMakeProposals = (
+	user: MaybeRefOrGetter<UserWithNonceManager | undefined>,
+) => {
+	const config = useConfig();
 
-export type ChainLinkProposalProps = {
-	proposalType: ProposalType.ChainLink;
-	api: IProposalElasticAPIDeps;
-	contract: IProposalChainLinkContract;
-};
-
-type Props = ElasticProposalProps | ChainLinkProposalProps;
-type ProposalParams = CreateElasticProposalBatchParams;
-
-export const useMakeProposals = (proposalParams: Props) => {
-	return useMutation<ProposalWithSignature[], Error, ProposalParams>({
-		mutationFn: async (params: ProposalParams) => {
-			const proposals = await makeProposals<typeof proposalParams.proposalType>(
-				proposalParams.proposalType,
-				params,
-				{
-					api: proposalParams.api,
-					contract: proposalParams.contract as IProposalElasticContract,
-				},
-			);
-
-			return proposals;
+	return useMutation<
+		ProposalWithSignature[],
+		Error,
+		ProposalParamWithDeps<ImplementedProposalTypes>[]
+	>({
+		mutationFn: async (
+			params: ProposalParamWithDeps<ImplementedProposalTypes>[],
+		) => {
+			const _user = toValue(user);
+			invariant(_user, "User is required");
+			// if we don't use toRaw, the user will be read-only
+			return await makeProposals(config, params, toRaw(_user));
 		},
 		onSuccess: (data) => {
 			console.log(data);

@@ -11,6 +11,4 @@ export type FetchUserNftsMetadataSource =
 export const FetchUserNftsMetadataSource = {
 	ALCHEMY: "ALCHEMY",
 	MORALIS: "MORALIS",
-	SIMPLE_HASH: "SIMPLE_HASH",
-	UNMARSHAL: "UNMARSHAL",
 } as const;

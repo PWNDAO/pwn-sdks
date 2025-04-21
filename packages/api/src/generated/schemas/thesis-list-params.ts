@@ -7,6 +7,8 @@
 export type ThesisListParams = {
 	chain_id?: number;
 	curator?: string;
+	is_featured?: boolean;
+	is_featured_chain?: number;
 	/**
 	 * Number of results to return per page.
 	 */
@@ -15,5 +17,6 @@ export type ThesisListParams = {
 	 * The initial index from which to return the results.
 	 */
 	offset?: number;
+	thesis_type?: number;
 	user_address?: string;
 };

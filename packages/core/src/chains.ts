@@ -19,6 +19,11 @@ export enum SupportedChain {
 export const ALL_SUPPORTED_CHAINS = Object.values(SupportedChain).filter(
 	(v) => typeof v === "number",
 ) as SupportedChain[];
+
+export const isChainSupported = (chain: SupportedChain): boolean => {
+	return ALL_SUPPORTED_CHAINS.includes(Number(chain));
+};
+
 export const TESTNET_CHAINS = [
 	SupportedChain.Sepolia,
 	SupportedChain.UnichainSepolia,

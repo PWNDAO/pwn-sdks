@@ -198,8 +198,6 @@ paths:
           enum:
           - ALCHEMY
           - MORALIS
-          - SIMPLE_HASH
-          - UNMARSHAL
       - in: query
         name: page
         schema:
@@ -1017,7 +1015,7 @@ paths:
           description: ''
   /api/v2/pwn_contracts/proposals/:
     get:
-      operationId: listProposals
+      operationId: proposalList
       parameters:
       - in: query
         name: apr_max
@@ -1297,6 +1295,14 @@ paths:
         name: curator
         schema:
           type: string
+      - in: query
+        name: is_featured
+        schema:
+          type: boolean
+      - in: query
+        name: is_featured_chain
+        schema:
+          type: integer
       - name: limit
         required: false
         in: query
@@ -1307,6 +1313,10 @@ paths:
         required: false
         in: query
         description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: thesis_type
         schema:
           type: integer
       - in: query
@@ -2125,6 +2135,19 @@ components:
       - end_date
       title: AssetVolumeOverPeriodSchema
       type: object
+    AssignReferrerRequestRequest:
+      properties:
+        refereeAddress:
+          title: Refereeaddress
+          type: string
+        referrerAddress:
+          title: Referreraddress
+          type: string
+      required:
+      - refereeAddress
+      - referrerAddress
+      title: AssignReferrerRequest
+      type: object
     AtrTokenOfAssetSchema:
       properties:
         contract_address:
@@ -2442,6 +2465,11 @@ components:
           - type: 'null'
           default: null
           title: Createdfromproposalid
+        proposalSpecificData:
+          anyOf:
+          - $ref: '#/components/schemas/ProposalSpecificData'
+          - type: 'null'
+          default: null
         checkCollateralStateFingerprint:
           title: Checkcollateralstatefingerprint
           type: boolean
@@ -2504,6 +2532,11 @@ components:
           - type: integer
           - type: 'null'
           title: Revokedat
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Referrer
       required:
       - id
       - duration
@@ -2531,6 +2564,7 @@ components:
       - hash
       - createdAt
       - revokedAt
+      - referrer
       title: BetaProposalDetailSchemaWorkaround
       type: object
     ChainIdEnum:
@@ -2881,6 +2915,12 @@ components:
           - type: 'null'
           default: null
           title: Related Thesis Id
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Referrer
       required:
       - check_collateral_state_fingerprint
       - collateral_state_fingerprint
@@ -3037,6 +3077,12 @@ components:
           - type: 'null'
           default: null
           title: Related Thesis Id
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Referrer
       required:
       - check_collateral_state_fingerprint
       - collateral_state_fingerprint
@@ -3189,6 +3235,12 @@ components:
           - type: 'null'
           default: null
           title: Related Thesis Id
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Referrer
       required:
       - check_collateral_state_fingerprint
       - collateral_state_fingerprint
@@ -3337,6 +3389,12 @@ components:
           - type: 'null'
           default: null
           title: Related Thesis Id
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Referrer
       required:
       - check_collateral_state_fingerprint
       - collateral_state_fingerprint
@@ -4531,6 +4589,16 @@ components:
           allOf:
           - $ref: '#/components/schemas/LoanDetailSchemaWorkaroundTypeEnum'
           title: Type
+        borrowerReferrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Borrowerreferrer
+        lenderReferrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lenderreferrer
       required:
       - chainId
       - contractAddress
@@ -4555,6 +4623,8 @@ components:
       - status
       - creditData
       - type
+      - borrowerReferrer
+      - lenderReferrer
       title: LoanDetailSchemaWorkaround
       type: object
     LoanDetailSchemaWorkaroundTypeEnum:
@@ -6569,12 +6639,14 @@ components:
       - SECOND_BORROWER_CLOSE_TO_DEFAULT
       - APPROVAL_INSUFFICIENT
       - INFO
+      - REFERRAL_ASSIGNED
+      - REFERRAL_REWARDED
       type: string
       description: |-
-        * `PROPOSAL_CREATED` - Proposal created
-        * `PROPOSAL_REVOKED` - Proposal revoked
-        * `PROPOSAL_UNAVAILABLE` - Proposal become unavailable
-        * `PROPOSAL_BACK_AVAILABLE` - Proposal is back available
+        * `PROPOSAL_CREATED` - Offer created
+        * `PROPOSAL_REVOKED` - Offer revoked
+        * `PROPOSAL_UNAVAILABLE` - Offer become unavailable
+        * `PROPOSAL_BACK_AVAILABLE` - Offer is back available
         * `LENDER_COMMITTED_TO_THESIS` - Lender committed funds to thesis
         * `LOAN_CREATED` - Loan created
         * `LOAN_PAID_BACK` - Loan paid back
@@ -6585,12 +6657,14 @@ components:
         * `LOAN_EXTENSION_REQUESTED` - Loan extension requested
         * `LOAN_EXTENSION_REQUEST_CANCELLED` - Loan extension request cancelled
         * `LOAN_EXTENSION_REQUEST_IGNORED` - Loan extension request ignored
-        * `NEW_COUNTER_PROPOSAL` - New counter proposal that you might be interested in
+        * `NEW_COUNTER_PROPOSAL` - New counter offer that you might be interested in
         * `THESIS_TERMS_CHANGED` - Thesis terms has been changed! you have to revoke your commitment and commit again with new terms
         * `FIRST_BORROWER_CLOSE_TO_DEFAULT` - Loan is getting close to default
         * `SECOND_BORROWER_CLOSE_TO_DEFAULT` - Loan is getting close to default
         * `APPROVAL_INSUFFICIENT` - Approval insufficient
         * `INFO` - Info
+        * `REFERRAL_ASSIGNED` - Someone used your referral!
+        * `REFERRAL_REWARDED` - You got a rep points for your referral!
     NotificationRequest:
       type: object
       properties:
@@ -7752,6 +7826,11 @@ components:
           - type: 'null'
           default: null
           title: Createdfromproposalid
+        proposalSpecificData:
+          anyOf:
+          - $ref: '#/components/schemas/ProposalSpecificData'
+          - type: 'null'
+          default: null
       required:
       - id
       - duration
@@ -7817,6 +7896,110 @@ components:
       - proposal_hashes
       title: ProposalHashesListSchema
       type: object
+    ProposalSpecificData:
+      properties:
+        allowed_acceptor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Allowed Acceptor
+        check_collateral_state_fingerprint:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          default: null
+          title: Check Collateral State Fingerprint
+        collateral_state_fingerprint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Collateral State Fingerprint
+        hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Hash
+        is_on_chain:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          default: null
+          title: Is On Chain
+        max_available_credit_amount:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Max Available Credit Amount
+        multiproposal_merkle_root:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Multiproposal Merkle Root
+        nonce:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Nonce
+        nonce_space:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Nonce Space
+        proposer_spec_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Proposer Spec Hash
+        refinancing_loan_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          default: null
+          title: Refinancing Loan Id
+        signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Signature
+        utilized_credit_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Utilized Credit Id
+        feed_intermediary_denominations:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          default: null
+          title: Feed Intermediary Denominations
+        feed_invert_flags:
+          anyOf:
+          - items:
+              type: boolean
+            type: array
+          - type: 'null'
+          default: null
+          title: Feed Invert Flags
+        loan_to_value:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          default: null
+          title: Loan To Value
+      title: ProposalSpecificData
+      type: object
     ProposalStatus:
       enum:
       - -6
@@ -7854,6 +8037,43 @@ components:
       required:
       - user_address
       title: ProposalTokenApprovalTriggerSchema
+      type: object
+    RefereeListSchema:
+      items:
+        $ref: '#/components/schemas/RefereeSchema'
+      title: RefereeListSchema
+      type: array
+    RefereeSchema:
+      properties:
+        walletAddress:
+          title: Walletaddress
+          type: string
+        totalVolumeFromReferral:
+          title: Totalvolumefromreferral
+          type: string
+        totalScoreFromReferral:
+          title: Totalscorefromreferral
+          type: string
+      required:
+      - walletAddress
+      - totalVolumeFromReferral
+      - totalScoreFromReferral
+      title: RefereeSchema
+      type: object
+    RefereesSchema:
+      properties:
+        referees:
+          $ref: '#/components/schemas/RefereeListSchema'
+        totalScoreFromReferrals:
+          title: Totalscorefromreferrals
+          type: string
+        referralsCount:
+          title: Referralscount
+          type: integer
+      required:
+      - totalScoreFromReferrals
+      - referralsCount
+      title: RefereesSchema
       type: object
     ReputationParameterResponse:
       properties:
@@ -8070,6 +8290,11 @@ components:
           - type: 'null'
           default: null
           title: Createdfromproposalid
+        proposalSpecificData:
+          anyOf:
+          - $ref: '#/components/schemas/ProposalSpecificData'
+          - type: 'null'
+          default: null
         checkCollateralStateFingerprint:
           title: Checkcollateralstatefingerprint
           type: boolean
@@ -8132,6 +8357,11 @@ components:
           - type: integer
           - type: 'null'
           title: Revokedat
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Referrer
         auctionStart:
           title: Auctionstart
           type: integer
@@ -8162,6 +8392,7 @@ components:
       - hash
       - createdAt
       - revokedAt
+      - referrer
       - auctionStart
       title: SimpleLoanDutchAuctionProposalDetailSchemaWorkaround
       type: object
@@ -8274,6 +8505,11 @@ components:
           - type: 'null'
           default: null
           title: Createdfromproposalid
+        proposalSpecificData:
+          anyOf:
+          - $ref: '#/components/schemas/ProposalSpecificData'
+          - type: 'null'
+          default: null
         checkCollateralStateFingerprint:
           title: Checkcollateralstatefingerprint
           type: boolean
@@ -8336,6 +8572,11 @@ components:
           - type: integer
           - type: 'null'
           title: Revokedat
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Referrer
       required:
       - id
       - duration
@@ -8364,6 +8605,7 @@ components:
       - hash
       - createdAt
       - revokedAt
+      - referrer
       title: SimpleLoanFungibleProposalDetailSchemaWorkaround
       type: object
     SimpleLoanListProposalDetailSchemaWorkaround:
@@ -8478,6 +8720,11 @@ components:
           - type: 'null'
           default: null
           title: Createdfromproposalid
+        proposalSpecificData:
+          anyOf:
+          - $ref: '#/components/schemas/ProposalSpecificData'
+          - type: 'null'
+          default: null
         checkCollateralStateFingerprint:
           title: Checkcollateralstatefingerprint
           type: boolean
@@ -8540,6 +8787,11 @@ components:
           - type: integer
           - type: 'null'
           title: Revokedat
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Referrer
         collateralIdsWhitelistMerkleRoot:
           anyOf:
           - type: string
@@ -8572,6 +8824,7 @@ components:
       - hash
       - createdAt
       - revokedAt
+      - referrer
       - collateralIdsWhitelistMerkleRoot
       title: SimpleLoanListProposalDetailSchemaWorkaround
       type: object
@@ -8687,6 +8940,11 @@ components:
           - type: 'null'
           default: null
           title: Createdfromproposalid
+        proposalSpecificData:
+          anyOf:
+          - $ref: '#/components/schemas/ProposalSpecificData'
+          - type: 'null'
+          default: null
         checkCollateralStateFingerprint:
           title: Checkcollateralstatefingerprint
           type: boolean
@@ -8749,6 +9007,11 @@ components:
           - type: integer
           - type: 'null'
           title: Revokedat
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Referrer
       required:
       - id
       - duration
@@ -8776,6 +9039,7 @@ components:
       - hash
       - createdAt
       - revokedAt
+      - referrer
       title: SimpleLoanSimpleProposalDetailSchemaWorkaround
       type: object
     SubdomainConfig:
@@ -9112,6 +9376,11 @@ components:
           - type: 'null'
           default: false
           title: Is Utilized Credit
+        chain_id:
+          anyOf:
+          - $ref: '#/components/schemas/ChainIdEnum'
+          - type: 'null'
+          default: null
         collateral_chain_ids:
           items:
             type: integer
@@ -9208,6 +9477,11 @@ components:
           - type: 'null'
           default: null
           title: Custom Apr Values
+        thesis_type:
+          anyOf:
+          - $ref: '#/components/schemas/ThesisType'
+          - type: 'null'
+          default: 1
       required:
       - title
       - ltv
@@ -9344,6 +9618,10 @@ components:
           - type: 'null'
           default: null
           title: Ishidden
+        thesisType:
+          $ref: '#/components/schemas/ThesisType'
+        chainId:
+          $ref: '#/components/schemas/ChainIdEnum'
         creditsStats:
           $ref: '#/components/schemas/ThesisCreditStatsListSchemaWorkaround'
         aprMappings:
@@ -9366,9 +9644,17 @@ components:
       - loanDurationDays
       - proposalExpirationDays
       - description
+      - thesisType
+      - chainId
       - creditsStats
       title: ThesisSchemaWorkaround
       type: object
+    ThesisType:
+      enum:
+      - 1
+      - 2
+      title: ThesisType
+      type: integer
     TokenBundlerMetadata:
       type: object
       description: Metadata URI Public Endpoint Serializer
@@ -9876,6 +10162,11 @@ components:
           - type: 'null'
           default: null
           title: Createdfromproposalid
+        proposalSpecificData:
+          anyOf:
+          - $ref: '#/components/schemas/ProposalSpecificData'
+          - type: 'null'
+          default: null
         checkCollateralStateFingerprint:
           title: Checkcollateralstatefingerprint
           type: boolean
@@ -9938,6 +10229,11 @@ components:
           - type: integer
           - type: 'null'
           title: Revokedat
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Referrer
         collateralIdsWhitelistMerkleRoot:
           anyOf:
           - type: string
@@ -9970,6 +10266,7 @@ components:
       - hash
       - createdAt
       - revokedAt
+      - referrer
       - collateralIdsWhitelistMerkleRoot
       title: V1_1_SimpleLoanListProposalDetailSchemaWorkaround
       type: object
@@ -10085,6 +10382,11 @@ components:
           - type: 'null'
           default: null
           title: Createdfromproposalid
+        proposalSpecificData:
+          anyOf:
+          - $ref: '#/components/schemas/ProposalSpecificData'
+          - type: 'null'
+          default: null
         checkCollateralStateFingerprint:
           title: Checkcollateralstatefingerprint
           type: boolean
@@ -10147,6 +10449,11 @@ components:
           - type: integer
           - type: 'null'
           title: Revokedat
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Referrer
       required:
       - id
       - duration
@@ -10174,6 +10481,7 @@ components:
       - hash
       - createdAt
       - revokedAt
+      - referrer
       title: V1_1_SimpleLoanSimpleProposalDetailSchemaWorkaround
       type: object
     V1_3_CreateSimpleLoanChainlinkProposalRequestSchemaRequest:
@@ -10232,11 +10540,6 @@ components:
           - type: integer
           - type: string
           title: Collateral Id
-        collateral_amount:
-          anyOf:
-          - type: integer
-          - type: string
-          title: Collateral Amount
         min_credit_amount:
           anyOf:
           - type: integer
@@ -10270,6 +10573,12 @@ components:
         loan_to_value:
           title: Loan To Value
           type: integer
+        expiration:
+          title: Expiration
+          type: integer
+        utilized_credit_id:
+          title: Utilized Credit Id
+          type: string
         chain_id:
           $ref: '#/components/schemas/ChainIdEnum'
         proposal_contract_address:
@@ -10307,6 +10616,12 @@ components:
           - type: 'null'
           default: null
           title: Related Thesis Id
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Referrer
       required:
       - check_collateral_state_fingerprint
       - collateral_state_fingerprint
@@ -10323,7 +10638,6 @@ components:
       - collateral_category
       - collateral_address
       - collateral_id
-      - collateral_amount
       - min_credit_amount
       - fixed_interest_amount
       - accruing_interest_apr
@@ -10331,6 +10645,8 @@ components:
       - feed_intermediary_denominations
       - feed_invert_flags
       - loan_to_value
+      - expiration
+      - utilized_credit_id
       - chain_id
       - proposal_contract_address
       - multiproposal_merkle_root
@@ -10465,6 +10781,12 @@ components:
           - type: 'null'
           default: null
           title: Related Thesis Id
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Referrer
       required:
       - check_collateral_state_fingerprint
       - collateral_state_fingerprint
@@ -10621,6 +10943,12 @@ components:
           - type: 'null'
           default: null
           title: Related Thesis Id
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Referrer
       required:
       - check_collateral_state_fingerprint
       - collateral_state_fingerprint
@@ -10773,6 +11101,12 @@ components:
           - type: 'null'
           default: null
           title: Related Thesis Id
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Referrer
       required:
       - check_collateral_state_fingerprint
       - collateral_state_fingerprint
@@ -10927,6 +11261,12 @@ components:
           - type: 'null'
           default: null
           title: Related Thesis Id
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Referrer
       required:
       - check_collateral_state_fingerprint
       - collateral_state_fingerprint
@@ -11070,6 +11410,11 @@ components:
           - type: 'null'
           default: null
           title: Createdfromproposalid
+        proposalSpecificData:
+          anyOf:
+          - $ref: '#/components/schemas/ProposalSpecificData'
+          - type: 'null'
+          default: null
         checkCollateralStateFingerprint:
           title: Checkcollateralstatefingerprint
           type: boolean
@@ -11132,6 +11477,11 @@ components:
           - type: integer
           - type: 'null'
           title: Revokedat
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Referrer
         durationOrDate:
           title: Durationordate
           type: integer
@@ -11184,6 +11534,7 @@ components:
       - hash
       - createdAt
       - revokedAt
+      - referrer
       - durationOrDate
       - utilizedCreditId
       - feedIntermediaryDenominations
@@ -11303,6 +11654,11 @@ components:
           - type: 'null'
           default: null
           title: Createdfromproposalid
+        proposalSpecificData:
+          anyOf:
+          - $ref: '#/components/schemas/ProposalSpecificData'
+          - type: 'null'
+          default: null
         checkCollateralStateFingerprint:
           title: Checkcollateralstatefingerprint
           type: boolean
@@ -11365,6 +11721,11 @@ components:
           - type: integer
           - type: 'null'
           title: Revokedat
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Referrer
         auctionStart:
           title: Auctionstart
           type: integer
@@ -11398,6 +11759,7 @@ components:
       - hash
       - createdAt
       - revokedAt
+      - referrer
       - auctionStart
       - durationOrDate
       title: V1_3_SimpleLoanDutchAuctionProposalDetailSchemaWorkaround
@@ -11511,6 +11873,11 @@ components:
           - type: 'null'
           default: null
           title: Createdfromproposalid
+        proposalSpecificData:
+          anyOf:
+          - $ref: '#/components/schemas/ProposalSpecificData'
+          - type: 'null'
+          default: null
         checkCollateralStateFingerprint:
           title: Checkcollateralstatefingerprint
           type: boolean
@@ -11573,6 +11940,11 @@ components:
           - type: integer
           - type: 'null'
           title: Revokedat
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Referrer
         durationOrDate:
           title: Durationordate
           type: integer
@@ -11612,6 +11984,7 @@ components:
       - hash
       - createdAt
       - revokedAt
+      - referrer
       - durationOrDate
       - maxAvailableCreditAmount
       - utilizedCreditId
@@ -11729,6 +12102,11 @@ components:
           - type: 'null'
           default: null
           title: Createdfromproposalid
+        proposalSpecificData:
+          anyOf:
+          - $ref: '#/components/schemas/ProposalSpecificData'
+          - type: 'null'
+          default: null
         checkCollateralStateFingerprint:
           title: Checkcollateralstatefingerprint
           type: boolean
@@ -11791,6 +12169,11 @@ components:
           - type: integer
           - type: 'null'
           title: Revokedat
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Referrer
         collateralIdsWhitelistMerkleRoot:
           anyOf:
           - type: string
@@ -11831,6 +12214,7 @@ components:
       - hash
       - createdAt
       - revokedAt
+      - referrer
       - collateralIdsWhitelistMerkleRoot
       - durationOrDate
       - utilizedCreditId
@@ -11948,6 +12332,11 @@ components:
           - type: 'null'
           default: null
           title: Createdfromproposalid
+        proposalSpecificData:
+          anyOf:
+          - $ref: '#/components/schemas/ProposalSpecificData'
+          - type: 'null'
+          default: null
         checkCollateralStateFingerprint:
           title: Checkcollateralstatefingerprint
           type: boolean
@@ -12010,6 +12399,11 @@ components:
           - type: integer
           - type: 'null'
           title: Revokedat
+        referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Referrer
         durationOrDate:
           title: Durationordate
           type: integer
@@ -12045,6 +12439,7 @@ components:
       - hash
       - createdAt
       - revokedAt
+      - referrer
       - durationOrDate
       - utilizedCreditId
       title: V1_3_SimpleLoanSimpleProposalDetailSchemaWorkaround
