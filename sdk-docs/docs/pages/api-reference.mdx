@@ -111,6 +111,23 @@ function useRevokeNonces() => {
 }
 ```
 
+### useRepayLoan
+
+Hook for repaying an active loan.
+
+```typescript
+function useRepayLoan() => {
+  mutateAsync: (params: {
+    loanId: bigint;
+    repayer: AddressString;
+    chainId: SupportedChain;
+  }) => Promise<void>;
+  isPending: boolean;
+  isSuccess: boolean;
+  error: Error | null;
+}
+```
+
 ### useUserWithNonce
 
 Hook for managing user nonces across chains.
@@ -169,6 +186,23 @@ function useRevokeNonces() => {
 }
 ```
 
+### useRepayLoan
+
+Composable for repaying an active loan.
+
+```typescript
+function useRepayLoan() => {
+  mutateAsync: (params: {
+    loanId: bigint;
+    repayer: AddressString;
+    chainId: SupportedChain;
+  }) => Promise<void>;
+  isPending: boolean;
+  isSuccess: boolean;
+  error: Error | null;
+}
+```
+
 ## Core Functions
 
 ### getStrategy
@@ -217,6 +251,33 @@ async function revokeProposals(
   contract: RevokedNonceContract,
 ): Promise<void>
 ```
+
+### repayLoan
+
+Core function to repay an active loan.
+
+```typescript
+async function repayLoan(
+  {
+    loanId: bigint,
+    repayer: AddressString,
+    chainId: SupportedChain,
+  },
+  deps: {
+    loanContract: {
+      repayLoan: (loanId: bigint, chainId: SupportedChain) => Promise<void>
+    }
+  }
+): Promise<void>
+```
+
+The `repayLoan` function allows users to repay an active loan. It requires:
+- `loanId`: The ID of the loan being repaid
+- `repayer`: The address making the repayment (must be a valid address)
+- `chainId`: The chain ID where the loan exists
+- `deps.loanContract`: An instance of the loan contract with the `repayLoan` method
+
+This function handles validation of inputs and interacts with the blockchain to process the repayment transaction.
 
 ## Types
 
@@ -273,6 +334,30 @@ class UserWithNonceManager {
 }
 ```
 
+### RepayLoanRequest
+
+Type for repay loan function parameters.
+
+```typescript
+interface RepayLoanRequest {
+  loanId: bigint;
+  repayer: AddressString;
+  chainId: SupportedChain;
+}
+```
+
+### RepayLoanDeps
+
+Type for repay loan function dependencies.
+
+```typescript
+interface RepayLoanDeps {
+  loanContract: {
+    repayLoan: (loanId: bigint, chainId: SupportedChain) => Promise<void>;
+  }
+}
+```
+
 ## Error Handling
 
 All hooks and functions may throw or return errors in the following cases:
@@ -284,6 +369,10 @@ All hooks and functions may throw or return errors in the following cases:
 - Nonce management errors
 - Invalid nonce revocation attempts
 - Nonce space validation failures
+- Invalid loan ID (for repayLoan)
+- Invalid repayer address (for repayLoan)
+- Attempting to repay a loan that doesn't exist or is already repaid
+- Loan is not active or has already defaulted
 
 It's recommended to always implement proper error handling and loading states in your application.
 
