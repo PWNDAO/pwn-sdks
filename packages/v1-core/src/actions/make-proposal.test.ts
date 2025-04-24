@@ -53,6 +53,7 @@ describe("Test make proposal", () => {
 			getCollateralAmount: vi.fn().mockImplementation(() => 0n),
 			createOnChainProposal: vi.fn().mockImplementation((p) => p),
 			getProposalHash: vi.fn().mockImplementation(() => "0x123"),
+			createMultiProposal: vi.fn().mockImplementation((p) => p),
 		};
 
 		const loanContractMock = {
@@ -89,6 +90,7 @@ describe("Test make proposal", () => {
 				minCreditAmountPercentage: 3,
 				relatedStrategyId: "1",
 				isOffer: true,
+				sourceOfFunds: user_address,
 			},
 			{
 				api: {
@@ -146,6 +148,7 @@ describe("Test make proposal", () => {
 			getCollateralAmount: vi.fn().mockImplementation(() => 0n),
 			createOnChainProposal: vi.fn().mockImplementation((p) => p),
 			getProposalHash: vi.fn().mockImplementation(() => "0x123"),
+			createMultiProposal: vi.fn().mockImplementation((p) => p),
 		};
 
 		const loanContractMock = {
@@ -186,6 +189,7 @@ describe("Test make proposal", () => {
 				minCreditAmountPercentage: 3,
 				relatedStrategyId: "1",
 				isOffer: true,
+				sourceOfFunds: user_address,
 			},
 			{
 				api: {
@@ -262,6 +266,7 @@ describe("Test make proposal", () => {
 			getCollateralAmount: vi.fn().mockImplementation(() => 0n),
 			createOnChainProposal: vi.fn().mockImplementation((p) => p),
 			getProposalHash: vi.fn().mockImplementation(() => "0x123"),
+			createMultiProposal: vi.fn().mockImplementation((p) => p),
 		};
 
 		const poolTokenAddress = generateAddress();
@@ -311,6 +316,7 @@ describe("Test make proposal", () => {
 				minCreditAmountPercentage: 3,
 				relatedStrategyId: "1",
 				isOffer: true,
+				sourceOfFunds: user_address,
 			},
 			{
 				api: {
