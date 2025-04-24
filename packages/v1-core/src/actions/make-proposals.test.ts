@@ -19,7 +19,6 @@ import type { ProposalWithSignature } from "../index.js";
 import { ChainLinkProposal } from "../models/proposals/chainlink-proposal.js";
 import { ProposalType } from "../models/proposals/proposal-base.js";
 import { convertNameIntoDenominator } from "../utils/chainlink-feeds.js";
-import { makeProposal } from "./make-proposal.js";
 import { makeProposals } from "./make-proposals.js";
 import type {
 	ImplementedProposalTypes,
@@ -625,12 +624,12 @@ describe("Test make proposals", () => {
 
 		expect(proposals).toHaveLength(2);
 		expect(contractMock.createMultiProposal).toHaveBeenCalled();
-		expect(loanContractMock.getLenderSpecHash).toHaveBeenCalledTimes(1);
+		expect(loanContractMock.getLenderSpecHash).toHaveBeenCalledTimes(0);
 
 		// @ts-expect-error - ProposalWithSignature is not assignable to ChainLinkProposal
 		const proposal: Extract<ProposalWithSignature, ChainLinkProposal> =
 			proposals[0];
-		expect(proposal.proposerSpecHash).toBe(proposerSpecHash);
+		expect(proposal.proposerSpecHash).toBe(ZERO_FINGERPRINT);
 		expect(proposal.collateralAddress).toBe(collateralAddress);
 		expect(proposal.creditAddress).toBe(creditAddress);
 		expect(proposal.availableCreditLimit).toBe(creditAmount);
@@ -640,8 +639,6 @@ describe("Test make proposals", () => {
 		expect(proposal.nonce).toBe(0n);
 		expect(proposal.isOffer).toBe(false);
 
-		console.log(proposal);
-		// Verify ChainLink specific fields
 		expect(proposal.feedIntermediaryDenominations).toHaveLength(2);
 		expect(proposal.feedInvertFlags).toHaveLength(3);
 		expect(proposal.feedIntermediaryDenominations[0]).toBe(
@@ -725,15 +722,13 @@ describe("Test make proposals", () => {
 
 		const proposal = result[0] as ProposalWithSignature;
 
-
-		expect(proposal).toBeDefined()
-		expect(proposal.proposerSpecHash).toBe(proposerSpecHash)
-		expect(proposal.collateralAddress).toBe(collateralAddress)
-		expect(proposal.creditAddress).toBe(creditAddress)
-		expect(proposal.availableCreditLimit).toBe(creditAmount)
-		expect(proposal.minCreditAmount).toBe(3n * 10n ** (18n - 2n))
-		expect(proposal.accruingInterestAPR).toBe(apr)
-		expect(proposal.signature).toBe("0x456")
-
+		expect(proposal).toBeDefined();
+		expect(proposal.proposerSpecHash).toBe(proposerSpecHash);
+		expect(proposal.collateralAddress).toBe(collateralAddress);
+		expect(proposal.creditAddress).toBe(creditAddress);
+		expect(proposal.availableCreditLimit).toBe(creditAmount);
+		expect(proposal.minCreditAmount).toBe(3n * 10n ** (18n - 2n));
+		expect(proposal.accruingInterestAPR).toBe(apr);
+		expect(proposal.signature).toBe("0x456");
 	});
 });

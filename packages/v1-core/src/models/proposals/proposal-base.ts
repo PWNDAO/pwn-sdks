@@ -20,6 +20,7 @@ export enum ProposalType {
 
 export interface IProposalMisc {
 	relatedStrategyId?: string;
+	isOffer: boolean;
 }
 
 interface IProposalBase extends IProposalMisc {

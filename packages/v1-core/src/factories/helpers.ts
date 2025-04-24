@@ -76,14 +76,14 @@ export const getLendingCommonProposalFields = async (
 		loanContract,
 		relatedStrategyId,
 		sourceOfFunds,
+		isOffer,
 	} = params;
 
-	const proposerSpecHash = await deps.loanContract.getLenderSpecHash(
+	const proposerSpecHash = isOffer ? await deps.loanContract.getLenderSpecHash(
 		{
 			sourceOfFunds: sourceOfFunds ?? user.address,
-		},
-		params.collateral.chainId,
-	);
+		}, params.collateral.chainId)
+		: ZERO_FINGERPRINT;
 
 	const creditAddress = isPoolToken(credit)
 		? credit.underlyingAddress
