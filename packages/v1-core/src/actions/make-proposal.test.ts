@@ -336,7 +336,7 @@ describe("Test make proposal", () => {
 		// It should use underlyingAddress instead of user_address when calling getLenderSpecHash
 		expect(loanContractMock.getLenderSpecHash).toHaveBeenCalledWith(
 			{
-				sourceOfFunds: poolTokenAddress,
+				sourceOfFunds: user_address,
 			},
 			SupportedChain.Ethereum,
 		);
