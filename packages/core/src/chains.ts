@@ -14,6 +14,9 @@ export enum SupportedChain {
 	StarknetSepolia = 11155112,
 	StarknetMainnet = 112211,
 	World = 480,
+	Linea = 59144,
+	Celo = 42220,
+	Ink = 57073,
 }
 
 export const ALL_SUPPORTED_CHAINS = Object.values(SupportedChain).filter(

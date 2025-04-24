@@ -58,20 +58,23 @@ export const ezETH = defineAddresses({
     [SupportedChain.Ethereum]: "0xbf5495efe5db9ce00f80364c8b423567e58d2110",
     [SupportedChain.Base]: "0x2416092f143378750bb29b79ed961ab195cceea5",
     [SupportedChain.Arbitrum]: "0x2416092f143378750bb29b79eD961ab195CcEea5",
-    [SupportedChain.Bsc]: "0x2416092f143378750bb29b79ed961ab195cceea5"
+    [SupportedChain.Bsc]: "0x2416092f143378750bb29b79ed961ab195cceea5",
+    [SupportedChain.Linea]: "0x2416092f143378750bb29b79eD961ab195CcEea5"
 })
 
 export const rsETH = defineAddresses({
     [SupportedChain.Ethereum]: "0xa1290d69c65a6fe4df752f95823fae25cb99e5a7",
     [SupportedChain.Optimism]: "0x4186BFC76E2E237523CBC30FD220FE055156b41F",
-    [SupportedChain.Arbitrum]: "0x4186BFC76E2E237523CBC30FD220FE055156b41F"
+    [SupportedChain.Arbitrum]: "0x4186BFC76E2E237523CBC30FD220FE055156b41F",
+    [SupportedChain.Linea]: "0x4186bfc76e2e237523cbc30fd220fe055156b41f"
 })
 
 export const weETH = defineAddresses({
     [SupportedChain.Ethereum]: "0xcd5fe23c85820f7b72d0926fc9b05b43e359b7ee",
     [SupportedChain.Base]: "0x04c0599ae5a44757c0af6f9ec3b93da8976c150a",
     [SupportedChain.Optimism]: "0x5A7fACB970D094B6C7FF1df0eA68D99E6e73CBFF",
-    [SupportedChain.Arbitrum]: "0x35751007a407ca6FEFfE80b3cB397736D2cf4dbe"
+    [SupportedChain.Arbitrum]: "0x35751007a407ca6FEFfE80b3cB397736D2cf4dbe",
+    [SupportedChain.Linea]: "0x1Bf74C010E6320bab11e2e5A532b5AC15e0b8aA6"
 })
 
 export const DAI = defineAddresses({
@@ -82,7 +85,8 @@ export const DAI = defineAddresses({
     [SupportedChain.Optimism]: "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
     [SupportedChain.Arbitrum]: "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
     [SupportedChain.Polygon]: "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
-    [SupportedChain.Bsc]: "0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3"
+    [SupportedChain.Bsc]: "0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3",
+    [SupportedChain.Linea]: "0x4AF15ec2A0BD43Db75dd04E62FAA3B8EF36b00d5"
 })
 
 export const TUSD = defineAddresses({
@@ -101,7 +105,8 @@ export const USDC = defineAddresses({
     [SupportedChain.Optimism]: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
     [SupportedChain.Arbitrum]: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
     [SupportedChain.Polygon]: "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
-    [SupportedChain.Bsc]: "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d"
+    [SupportedChain.Bsc]: "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+    [SupportedChain.Linea]: "0x176211869cA2b568f2A7D4EE941E073a821EE1ff"
 })
 
 export const USDT = defineAddresses({
@@ -111,7 +116,8 @@ export const USDT = defineAddresses({
     [SupportedChain.Optimism]: "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
     [SupportedChain.Arbitrum]: "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
     [SupportedChain.Polygon]: "0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
-    [SupportedChain.Bsc]: "0x524bc91dc82d6b90ef29f76a3ecaabafffd490bc"
+    [SupportedChain.Bsc]: "0x524bc91dc82d6b90ef29f76a3ecaabafffd490bc",
+    [SupportedChain.Linea]: "0xA219439258ca9da29E9Cc4cE5596924745e12B93"
 })
 
 export const tBTC = defineAddresses({
@@ -127,7 +133,8 @@ export const wstETH = defineAddresses({
     [SupportedChain.Optimism]: "0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb",
     [SupportedChain.Arbitrum]: "0x5979D7b546E38E414F7E9822514be443A4800529",
     [SupportedChain.Polygon]: "0x03b54a6e9a984069379fae1a4fc4dbae93b3bccd",
-    [SupportedChain.Bsc]: "0x26c5e01524d2E6280A48F2c50fF6De7e52E9611C"
+    [SupportedChain.Bsc]: "0x26c5e01524d2E6280A48F2c50fF6De7e52E9611C",
+    [SupportedChain.Linea]: "0xB5beDd42000b71FddE22D3eE8a79Bd49A568fC8F"
 })
 
 export const USD0 = defineAddresses({
@@ -150,7 +157,8 @@ export const WETH = defineAddresses({
     [SupportedChain.Optimism]: "0x4200000000000000000000000000000000000006",
     [SupportedChain.Arbitrum]: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
     [SupportedChain.Polygon]: "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
-    [SupportedChain.Bsc]: "0x4db5a66e937a9f4473fa95b1caf1d1e1d62e29ea"
+    [SupportedChain.Bsc]: "0x4db5a66e937a9f4473fa95b1caf1d1e1d62e29ea",
+    [SupportedChain.Linea]: "0xe5D7C2a44FfDDf6b295A15c148167daaAf5Cf34f"
 })
 
 export const sUSDe = defineAddresses({

@@ -45,6 +45,7 @@ export const NATIVE_PAIRS = {
 	[SupportedChain.Arbitrum]: ["BTC/ETH", "BTC/USD", "ETH/USD"],
 	[SupportedChain.Polygon]: ["BTC/ETH", "BTC/USD", "ETH/USD"],
 	[SupportedChain.Bsc]: ["BTC/ETH", "BTC/USD", "ETH/USD"],
+	[SupportedChain.Linea]: ["BTC/USD", "ETH/USD"],
 } as const;
 
 export const CHAINS_WITH_CHAINLINK_FEED_SUPPORT =
@@ -73,7 +74,9 @@ export type AllowedQuotes<T extends ChainsWithChainLinkFeedSupport> =
 								? "ETH" | "USD"
 								: T extends SupportedChain.Bsc
 									? "BTC" | "ETH" | "USD"
-									: never;
+									: T extends SupportedChain.Linea
+										? "BTC" | "ETH" | "USD"
+										: never;
 
 // Define a type for the native pairs
 type NativePair = `${NativeAssetName}/${NativeAssetName}`;
@@ -275,6 +278,18 @@ export const FEED_REGISTRY = {
 		//  as for ETH in NATIVE_PAIRS
 		[WETH[SupportedChain.Sepolia]]: ["ETH", "USD"],
 	},
+	[SupportedChain.Linea]: {
+		[rsETH[SupportedChain.Linea]]: ["ETH"],
+		[ezETH[SupportedChain.Linea]]: ["ETH"],
+		[weETH[SupportedChain.Linea]]: ["ETH"],
+		[wstETH[SupportedChain.Linea]]: ["USD"],
+		[DAI[SupportedChain.Linea]]: ["USD"],
+		[USDC[SupportedChain.Linea]]: ["USD"],
+		[USDT[SupportedChain.Linea]]: ["USD"],
+		// note: slight hack as WETH == ETH, so these are the same feeds
+		//  as for ETH in NATIVE_PAIRS
+		[WETH[SupportedChain.Linea]]: ["ETH", "USD"],
+	},	
 } as const satisfies CompleteFeedRegistry;
 
 export const convertNameIntoDenominator = <
