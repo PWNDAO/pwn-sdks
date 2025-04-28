@@ -294,7 +294,6 @@ describe("Test make proposals", () => {
 		expect(contractMock.createMultiProposal).toHaveBeenCalled();
 		expect(loanContractMock.getLenderSpecHash).toHaveBeenCalledTimes(2);
 
-		// Verify first proposal
 		expect(proposals[0].proposerSpecHash).toBe(proposerSpecHash);
 		expect(proposals[0].collateralAddress).toBe(collateralAddress);
 		expect(proposals[0].creditAddress).toBe(creditAddress);
@@ -304,7 +303,6 @@ describe("Test make proposals", () => {
 		expect(proposals[0].signature).toBe("0x456");
 		expect(proposals[0].nonce).toBe(0n);
 
-		// Verify second proposal
 		expect(proposals[1].proposerSpecHash).toBe(proposerSpecHash);
 		expect(proposals[1].collateralAddress).toBe(collateralAddress);
 		expect(proposals[1].creditAddress).toBe(creditAddress);
@@ -314,21 +312,20 @@ describe("Test make proposals", () => {
 		expect(proposals[1].signature).toBe("0x456");
 		expect(proposals[1].nonce).toBe(1n);
 
-		// Verify ChainLink specific fields
 		for (const proposal of proposals) {
-			if (proposal instanceof ChainLinkProposal) {
-				expect(proposal.feedIntermediaryDenominations).toHaveLength(2);
-				expect(proposal.feedInvertFlags).toHaveLength(3);
-				expect(proposal.feedIntermediaryDenominations[0]).toBe(
-					convertNameIntoDenominator("USD"),
-				);
-				expect(proposal.feedIntermediaryDenominations[1]).toBe(
-					convertNameIntoDenominator("BTC"),
-				);
-				expect(proposal.feedInvertFlags[0]).toBe(false);
-				expect(proposal.feedInvertFlags[1]).toBe(true);
-				expect(proposal.feedInvertFlags[2]).toBe(true);
-			}
+			const chainLinkProposal = proposal as ChainLinkProposal;
+			expect(chainLinkProposal.feedIntermediaryDenominations).toHaveLength(2);
+			expect(chainLinkProposal.feedInvertFlags).toHaveLength(3);
+			expect(chainLinkProposal.feedIntermediaryDenominations[0]).toBe(
+				convertNameIntoDenominator("USD"),
+			);
+			expect(chainLinkProposal.feedIntermediaryDenominations[1]).toBe(
+				convertNameIntoDenominator("BTC"),
+			);
+			expect(chainLinkProposal.feedInvertFlags[0]).toBe(false);
+			expect(chainLinkProposal.feedInvertFlags[1]).toBe(true);
+			expect(chainLinkProposal.feedInvertFlags[2]).toBe(true);
+			expect(chainLinkProposal.loanToValue).toBe(6969n);
 		}
 	});
 

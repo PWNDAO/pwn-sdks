@@ -137,7 +137,7 @@ export class ChainLinkProposalStrategy
 				...commonFields,
 				feedIntermediaryDenominations: feedData.feedIntermediaryDenominations,
 				feedInvertFlags: feedData.feedInvertFlags,
-				loanToValue: formatLtvForContract(ltv),
+				loanToValue: BigInt(ltv),
 				minCreditAmount,
 				chainId: params.collateral.chainId,
 				isOffer: params.isOffer,
