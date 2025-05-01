@@ -217,3 +217,36 @@ export type UniswapV3LpSetProposalDeps = {
 	loanContract: ILoanContract;
 };
 
+export const createUniswapV3LpSetProposal = async (
+	params: CreateUniswapV3LpSetProposalParams,
+	deps: UniswapV3LpSetProposalDeps,
+	user: UserWithNonceManager,
+): Promise<UniswapV3LpSetProposal> => {
+	const dummyTerm: StrategyTerm = {
+		creditAssets: [params.credit],
+		collateralAssets: [params.collateral],
+		apr: params.apr,
+		durationDays: params.duration.days || 0,
+		ltv: params.ltv,
+		expirationDays: params.expirationDays,
+		minCreditAmountPercentage: params.minCreditAmountPercentage,
+		relatedStrategyId: params.relatedStrategyId,
+	};
+
+	const strategy = new UniswapV3LpSetProposalStrategy(
+		dummyTerm,
+		deps.contract,
+		deps.loanContract,
+	);
+
+	const proposals = await strategy.createLendingProposals(
+		user,
+		params.creditAmount,
+		params.utilizedCreditId,
+		params.isOffer,
+		params.sourceOfFunds,
+		params.minCreditAmount,
+	);
+
+	return proposals[0];
+}
