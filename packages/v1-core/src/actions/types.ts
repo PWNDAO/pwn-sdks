@@ -11,6 +11,9 @@ export const proposalTypes = {
 	[ProposalType.Simple]: () => {
 		throw new Error("Not implemented");
 	},
+	[ProposalType.UniswapV3LpSet]: () => {
+		throw new Error("Not implemented");
+	},
 };
 
 export type ImplementedProposalTypes = {
