@@ -4,17 +4,26 @@ import {
     IServerAPI,
     ProposalWithHash,
     ProposalWithSignature,
+    readPwnSimpleLoanUniswapV3LpSetProposalGetCreditAmount,
     readPwnSimpleLoanUniswapV3LpSetProposalGetProposalHash,
     writePwnSimpleLoanUniswapV3LpSetProposalMakeProposal,
     type IProposalContract
 } from '../index.js'
-import { getUniswapV3LpSetProposalContractAddress, Hex } from '@pwndao/sdk-core';
+import { AddressString, getUniswapV3LpSetProposalContractAddress, Hex, SupportedChain } from '@pwndao/sdk-core';
 import { Address } from 'viem';
 import { getAccount } from '@wagmi/core';
 
 export interface IProposalUniswapV3LpSetContract
     extends IProposalContract<UniswapV3LpSetProposal> {
-    // TODO: something? maybe getLPPoolValue ?
+    getCreditAmount(
+        creditAddress: AddressString,
+        collateralId: bigint,
+        token0Denominator: boolean,
+        feedIntermediaryDenominations: AddressString[],
+        feedInvertFlags: boolean[],
+        loanToValue: bigint,
+        chainId: SupportedChain
+    ): Promise<bigint>;
 }
 
 export class UniswapV3LpSetProposalContract
@@ -59,6 +68,34 @@ export class UniswapV3LpSetProposalContract
             hash,
             isOnChain: true,
         }) as ProposalWithSignature;
+    }
+
+    async getCreditAmount(
+        creditAddress: AddressString,
+        collateralId: bigint,
+        token0Denominator: boolean,
+        feedIntermediaryDenominations: AddressString[],
+        feedInvertFlags: boolean[],
+        loanToValue: bigint,
+        chainId: SupportedChain
+    ): Promise<bigint> {
+        const data = await readPwnSimpleLoanUniswapV3LpSetProposalGetCreditAmount(
+            this.config,
+            {
+                address: getUniswapV3LpSetProposalContractAddress(chainId),
+                chainId,
+                args: [
+                    creditAddress,
+                    collateralId,
+                    token0Denominator,
+                    feedIntermediaryDenominations,
+                    feedInvertFlags,
+                    loanToValue
+                ],
+            }
+        )
+
+        return data;
     }
 
 	async createProposal(

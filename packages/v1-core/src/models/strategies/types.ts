@@ -13,6 +13,7 @@ import type { UniswapV3LpSetProposal } from "../proposals/uniswap-v3-lp-set-prop
 import type {
 	IElasticProposalBase,
 	IOracleProposalBase,
+	IUniswapV3LpSetProposalBase,
 } from "../proposals/proposal-base.js";
 import type { ProposalType } from "../proposals/proposal-base.js";
 
@@ -33,7 +34,7 @@ export interface StrategyTerm {
 }
 
 export interface IProposalStrategy<
-	T extends IElasticProposalBase | IOracleProposalBase,
+	T extends IElasticProposalBase | IOracleProposalBase | IUniswapV3LpSetProposalBase,
 > {
 	term: StrategyTerm;
 	getProposalsParams(
