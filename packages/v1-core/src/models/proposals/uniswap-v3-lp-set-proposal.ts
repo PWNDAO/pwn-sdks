@@ -122,8 +122,8 @@ export class UniswapV3LpSetProposal implements IUniswapV3LpSetProposalBase {
     accruingInterestAPR: number;
     durationOrDate: number;
     expiration: number;
-    acceptorController: AddressString;
-    acceptorControllerData: Hex;
+    acceptorController: AddressString | null;
+    acceptorControllerData: Hex | null;
     proposer: AddressString;
     proposerSpecHash: Hex;
     isOffer: true;

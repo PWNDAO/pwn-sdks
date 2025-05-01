@@ -202,8 +202,8 @@ export interface IUniswapV3LpSetProposalBase extends Omit<IOracleProposalBase, "
 	isOffer: true;
 
 	// TODO: remove this after V1.4 is implemented
-	acceptorController: AddressString;
-	acceptorControllerData: Hex;
+	acceptorController: AddressString | null;
+	acceptorControllerData: Hex | null;
 }
 
 interface IBaseFixedProposal {

@@ -21,6 +21,7 @@ import type {
 import type { ProposalWithHash, ProposalWithSignature } from "../models/strategies/types.js";
 import type { Proposal } from "../models/strategies/types.js";
 import type { ILenderSpec } from "../models/terms.js";
+import { IProposalUniswapV3LpSetContract } from "src/contracts/uniswap-v3-lp-set-proposal-contract.js";
 
 type CommonProposalFieldsParams = {
 	user: UserWithNonceManager;
@@ -53,7 +54,8 @@ export interface IProposalContract<TProposal extends Proposal> {
 
 export type ProposalContract =
 	| IProposalChainLinkContract
-	| IProposalElasticContract;
+	| IProposalElasticContract
+	| IProposalUniswapV3LpSetContract;
 
 export const getLendingCommonProposalFields = async (
 	params: CommonProposalFieldsParams & IProposalMisc,

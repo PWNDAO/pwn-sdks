@@ -24,6 +24,14 @@ export interface StrategyTerm {
 	ltv: Record<string, number>;
 	durationDays: number;
 	expirationDays: number;
+
+	// 1.4 UniswapV3LpSet
+	tokenAAllowlist?: string[];
+	tokenBAllowlist?: string[];
+
+	// V1.4
+	acceptorController?: string;
+	acceptorControllerData?: string;
 	/**
 	 * The minimum credit amount percentage for a proposal to be created
 	 * With 1e4 precision

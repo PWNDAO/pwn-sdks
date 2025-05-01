@@ -1,8 +1,219 @@
-import type { IServerAPI } from "./types.js";
+import { IProposalUniswapV3LpSetContract } from "src/contracts/uniswap-v3-lp-set-proposal-contract.js";
+import type { BaseTerm, IServerAPI } from "./types.js";
+import { getLendingCommonProposalFields, ILoanContract } from "./helpers.js";
+import { IProposalStrategy, StrategyTerm } from "src/models/strategies/types.js";
+import { IUniswapV3LpSetProposalBase } from "src/models/proposals/proposal-base.js";
+import { AddressString, getLoanContractAddress, getUniqueCreditCollateralKey, Hex, UserWithNonceManager } from "@pwndao/sdk-core";
+import { UniswapV3LpSetProposal } from "src/models/proposals/uniswap-v3-lp-set-proposal.js";
+import { calculateExpirationTimestamp, calculateMinCreditAmount } from "src/utils/proposal-calculations.js";
+import { calculateDurationInSeconds } from "src/utils/proposal-calculations.js";
+import invariant from "ts-invariant";
+import { getFeedData } from "src/utils/chainlink-feeds.js";
+import { ChainsWithChainLinkFeedSupport } from "src/utils/chainlink-feeds.js";
+import { UniswapV3Position } from "../../../core/src/models/liquidity-position.js";
 
-export interface IProposalChainLinkAPIDeps {
+export type CreateUniswapV3LpSetProposalParams = BaseTerm & {
+	tokenAAllowlist: string[];
+	tokenBAllowlist: string[];
+	isOffer: true;
+	acceptorController: string;
+	acceptorControllerData: string;
+	minCreditAmountPercentage: number;
+	minCreditAmount?: bigint;
+}
+
+export class UniswapV3LpSetProposalStrategy
+	implements IProposalStrategy<IUniswapV3LpSetProposalBase>
+{
+	constructor(
+		public term: StrategyTerm,
+		public contract: IProposalUniswapV3LpSetContract,
+		public loanContract: ILoanContract,
+	) {}
+
+	async implementUniswapV3LpSetProposal(
+		params: CreateUniswapV3LpSetProposalParams,
+		contract: IProposalUniswapV3LpSetContract,
+		user: UserWithNonceManager,
+	): Promise<UniswapV3LpSetProposal | undefined> {
+		// Calculate expiration timestamp
+		const expiration = calculateExpirationTimestamp(params.expirationDays);
+
+		// Get duration in seconds or timestamp
+		const durationOrDate = calculateDurationInSeconds(params.duration);
+		
+		// Get LTV value for the credit-collateral pair
+		const ltv = this.term.ltv[getUniqueCreditCollateralKey(params.credit, params.collateral)];
+
+		invariant(ltv, "LTV is undefined");
+
+        const feedData = getFeedData(
+            params.collateral.chainId as ChainsWithChainLinkFeedSupport,
+            params.collateral.address,
+            "underlyingAddress" in params.credit && params.credit.underlyingAddress
+                ? params.credit.underlyingAddress
+                : params.credit.address,
+        );
+
+        invariant(feedData, "We did not find a suitable price feed. Create classic elastic proposal instead.");
+
+		invariant(params.collateral instanceof UniswapV3Position, "Collateral must be a UniswapV3Position");
+        const creditAmount = await contract.getCreditAmount(
+            params.credit.address,
+            BigInt(params.collateral.tokenId),
+            true,
+            feedData.feedIntermediaryDenominations,
+            feedData.feedInvertFlags,
+            BigInt(ltv),
+            params.collateral.chainId,
+        )
+
+		const minCreditAmount = 
+			params.minCreditAmount && !params.minCreditAmountPercentage
+				? params.minCreditAmount
+				: params.minCreditAmountPercentage
+					? calculateMinCreditAmount(
+							creditAmount,
+							params.minCreditAmountPercentage,
+						)
+					: undefined;
+
+		invariant(minCreditAmount, "Min credit amount is undefined");
+
+		// Get common proposal fields
+		const commonFields = await getLendingCommonProposalFields(
+			{
+				nonce: user.getNextNonce(params.collateral.chainId),
+				nonceSpace: user.getNonceSpace(params.collateral.chainId),
+				user,
+				collateral: params.collateral,
+				credit: params.credit,
+				creditAmount: params.creditAmount,
+				utilizedCreditId: params.utilizedCreditId,
+				durationOrDate,
+				apr: params.apr,
+				expiration,
+				loanContract: getLoanContractAddress(params.collateral.chainId),
+				relatedStrategyId: this.term.relatedStrategyId,
+				sourceOfFunds: params.sourceOfFunds,
+				isOffer: true,
+			},
+			{
+				contract: contract,
+				loanContract: this.loanContract,
+			},
+		);
+
+		// Create and return the UniswapV3LpSet proposal with formatted LTV for contract
+		return new UniswapV3LpSetProposal(
+			{
+				...commonFields,
+				minCreditAmount,
+				isOffer: true,
+				feedIntermediaryDenominations: feedData.feedIntermediaryDenominations,
+				feedInvertFlags: feedData.feedInvertFlags,
+				loanToValue: BigInt(ltv),
+				chainId: params.collateral.chainId,
+				collateralCategory: params.collateral.category,
+				collateralAddress: params.collateral.address,
+				collateralId: BigInt(params.collateral.tokenId),
+				tokenAAllowlist: params.tokenAAllowlist.map(token => token as `0x${string}`),
+				tokenBAllowlist: params.tokenBAllowlist.map(token => token as `0x${string}`),
+				acceptorController: params.acceptorController as `0x${string}`,
+				acceptorControllerData: params.acceptorControllerData as `0x${string}`,
+			},
+			params.collateral.chainId,
+		);
+	}
+
+	getProposalsParams(
+		creditAmount: bigint,
+		utilizedCreditId: Hex,
+		isOffer: boolean,
+		sourceOfFunds: AddressString | null,
+		minCreditAmount?: bigint,
+	): CreateUniswapV3LpSetProposalParams[] {
+
+		invariant(isOffer, "UniswapV3LpSetProposal is always an offer");
+		invariant(this.term.creditAssets.length === 1, "UniswapV3LpSetProposal supports only one credit asset");
+		invariant(this.term.collateralAssets.length === 1, "UniswapV3LpSetProposal supports only one collateral asset");
+
+		const credit = this.term.creditAssets[0];
+		const collateral = this.term.collateralAssets[0];
+		
+		return [
+			{
+				collateral,
+				credit,
+				creditAmount,
+				utilizedCreditId,
+				apr: this.term.apr,
+				duration: {
+					days: this.term.durationDays,
+					date: undefined,
+				},
+				ltv: this.term.ltv,
+				expirationDays: this.term.expirationDays,
+				isOffer: true,
+				sourceOfFunds,
+				minCreditAmount,
+				tokenAAllowlist: this.term.tokenAAllowlist || [],
+				tokenBAllowlist: this.term.tokenBAllowlist || [],
+				acceptorController: this.term.acceptorController || "",
+				acceptorControllerData: this.term.acceptorControllerData || "",
+				minCreditAmountPercentage: this.term.minCreditAmountPercentage || 0,
+			},
+		];
+	}
+
+	async createLendingProposals(
+		user: UserWithNonceManager,
+		creditAmount: bigint,
+		utilizedCreditId: Hex,
+		isOffer: boolean,
+		sourceOfFunds: AddressString | null,
+		minCreditAmount?: bigint,
+	): Promise<UniswapV3LpSetProposal[]> {
+		const paramsArray = this.getProposalsParams(
+			creditAmount,
+			utilizedCreditId,
+			isOffer,
+			sourceOfFunds,
+			minCreditAmount,
+		);
+
+		const result: UniswapV3LpSetProposal[] = [];
+
+		const proposals = await Promise.allSettled(
+			paramsArray.map(async (params) => {
+				try {
+					return await this.implementUniswapV3LpSetProposal(params, this.contract, user);
+				} catch (error) {
+					console.error("Error creating UniswapV3LpSet proposal:", error);
+					throw error;
+				}
+			}),
+		);
+
+		for (const proposal of proposals) {
+			if (proposal.status === "fulfilled" && proposal.value) {
+				result.push(proposal.value);
+			}
+		}
+
+		return result;
+	}
+}
+
+export interface IProposalUniswapV3LpSetAPIDeps {
 	persistProposal: IServerAPI["post"]["persistProposal"];
 	persistProposals: IServerAPI["post"]["persistProposals"];
 	updateNonces: IServerAPI["post"]["updateNonce"];
 }
+
+export type UniswapV3LpSetProposalDeps = {
+	api: IProposalUniswapV3LpSetAPIDeps;
+	contract: IProposalUniswapV3LpSetContract;
+	loanContract: ILoanContract;
+};
 
