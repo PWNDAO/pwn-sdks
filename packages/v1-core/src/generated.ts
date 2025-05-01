@@ -6143,6 +6143,808 @@ export const pwnSimpleLoanDutchAuctionProposalAbi = [
 ] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// PWNSimpleLoanUniswapV3LPSetProposal
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const pwnSimpleLoanUniswapV3LPSetProposalAbi = [
+	[
+		{
+			type: "constructor",
+			inputs: [
+				{ name: "_hub", internalType: "address", type: "address" },
+				{ name: "_revokedNonce", internalType: "address", type: "address" },
+				{ name: "_config", internalType: "address", type: "address" },
+				{ name: "_utilizedCredit", internalType: "address", type: "address" },
+				{ name: "_uniswapV3Factory", internalType: "address", type: "address" },
+				{
+					name: "_uniswapNFTPositionManager",
+					internalType: "address",
+					type: "address",
+				},
+				{
+					name: "_chainlinkFeedRegistry",
+					internalType: "address",
+					type: "address",
+				},
+				{
+					name: "_chainlinkL2SequencerUptimeFeed",
+					internalType: "address",
+					type: "address",
+				},
+				{ name: "_weth", internalType: "address", type: "address" },
+			],
+			stateMutability: "nonpayable",
+		},
+		{
+			type: "error",
+			inputs: [{ name: "addr", internalType: "address", type: "address" }],
+			name: "AcceptorIsProposer",
+		},
+		{
+			type: "error",
+			inputs: [
+				{ name: "addr", internalType: "address", type: "address" },
+				{ name: "tag", internalType: "bytes32", type: "bytes32" },
+			],
+			name: "AddressMissingHubTag",
+		},
+		{
+			type: "error",
+			inputs: [{ name: "addr", internalType: "address", type: "address" }],
+			name: "CallerIsNotStatedProposer",
+		},
+		{
+			type: "error",
+			inputs: [
+				{ name: "caller", internalType: "address", type: "address" },
+				{ name: "loanContract", internalType: "address", type: "address" },
+			],
+			name: "CallerNotLoanContract",
+		},
+		{
+			type: "error",
+			inputs: [
+				{ name: "feed", internalType: "address", type: "address" },
+				{ name: "updatedAt", internalType: "uint256", type: "uint256" },
+			],
+			name: "ChainlinkFeedPriceTooOld",
+		},
+		{
+			type: "error",
+			inputs: [
+				{ name: "feed", internalType: "address", type: "address" },
+				{ name: "price", internalType: "int256", type: "int256" },
+				{ name: "updatedAt", internalType: "uint256", type: "uint256" },
+			],
+			name: "ChainlinkFeedReturnedNegativePrice",
+		},
+		{ type: "error", inputs: [], name: "ChainlinkInvalidInputLenghts" },
+		{
+			type: "error",
+			inputs: [
+				{ name: "defaultDate", internalType: "uint32", type: "uint32" },
+				{ name: "current", internalType: "uint32", type: "uint32" },
+			],
+			name: "DefaultDateInPast",
+		},
+		{
+			type: "error",
+			inputs: [
+				{ name: "current", internalType: "uint256", type: "uint256" },
+				{ name: "expiration", internalType: "uint256", type: "uint256" },
+			],
+			name: "Expired",
+		},
+		{
+			type: "error",
+			inputs: [
+				{ name: "timeSinceUp", internalType: "uint256", type: "uint256" },
+				{ name: "gracePeriod", internalType: "uint256", type: "uint256" },
+			],
+			name: "GracePeriodNotOver",
+		},
+		{
+			type: "error",
+			inputs: [
+				{ name: "current", internalType: "uint256", type: "uint256" },
+				{ name: "limit", internalType: "uint256", type: "uint256" },
+			],
+			name: "InsufficientCreditAmount",
+		},
+		{
+			type: "error",
+			inputs: [
+				{ name: "current", internalType: "uint256", type: "uint256" },
+				{ name: "limit", internalType: "uint256", type: "uint256" },
+			],
+			name: "IntermediaryDenominationsOutOfBounds",
+		},
+		{
+			type: "error",
+			inputs: [
+				{
+					name: "acceptorController",
+					internalType: "address",
+					type: "address",
+				},
+			],
+			name: "InvalidAcceptorController",
+		},
+		{
+			type: "error",
+			inputs: [
+				{ name: "current", internalType: "bytes32", type: "bytes32" },
+				{ name: "proposed", internalType: "bytes32", type: "bytes32" },
+			],
+			name: "InvalidCollateralStateFingerprint",
+		},
+		{ type: "error", inputs: [], name: "InvalidLPTokenPair" },
+		{
+			type: "error",
+			inputs: [
+				{ name: "refinancingLoanId", internalType: "uint256", type: "uint256" },
+			],
+			name: "InvalidRefinancingLoanId",
+		},
+		{
+			type: "error",
+			inputs: [
+				{ name: "signer", internalType: "address", type: "address" },
+				{ name: "digest", internalType: "bytes32", type: "bytes32" },
+			],
+			name: "InvalidSignature",
+		},
+		{
+			type: "error",
+			inputs: [{ name: "length", internalType: "uint256", type: "uint256" }],
+			name: "InvalidSignatureLength",
+		},
+		{ type: "error", inputs: [], name: "L2SequencerDown" },
+		{ type: "error", inputs: [], name: "MinCreditAmountNotSet" },
+		{ type: "error", inputs: [], name: "MissingStateFingerprintComputer" },
+		{
+			type: "error",
+			inputs: [
+				{ name: "addr", internalType: "address", type: "address" },
+				{ name: "nonceSpace", internalType: "uint256", type: "uint256" },
+				{ name: "nonce", internalType: "uint256", type: "uint256" },
+			],
+			name: "NonceNotUsable",
+		},
+		{ type: "error", inputs: [], name: "T" },
+		{
+			type: "event",
+			anonymous: false,
+			inputs: [
+				{
+					name: "proposalHash",
+					internalType: "bytes32",
+					type: "bytes32",
+					indexed: true,
+				},
+				{
+					name: "proposer",
+					internalType: "address",
+					type: "address",
+					indexed: true,
+				},
+				{
+					name: "proposal",
+					internalType: "struct PWNSimpleLoanUniswapV3LPSetProposal.Proposal",
+					type: "tuple",
+					components: [
+						{ name: "tokenAAllowlist", internalType: "address[]", type: "address[]" },
+						{ name: "tokenBAllowlist", internalType: "address[]", type: "address[]" },
+						{ name: "creditAddress", internalType: "address", type: "address" },
+						{
+							name: "feedIntermediaryDenominations",
+							internalType: "address[]",
+							type: "address[]",
+						},
+						{ name: "feedInvertFlags", internalType: "bool[]", type: "bool[]" },
+						{ name: "loanToValue", internalType: "uint256", type: "uint256" },
+						{ name: "minCreditAmount", internalType: "uint256", type: "uint256" },
+						{
+							name: "availableCreditLimit",
+							internalType: "uint256",
+							type: "uint256",
+						},
+						{ name: "utilizedCreditId", internalType: "bytes32", type: "bytes32" },
+						{
+							name: "fixedInterestAmount",
+							internalType: "uint256",
+							type: "uint256",
+						},
+						{
+							name: "accruingInterestAPR",
+							internalType: "uint24",
+							type: "uint24",
+						},
+						{ name: "durationOrDate", internalType: "uint32", type: "uint32" },
+						{ name: "expiration", internalType: "uint40", type: "uint40" },
+						{
+							name: "acceptorController",
+							internalType: "address",
+							type: "address",
+						},
+						{
+							name: "acceptorControllerData",
+							internalType: "bytes",
+							type: "bytes",
+						},
+						{ name: "proposer", internalType: "address", type: "address" },
+						{ name: "proposerSpecHash", internalType: "bytes32", type: "bytes32" },
+						{ name: "isOffer", internalType: "bool", type: "bool" },
+						{
+							name: "refinancingLoanId",
+							internalType: "uint256",
+							type: "uint256",
+						},
+						{ name: "nonceSpace", internalType: "uint256", type: "uint256" },
+						{ name: "nonce", internalType: "uint256", type: "uint256" },
+						{ name: "loanContract", internalType: "address", type: "address" },
+					],
+					indexed: false,
+				},
+			],
+			name: "ProposalMade",
+		},
+		{
+			type: "function",
+			inputs: [],
+			name: "DOMAIN_SEPARATOR",
+			outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [],
+			name: "LOAN_TO_VALUE_DENOMINATOR",
+			outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [],
+			name: "MAX_INTERMEDIARY_DENOMINATIONS",
+			outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [],
+			name: "MULTIPROPOSAL_DOMAIN_SEPARATOR",
+			outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [],
+			name: "MULTIPROPOSAL_TYPEHASH",
+			outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [],
+			name: "PROPOSAL_TYPEHASH",
+			outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [],
+			name: "VERSION",
+			outputs: [{ name: "", internalType: "string", type: "string" }],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [],
+			name: "WETH",
+			outputs: [{ name: "", internalType: "address", type: "address" }],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [
+				{ name: "acceptor", internalType: "address", type: "address" },
+				{ name: "refinancingLoanId", internalType: "uint256", type: "uint256" },
+				{ name: "proposalData", internalType: "bytes", type: "bytes" },
+				{
+					name: "proposalInclusionProof",
+					internalType: "bytes32[]",
+					type: "bytes32[]",
+				},
+				{ name: "signature", internalType: "bytes", type: "bytes" },
+			],
+			name: "acceptProposal",
+			outputs: [
+				{ name: "proposalHash", internalType: "bytes32", type: "bytes32" },
+				{
+					name: "loanTerms",
+					internalType: "struct PWNSimpleLoan.Terms",
+					type: "tuple",
+					components: [
+						{ name: "lender", internalType: "address", type: "address" },
+						{ name: "borrower", internalType: "address", type: "address" },
+						{ name: "duration", internalType: "uint32", type: "uint32" },
+						{
+							name: "collateral",
+							internalType: "struct MultiToken.Asset",
+							type: "tuple",
+							components: [
+								{
+									name: "category",
+									internalType: "enum MultiToken.Category",
+									type: "uint8",
+								},
+								{ name: "assetAddress", internalType: "address", type: "address" },
+								{ name: "id", internalType: "uint256", type: "uint256" },
+								{ name: "amount", internalType: "uint256", type: "uint256" },
+							],
+						},
+						{
+							name: "credit",
+							internalType: "struct MultiToken.Asset",
+							type: "tuple",
+							components: [
+								{
+									name: "category",
+									internalType: "enum MultiToken.Category",
+									type: "uint8",
+								},
+								{ name: "assetAddress", internalType: "address", type: "address" },
+								{ name: "id", internalType: "uint256", type: "uint256" },
+								{ name: "amount", internalType: "uint256", type: "uint256" },
+							],
+						},
+						{
+							name: "fixedInterestAmount",
+							internalType: "uint256",
+							type: "uint256",
+						},
+						{
+							name: "accruingInterestAPR",
+							internalType: "uint24",
+							type: "uint24",
+						},
+						{ name: "lenderSpecHash", internalType: "bytes32", type: "bytes32" },
+						{ name: "borrowerSpecHash", internalType: "bytes32", type: "bytes32" },
+					],
+				},
+			],
+			stateMutability: "nonpayable",
+		},
+		{
+			type: "function",
+			inputs: [],
+			name: "chainlinkFeedRegistry",
+			outputs: [
+				{
+					name: "",
+					internalType: "contract IChainlinkFeedRegistryLike",
+					type: "address",
+				},
+			],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [],
+			name: "chainlinkL2SequencerUptimeFeed",
+			outputs: [
+				{
+					name: "",
+					internalType: "contract IChainlinkAggregatorLike",
+					type: "address",
+				},
+			],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [],
+			name: "config",
+			outputs: [{ name: "", internalType: "contract PWNConfig", type: "address" }],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [{ name: "proposalData", internalType: "bytes", type: "bytes" }],
+			name: "decodeProposalData",
+			outputs: [
+				{
+					name: "",
+					internalType: "struct PWNSimpleLoanUniswapV3LPSetProposal.Proposal",
+					type: "tuple",
+					components: [
+						{ name: "tokenAAllowlist", internalType: "address[]", type: "address[]" },
+						{ name: "tokenBAllowlist", internalType: "address[]", type: "address[]" },
+						{ name: "creditAddress", internalType: "address", type: "address" },
+						{
+							name: "feedIntermediaryDenominations",
+							internalType: "address[]",
+							type: "address[]",
+						},
+						{ name: "feedInvertFlags", internalType: "bool[]", type: "bool[]" },
+						{ name: "loanToValue", internalType: "uint256", type: "uint256" },
+						{ name: "minCreditAmount", internalType: "uint256", type: "uint256" },
+						{
+							name: "availableCreditLimit",
+							internalType: "uint256",
+							type: "uint256",
+						},
+						{ name: "utilizedCreditId", internalType: "bytes32", type: "bytes32" },
+						{
+							name: "fixedInterestAmount",
+							internalType: "uint256",
+							type: "uint256",
+						},
+						{
+							name: "accruingInterestAPR",
+							internalType: "uint24",
+							type: "uint24",
+						},
+						{ name: "durationOrDate", internalType: "uint32", type: "uint32" },
+						{ name: "expiration", internalType: "uint40", type: "uint40" },
+						{
+							name: "acceptorController",
+							internalType: "address",
+							type: "address",
+						},
+						{
+							name: "acceptorControllerData",
+							internalType: "bytes",
+							type: "bytes",
+						},
+						{ name: "proposer", internalType: "address", type: "address" },
+						{ name: "proposerSpecHash", internalType: "bytes32", type: "bytes32" },
+						{ name: "isOffer", internalType: "bool", type: "bool" },
+						{
+							name: "refinancingLoanId",
+							internalType: "uint256",
+							type: "uint256",
+						},
+						{ name: "nonceSpace", internalType: "uint256", type: "uint256" },
+						{ name: "nonce", internalType: "uint256", type: "uint256" },
+						{ name: "loanContract", internalType: "address", type: "address" },
+					],
+				},
+				{
+					name: "",
+					internalType:
+						"struct PWNSimpleLoanUniswapV3LPSetProposal.ProposalValues",
+					type: "tuple",
+					components: [
+						{ name: "collateralId", internalType: "uint256", type: "uint256" },
+						{ name: "tokenAIndex", internalType: "uint256", type: "uint256" },
+						{ name: "tokenBIndex", internalType: "uint256", type: "uint256" },
+						{
+							name: "acceptorControllerData",
+							internalType: "bytes",
+							type: "bytes",
+						},
+					],
+				},
+			],
+			stateMutability: "pure",
+		},
+		{
+			type: "function",
+			inputs: [
+				{
+					name: "proposal",
+					internalType: "struct PWNSimpleLoanUniswapV3LPSetProposal.Proposal",
+					type: "tuple",
+					components: [
+						{ name: "tokenAAllowlist", internalType: "address[]", type: "address[]" },
+						{ name: "tokenBAllowlist", internalType: "address[]", type: "address[]" },
+						{ name: "creditAddress", internalType: "address", type: "address" },
+						{
+							name: "feedIntermediaryDenominations",
+							internalType: "address[]",
+							type: "address[]",
+						},
+						{ name: "feedInvertFlags", internalType: "bool[]", type: "bool[]" },
+						{ name: "loanToValue", internalType: "uint256", type: "uint256" },
+						{ name: "minCreditAmount", internalType: "uint256", type: "uint256" },
+						{
+							name: "availableCreditLimit",
+							internalType: "uint256",
+							type: "uint256",
+						},
+						{ name: "utilizedCreditId", internalType: "bytes32", type: "bytes32" },
+						{
+							name: "fixedInterestAmount",
+							internalType: "uint256",
+							type: "uint256",
+						},
+						{
+							name: "accruingInterestAPR",
+							internalType: "uint24",
+							type: "uint24",
+						},
+						{ name: "durationOrDate", internalType: "uint32", type: "uint32" },
+						{ name: "expiration", internalType: "uint40", type: "uint40" },
+						{
+							name: "acceptorController",
+							internalType: "address",
+							type: "address",
+						},
+						{
+							name: "acceptorControllerData",
+							internalType: "bytes",
+							type: "bytes",
+						},
+						{ name: "proposer", internalType: "address", type: "address" },
+						{ name: "proposerSpecHash", internalType: "bytes32", type: "bytes32" },
+						{ name: "isOffer", internalType: "bool", type: "bool" },
+						{
+							name: "refinancingLoanId",
+							internalType: "uint256",
+							type: "uint256",
+						},
+						{ name: "nonceSpace", internalType: "uint256", type: "uint256" },
+						{ name: "nonce", internalType: "uint256", type: "uint256" },
+						{ name: "loanContract", internalType: "address", type: "address" },
+					],
+				},
+				{
+					name: "proposalValues",
+					internalType:
+						"struct PWNSimpleLoanUniswapV3LPSetProposal.ProposalValues",
+					type: "tuple",
+					components: [
+						{ name: "collateralId", internalType: "uint256", type: "uint256" },
+						{ name: "tokenAIndex", internalType: "uint256", type: "uint256" },
+						{ name: "tokenBIndex", internalType: "uint256", type: "uint256" },
+						{
+							name: "acceptorControllerData",
+							internalType: "bytes",
+							type: "bytes",
+						},
+					],
+				},
+			],
+			name: "encodeProposalData",
+			outputs: [{ name: "", internalType: "bytes", type: "bytes" }],
+			stateMutability: "pure",
+		},
+		{
+			type: "function",
+			inputs: [
+				{ name: "creditAddress", internalType: "address", type: "address" },
+				{ name: "collateralId", internalType: "uint256", type: "uint256" },
+				{ name: "token0Denominator", internalType: "bool", type: "bool" },
+				{
+					name: "feedIntermediaryDenominations",
+					internalType: "address[]",
+					type: "address[]",
+				},
+				{ name: "feedInvertFlags", internalType: "bool[]", type: "bool[]" },
+				{ name: "loanToValue", internalType: "uint256", type: "uint256" },
+			],
+			name: "getCreditAmount",
+			outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [
+				{
+					name: "multiproposal",
+					internalType: "struct PWNSimpleLoanProposal.Multiproposal",
+					type: "tuple",
+					components: [
+						{
+							name: "multiproposalMerkleRoot",
+							internalType: "bytes32",
+							type: "bytes32",
+						},
+					],
+				},
+			],
+			name: "getMultiproposalHash",
+			outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [
+				{
+					name: "proposal",
+					internalType: "struct PWNSimpleLoanUniswapV3LPSetProposal.Proposal",
+					type: "tuple",
+					components: [
+						{ name: "tokenAAllowlist", internalType: "address[]", type: "address[]" },
+						{ name: "tokenBAllowlist", internalType: "address[]", type: "address[]" },
+						{ name: "creditAddress", internalType: "address", type: "address" },
+						{
+							name: "feedIntermediaryDenominations",
+							internalType: "address[]",
+							type: "address[]",
+						},
+						{ name: "feedInvertFlags", internalType: "bool[]", type: "bool[]" },
+						{ name: "loanToValue", internalType: "uint256", type: "uint256" },
+						{ name: "minCreditAmount", internalType: "uint256", type: "uint256" },
+						{
+							name: "availableCreditLimit",
+							internalType: "uint256",
+							type: "uint256",
+						},
+						{ name: "utilizedCreditId", internalType: "bytes32", type: "bytes32" },
+						{
+							name: "fixedInterestAmount",
+							internalType: "uint256",
+							type: "uint256",
+						},
+						{
+							name: "accruingInterestAPR",
+							internalType: "uint24",
+							type: "uint24",
+						},
+						{ name: "durationOrDate", internalType: "uint32", type: "uint32" },
+						{ name: "expiration", internalType: "uint40", type: "uint40" },
+						{
+							name: "acceptorController",
+							internalType: "address",
+							type: "address",
+						},
+						{
+							name: "acceptorControllerData",
+							internalType: "bytes",
+							type: "bytes",
+						},
+						{ name: "proposer", internalType: "address", type: "address" },
+						{ name: "proposerSpecHash", internalType: "bytes32", type: "bytes32" },
+						{ name: "isOffer", internalType: "bool", type: "bool" },
+						{
+							name: "refinancingLoanId",
+							internalType: "uint256",
+							type: "uint256",
+						},
+						{ name: "nonceSpace", internalType: "uint256", type: "uint256" },
+						{ name: "nonce", internalType: "uint256", type: "uint256" },
+						{ name: "loanContract", internalType: "address", type: "address" },
+					],
+				},
+			],
+			name: "getProposalHash",
+			outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [],
+			name: "hub",
+			outputs: [{ name: "", internalType: "contract PWNHub", type: "address" }],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [
+				{
+					name: "proposal",
+					internalType: "struct PWNSimpleLoanUniswapV3LPSetProposal.Proposal",
+					type: "tuple",
+					components: [
+						{ name: "tokenAAllowlist", internalType: "address[]", type: "address[]" },
+						{ name: "tokenBAllowlist", internalType: "address[]", type: "address[]" },
+						{ name: "creditAddress", internalType: "address", type: "address" },
+						{
+							name: "feedIntermediaryDenominations",
+							internalType: "address[]",
+							type: "address[]",
+						},
+						{ name: "feedInvertFlags", internalType: "bool[]", type: "bool[]" },
+						{ name: "loanToValue", internalType: "uint256", type: "uint256" },
+						{ name: "minCreditAmount", internalType: "uint256", type: "uint256" },
+						{
+							name: "availableCreditLimit",
+							internalType: "uint256",
+							type: "uint256",
+						},
+						{ name: "utilizedCreditId", internalType: "bytes32", type: "bytes32" },
+						{
+							name: "fixedInterestAmount",
+							internalType: "uint256",
+							type: "uint256",
+						},
+						{
+							name: "accruingInterestAPR",
+							internalType: "uint24",
+							type: "uint24",
+						},
+						{ name: "durationOrDate", internalType: "uint32", type: "uint32" },
+						{ name: "expiration", internalType: "uint40", type: "uint40" },
+						{
+							name: "acceptorController",
+							internalType: "address",
+							type: "address",
+						},
+						{
+							name: "acceptorControllerData",
+							internalType: "bytes",
+							type: "bytes",
+						},
+						{ name: "proposer", internalType: "address", type: "address" },
+						{ name: "proposerSpecHash", internalType: "bytes32", type: "bytes32" },
+						{ name: "isOffer", internalType: "bool", type: "bool" },
+						{
+							name: "refinancingLoanId",
+							internalType: "uint256",
+							type: "uint256",
+						},
+						{ name: "nonceSpace", internalType: "uint256", type: "uint256" },
+						{ name: "nonce", internalType: "uint256", type: "uint256" },
+						{ name: "loanContract", internalType: "address", type: "address" },
+					],
+				},
+			],
+			name: "makeProposal",
+			outputs: [{ name: "proposalHash", internalType: "bytes32", type: "bytes32" }],
+			stateMutability: "nonpayable",
+		},
+		{
+			type: "function",
+			inputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+			name: "proposalsMade",
+			outputs: [{ name: "", internalType: "bool", type: "bool" }],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [
+				{ name: "nonceSpace", internalType: "uint256", type: "uint256" },
+				{ name: "nonce", internalType: "uint256", type: "uint256" },
+			],
+			name: "revokeNonce",
+			outputs: [],
+			stateMutability: "nonpayable",
+		},
+		{
+			type: "function",
+			inputs: [],
+			name: "revokedNonce",
+			outputs: [
+				{ name: "", internalType: "contract PWNRevokedNonce", type: "address" },
+			],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [],
+			name: "uniswapNFTPositionManager",
+			outputs: [
+				{
+					name: "",
+					internalType: "contract INonfungiblePositionManager",
+					type: "address",
+				},
+			],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [],
+			name: "uniswapV3Factory",
+			outputs: [{ name: "", internalType: "address", type: "address" }],
+			stateMutability: "view",
+		},
+		{
+			type: "function",
+			inputs: [],
+			name: "utilizedCredit",
+			outputs: [
+				{ name: "", internalType: "contract PWNUtilizedCredit", type: "address" },
+			],
+			stateMutability: "view",
+		},
+	]
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // PWNSimpleLoanElasticChainlinkProposal
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -9,6 +9,7 @@ import type {
 import type { CreateElasticProposalParams } from "../../factories/create-elastic-proposal.js";
 import type { ChainLinkProposal } from "../proposals/chainlink-proposal.js";
 import type { ElasticProposal } from "../proposals/elastic-proposal.js";
+import type { UniswapV3LpSetProposal } from "../proposals/uniswap-v3-lp-set-proposal.js";
 import type {
 	IElasticProposalBase,
 	IOracleProposalBase,
@@ -78,7 +79,7 @@ export type Strategy = {
 	};
 };
 
-export type Proposal = ElasticProposal | ChainLinkProposal;
+export type Proposal = ElasticProposal | ChainLinkProposal | UniswapV3LpSetProposal;
 
 export type ProposalWithHash = Proposal & {
 	hash: Hex;
