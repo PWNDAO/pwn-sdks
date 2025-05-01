@@ -4,9 +4,13 @@ import {
     IServerAPI,
     ProposalWithHash,
     ProposalWithSignature,
+    readPwnSimpleLoanUniswapV3LpSetProposalGetProposalHash,
+    writePwnSimpleLoanUniswapV3LpSetProposalMakeProposal,
     type IProposalContract
 } from '../index.js'
-import { Hex } from '@pwndao/sdk-core';
+import { getUniswapV3LpSetProposalContractAddress, Hex } from '@pwndao/sdk-core';
+import { Address } from 'viem';
+import { getAccount } from '@wagmi/core';
 
 export interface IProposalUniswapV3LpSetContract
     extends IProposalContract<UniswapV3LpSetProposal> {
@@ -16,21 +20,46 @@ export interface IProposalUniswapV3LpSetContract
 export class UniswapV3LpSetProposalContract
     extends BaseProposalContract<UniswapV3LpSetProposal>
     implements IProposalUniswapV3LpSetContract {
-    // TODO: something? maybe getLPPoolValue ?
 
 
 	async getProposalHash(proposal: UniswapV3LpSetProposal): Promise<Hex> {
-		console.warn(
-			"UniswapV3LpSetProposalContract.getProposalHash is not implemented",
-			proposal,
-		);
-		// TODO: Implement actual hash calculation using EIP-712 logic
-		// This will likely involve calling a read method on the corresponding proposal contract
-		// or using viem's hashTypedData locally. See ChainLinkProposalContract.getProposalHash.
-		throw new Error(
-			"Method UniswapV3LpSetProposalContract.getProposalHash not implemented.",
-		);
+		const data = await readPwnSimpleLoanUniswapV3LpSetProposalGetProposalHash(
+            this.config,
+            {
+                address: getUniswapV3LpSetProposalContractAddress(proposal.chainId),
+                chainId: proposal.chainId,
+                args: [proposal.createProposalStruct()],
+            }
+        )
+
+		return data;
 	}
+
+    async signProposal(
+        proposal: UniswapV3LpSetProposal,
+    ): Promise<ProposalWithSignature> {
+        const hash = await this.getProposalHash(proposal);
+
+        const domain = {
+            name: "PWNSimpleLoanUniswapV3LpSetProposal",
+            version: "1.0",
+            chainId: proposal.chainId,
+            verifyingContract: getUniswapV3LpSetProposalContractAddress(proposal.chainId),
+        }
+
+        const signature = await this.signWithSafeWalletSupport(
+            domain,
+            UniswapV3LpSetProposal.ERC712_TYPES,
+            "Proposal",
+            proposal.createProposalStruct(),
+        )
+
+        return Object.assign(proposal, {
+            signature,
+            hash,
+            isOnChain: true,
+        }) as ProposalWithSignature;
+    }
 
 	async createProposal(
 		proposal: UniswapV3LpSetProposal,
@@ -53,19 +82,32 @@ export class UniswapV3LpSetProposalContract
 	async createOnChainProposal(
 		proposal: UniswapV3LpSetProposal,
 	): Promise<ProposalWithSignature> {
-		console.warn(
-			"UniswapV3LpSetProposalContract.createOnChainProposal is not implemented",
-			proposal,
-		);
-		// TODO: Implement actual on-chain proposal creation.
-		// This involves sending a transaction to the proposal contract's `makeProposal` function.
-		// See ChainLinkProposalContract for an example implementation.
-		throw new Error(
-			"Method UniswapV3LpSetProposalContract.createOnChainProposal not implemented.",
-		);
+		const account = getAccount(this.config);
+        const isSafe = account?.address
+            ? await this.safeService.isSafeAddress(account.address as Address)
+            : false;
+
+        const proposalHash = await writePwnSimpleLoanUniswapV3LpSetProposalMakeProposal(
+            this.config,
+            {
+                address: getUniswapV3LpSetProposalContractAddress(proposal.chainId),
+                chainId: proposal.chainId,
+                args: [proposal.createProposalStruct()],
+            }
+        )
+
+        if (isSafe) {
+            await this.safeService.waitForTransaction(proposalHash);
+        }
+        
+        return Object.assign(proposal, {
+            signature: null,
+            hash: proposalHash,
+            isOnChain: true,
+        }) as ProposalWithSignature;
 	}
 
-	async createMultiProposal(
+    async createMultiProposal(
 		proposals: ProposalWithHash[],
 	): Promise<ProposalWithSignature[]> {
 		console.warn(

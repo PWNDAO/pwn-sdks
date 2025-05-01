@@ -6,7 +6,7 @@ import type {
 	pwnSimpleLoanElasticProposalAbi,
 	pwnSimpleLoanListProposalAbi,
 	pwnSimpleLoanSimpleProposalAbi,
-	pwnSimpleLoanUniswapV3LPSetProposalAbi,
+	pwnSimpleLoanUniswapV3LpSetProposalAbi,
 } from "./generated.js";
 
 // V1.3
@@ -53,7 +53,7 @@ export type V1_3SimpleLoanElasticChainlinkProposalStruct =
 	>;
 
 type _V1_4SimpleLoanUniswapV3LpSetProposalEncodeFn = ExtractAbiFunction<
-	typeof pwnSimpleLoanUniswapV3LPSetProposalAbi[0],
+	typeof pwnSimpleLoanUniswapV3LpSetProposalAbi,
 	"encodeProposalData"
 >;
 export type V1_4SimpleLoanUniswapV3LpSetProposalStruct = AbiParameterToPrimitiveType<

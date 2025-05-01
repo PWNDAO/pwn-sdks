@@ -1,5 +1,5 @@
 import { SupportedChain } from "./chains.js";
-import type { V1_2_SUPPORTED_CHAINS, V1_3_SUPPORTED_CHAINS } from "./chains.js";
+import type { V1_2_SUPPORTED_CHAINS, V1_3_SUPPORTED_CHAINS, V1_4_SUPPORTED_CHAINS } from "./chains.js";
 import { ZERO_ADDRESS } from "./constants.js";
 import type { AddressString } from "./types.js";
 
@@ -21,6 +21,10 @@ type V1_3_Contracts = ContractAddresses & {
 	pwnSimpleLoanElasticProposal: AddressString;
 	pwnSimpleLoanElasticChainlinkProposal: AddressString;
 	utilizedCredit: AddressString;
+};
+
+type V1_4_Contracts = Omit<V1_3_Contracts, "tokenBundlerContract"> & {
+	pwnSimpleLoanUniswapV3LpSetProposal: AddressString;
 };
 
 // starknet has no tokenBundlerContract by now
@@ -66,6 +70,12 @@ export const PWN_V1_3_CONTRACTS: Omit<V1_3_Contracts, "tokenBundlerContract" | "
 		pwnLoan: "0x4440C069272cC34b80C7B11bEE657D0349Ba9C23",
 		pwnRevokedNonce: "0x972204fF33348ee6889B2d0A3967dB67d7b08e4c",
 	};
+
+export const PWN_V1_4_CONTRACTS: Omit<V1_4_Contracts, "tokenBundlerContract"> = {
+	...PWN_V1_3_CONTRACTS,
+	pwnSimpleLoanUniswapV3LpSetProposal: "0x4D067c921AC90cC4b1e962ea0e743Ef8d85Fb0E9",
+	pwnSimpleLoanElasticChainlinkProposal: "0x39fd308D651F5add5A4826D12Bf92d9D91E732AC",
+};
 
 // Mainnet contracts
 const MAINNET_CONTRACTS: V1_3_Contracts = {
@@ -205,7 +215,15 @@ export const V1_3_CHAIN_TO_ADDRESSES_MAP: Record<
 	[SupportedChain.UnichainSepolia]: UNICHAIN_SEPOLIA_CONTRACTS,
 };
 
+export const V1_4_CHAIN_TO_ADDRESSES_MAP: Record<
+	V1_4_SUPPORTED_CHAINS,
+	V1_4_Contracts
+> = {
+	[SupportedChain.Sepolia]: PWN_V1_4_CONTRACTS,
+};
+
 export const CHAIN_TO_ADDRESSES_MAP = {
 	...V1_2_CHAIN_TO_ADDRESSES_MAP,
 	...V1_3_CHAIN_TO_ADDRESSES_MAP,
+	...V1_4_CHAIN_TO_ADDRESSES_MAP,
 };
