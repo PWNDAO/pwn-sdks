@@ -136,6 +136,7 @@ export class ElasticProposalStrategy
 				loanContract: getLoanContractAddress(params.collateral.chainId),
 				relatedStrategyId: this.term.relatedStrategyId,
 				sourceOfFunds: params.sourceOfFunds,
+				isOffer: params.isOffer,
 			},
 			{
 				contract: contract,

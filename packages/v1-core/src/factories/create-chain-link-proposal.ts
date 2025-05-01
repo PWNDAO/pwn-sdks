@@ -123,6 +123,7 @@ export class ChainLinkProposalStrategy
 				loanContract: getLoanContractAddress(params.collateral.chainId),
 				relatedStrategyId: this.term.relatedStrategyId,
 				sourceOfFunds: params.sourceOfFunds,
+				isOffer: params.isOffer,
 			},
 			{
 				contract: contract,
@@ -136,7 +137,7 @@ export class ChainLinkProposalStrategy
 				...commonFields,
 				feedIntermediaryDenominations: feedData.feedIntermediaryDenominations,
 				feedInvertFlags: feedData.feedInvertFlags,
-				loanToValue: formatLtvForContract(ltv),
+				loanToValue: BigInt(ltv),
 				minCreditAmount,
 				chainId: params.collateral.chainId,
 				isOffer: params.isOffer,

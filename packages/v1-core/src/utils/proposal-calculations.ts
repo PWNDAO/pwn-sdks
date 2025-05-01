@@ -1,9 +1,6 @@
 import type { Token } from "@pwndao/sdk-core";
 import { Decimal } from "decimal.js";
-import {
-	LTV_DENOMINATOR,
-	LTV_DENOMINATOR_MULTIPLIER,
-} from "../factories/constants.js";
+import { LTV_DENOMINATOR } from "../factories/constants.js";
 
 /**
  * Calculates the minimum credit amount based on a percentage of the total credit amount
@@ -124,14 +121,4 @@ export const getLtvValue = (
 		return value;
 	}
 	return ltv;
-};
-
-/**
- * Converts the LTV value to the format required by the contracts
- *
- * @param ltv - The LTV value
- * @returns The LTV value for contract use
- */
-export const formatLtvForContract = (ltv: number): bigint => {
-	return BigInt(ltv * LTV_DENOMINATOR_MULTIPLIER);
 };
