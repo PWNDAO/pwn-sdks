@@ -1,6 +1,6 @@
-import { UniswapV3LpSetProposal } from 'src/models/proposals/uniswap-v3-lp-set-proposal.js'
+import { UniswapV3LpSetProposal } from '../models/proposals/uniswap-v3-lp-set-proposal.js'
+import { BaseProposalContract } from './base-proposal-contract.js'
 import {
-    BaseProposalContract,
     type IServerAPI,
     type ProposalWithHash,
     type ProposalWithSignature,

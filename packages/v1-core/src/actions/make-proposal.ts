@@ -5,6 +5,7 @@ import { createChainLinkElasticProposal } from "../factories/create-chain-link-p
 import { createElasticProposal } from "../factories/create-elastic-proposal.js";
 import { ProposalType } from "../models/proposals/proposal-base.js";
 import { createUniswapV3LpSetProposal } from "../factories/create-uniswap-v3-lp-set-proposal.js";
+import { createUniswapV3LpIndividualProposal } from "../factories/create-uniswap-v3-lp-individual-proposal.js";
 const proposalTypes = {
 	[ProposalType.Elastic]: createElasticProposal,
 	[ProposalType.ChainLink]: createChainLinkElasticProposal,
@@ -15,6 +16,7 @@ const proposalTypes = {
 		throw new Error("Not implemented");
 	},
 	[ProposalType.UniswapV3LpSet]: createUniswapV3LpSetProposal,
+	[ProposalType.UniswapV3Individual]: createUniswapV3LpIndividualProposal,
 };
 
 export const makeProposal = async <T extends ProposalType>(
@@ -85,6 +87,17 @@ export const makeProposal = async <T extends ProposalType>(
 			const uniswapV3LpSetDeps = deps as Parameters<typeof createUniswapV3LpSetProposal>[1];
 			const proposal = await createUniswapV3LpSetProposal(uniswapV3LpSetParams, uniswapV3LpSetDeps, user);
 			proposalWithSignature = await uniswapV3LpSetDeps.contract.createOnChainProposal(
+				proposal,
+			);
+			break;
+		}
+		case ProposalType.UniswapV3Individual: {
+			const uniswapV3IndividualParams = proposalParams as Parameters<
+				typeof createUniswapV3LpIndividualProposal
+			>[0];
+			const uniswapV3IndividualDeps = deps as Parameters<typeof createUniswapV3LpIndividualProposal>[1];
+			const proposal = await createUniswapV3LpIndividualProposal(uniswapV3IndividualParams, uniswapV3IndividualDeps, user);
+			proposalWithSignature = await uniswapV3IndividualDeps.contract.createOnChainProposal(
 				proposal,
 			);
 			break;

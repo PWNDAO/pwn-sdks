@@ -17,6 +17,7 @@ export enum ProposalType {
 	Simple = "pwn_contracts.v1_3simpleloansimpleproposal",
 	ChainLink = "pwn_contracts.v1_3simpleloanelasticchainlinkproposal",
 	UniswapV3LpSet = "pwn_contracts.v1_4simpleloanuniswapv3lpsetproposal",
+	UniswapV3Individual = "pwn_contracts.v1_4simpleloanuniswapv3individualproposal",
 }
 
 export interface IProposalMisc {
@@ -204,6 +205,17 @@ export interface IUniswapV3LpSetProposalBase extends Omit<IOracleProposalBase, "
 	// TODO: remove this after V1.4 is implemented
 	acceptorController: AddressString | null;
 	acceptorControllerData: Hex | null;
+}
+
+export interface IUniswapV3IndividualProposalBase extends Omit<IOracleProposalBase, "type"> {
+	token0Denominator: boolean;
+	feedIntermediaryDenominations: AddressString[];
+	feedInvertFlags: boolean[];
+	loanToValue: bigint;
+	acceptorController: AddressString;
+	acceptorControllerData: Hex;
+	collateralId: bigint;
+	type: ProposalType.UniswapV3Individual;
 }
 
 interface IBaseFixedProposal {

@@ -134,6 +134,7 @@ export class UniswapV3LpSetProposalStrategy
 		minCreditAmount?: bigint,
 		tokenAAllowlist?: string[],
 		tokenBAllowlist?: string[],
+		// todo: maybe laontovalue ?
 	): CreateUniswapV3LpSetProposalParams[] {
 
 		invariant(isOffer, "UniswapV3LpSetProposal is always an offer");
@@ -145,6 +146,8 @@ export class UniswapV3LpSetProposalStrategy
 
 		invariant(tokenAAllowlist && tokenAAllowlist.length > 0, "Token A allowlist is required");
 		invariant(tokenBAllowlist && tokenBAllowlist.length > 0, "Token B allowlist is required");
+
+		// todo: check feed params, loantovalue
 		
 		return [
 			{

@@ -25,6 +25,7 @@ type V1_3_Contracts = ContractAddresses & {
 
 type V1_4_Contracts = Omit<V1_3_Contracts, "tokenBundlerContract"> & {
 	pwnSimpleLoanUniswapV3LpSetProposal: AddressString;
+	pwnSimpleLoanUniswapV3IndividualProposal: AddressString;
 };
 
 // starknet has no tokenBundlerContract by now
@@ -75,6 +76,7 @@ export const PWN_V1_4_CONTRACTS: Omit<V1_4_Contracts, "tokenBundlerContract"> = 
 	...PWN_V1_3_CONTRACTS,
 	pwnSimpleLoanUniswapV3LpSetProposal: "0x4D067c921AC90cC4b1e962ea0e743Ef8d85Fb0E9",
 	pwnSimpleLoanElasticChainlinkProposal: "0x39fd308D651F5add5A4826D12Bf92d9D91E732AC",
+	pwnSimpleLoanUniswapV3IndividualProposal: "0xF966696BE0623447679AC830FC5bB7bDB15FEAB4",
 };
 
 // Mainnet contracts

@@ -13,10 +13,11 @@ import type { UniswapV3LpSetProposal } from "../proposals/uniswap-v3-lp-set-prop
 import type {
 	IElasticProposalBase,
 	IOracleProposalBase,
+	IUniswapV3IndividualProposalBase,
 	IUniswapV3LpSetProposalBase,
 } from "../proposals/proposal-base.js";
 import type { ProposalType } from "../proposals/proposal-base.js";
-
+import type { UniswapV3IndividualProposal } from "../proposals/uniswap-v3-lp-individual-proposal.js"
 export interface StrategyTerm {
 	creditAssets: ERC20TokenLike[];
 	collateralAssets: Token[];
@@ -38,7 +39,7 @@ export interface StrategyTerm {
 }
 
 export interface IProposalStrategy<
-	T extends IElasticProposalBase | IOracleProposalBase | IUniswapV3LpSetProposalBase,
+	T extends IElasticProposalBase | IOracleProposalBase | IUniswapV3LpSetProposalBase | IUniswapV3IndividualProposalBase,
 > {
 	term: StrategyTerm;
 	getProposalsParams(
@@ -84,7 +85,7 @@ export type Strategy = {
 	};
 };
 
-export type Proposal = ElasticProposal | ChainLinkProposal | UniswapV3LpSetProposal;
+export type Proposal = ElasticProposal | ChainLinkProposal | UniswapV3LpSetProposal | UniswapV3IndividualProposal;
 
 export type ProposalWithHash = Proposal & {
 	hash: Hex;

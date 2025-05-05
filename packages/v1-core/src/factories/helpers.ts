@@ -22,7 +22,7 @@ import type { ProposalWithHash, ProposalWithSignature } from "../models/strategi
 import type { Proposal } from "../models/strategies/types.js";
 import type { ILenderSpec } from "../models/terms.js";
 import type { IProposalUniswapV3LpSetContract } from "src/contracts/uniswap-v3-lp-set-proposal-contract.js";
-
+import type { IProposalUniswapV3LpIndividualContract } from "src/contracts/uniswap-v3-lp-individual-proposal-contract.js";
 type CommonProposalFieldsParams = {
 	user: UserWithNonceManager;
 	nonce: bigint;
@@ -55,7 +55,8 @@ export interface IProposalContract<TProposal extends Proposal> {
 export type ProposalContract =
 	| IProposalChainLinkContract
 	| IProposalElasticContract
-	| IProposalUniswapV3LpSetContract;
+	| IProposalUniswapV3LpSetContract
+	| IProposalUniswapV3LpIndividualContract;
 
 export const getLendingCommonProposalFields = async (
 	params: CommonProposalFieldsParams & IProposalMisc,
