@@ -12,15 +12,12 @@ export class UniswapV3Position extends BaseAsset {
     constructor(
         chainId: SupportedChain,
         address: AddressString,
-        decimals: number,
         tokenA: AddressString,
         tokenB: AddressString,
         tokenId: string,
-        name?: string,
-        symbol?: string,
         icon?: string,
     ) {
-        super(chainId, address, decimals, false, UniswapV3Position.category, name, symbol, icon);
+        super(chainId, address, 0, false, UniswapV3Position.category, "Uniswap V3 Positions NFT-V1", "UNI-V3-POS", icon);
         this.tokenA = tokenA;
         this.tokenB = tokenB;
         this.tokenId = tokenId;

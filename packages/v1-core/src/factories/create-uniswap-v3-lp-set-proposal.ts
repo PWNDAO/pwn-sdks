@@ -178,6 +178,8 @@ export class UniswapV3LpSetProposalStrategy
 		isOffer: boolean,
 		sourceOfFunds: AddressString | null,
 		minCreditAmount?: bigint,
+		tokenAAllowlist?: string[],
+		tokenBAllowlist?: string[],
 	): Promise<UniswapV3LpSetProposal[]> {
 		const paramsArray = this.getProposalsParams(
 			creditAmount,
@@ -185,6 +187,8 @@ export class UniswapV3LpSetProposalStrategy
 			isOffer,
 			sourceOfFunds,
 			minCreditAmount,
+			tokenAAllowlist,
+			tokenBAllowlist,
 		);
 
 		const result: UniswapV3LpSetProposal[] = [];
@@ -251,6 +255,8 @@ export const createUniswapV3LpSetProposal = async (
 		params.isOffer,
 		params.sourceOfFunds,
 		params.minCreditAmount,
+		params.tokenAAllowlist,
+		params.tokenBAllowlist,
 	);
 
 	return proposals[0];

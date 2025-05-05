@@ -5,6 +5,7 @@ import {
 	ZERO_ADDRESS,
 	ZERO_FINGERPRINT,
 	getLoanContractAddress,
+	getMockLiquidityPoolToken,
 	getUniqueCreditCollateralKey,
 } from "@pwndao/sdk-core";
 import {
@@ -258,6 +259,100 @@ describe("Test make proposal", () => {
 			getLoanContractAddress(SupportedChain.Ethereum),
 		);
 		expect(proposal.relatedStrategyId).toBe("1");
+	});
+
+	it("should assemble uniswap v3 lp set proposal", async () => {
+		const contractMock = {
+			createProposal: vi.fn().mockImplementation((p) => p),
+			getCollateralAmount: vi.fn().mockImplementation(() => 0n),
+			createOnChainProposal: vi.fn().mockImplementation((p) => p),
+			getProposalHash: vi.fn().mockImplementation(() => "0x123"),
+			getCreditAmount: vi.fn().mockImplementation(() => 0n),
+			createMultiProposal: vi.fn().mockImplementation((p) => p),
+		};
+
+		const loanContractMock = {
+			getLenderSpecHash: vi
+				.fn()
+				.mockImplementation(() => Promise.resolve(proposerSpecHash)),
+		};
+
+		const sepoliaAssetsWithPriceFeeds = {
+			weth: "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9" as AddressString,
+			usdc: "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8" as AddressString,
+		}
+
+		const user = getMockUserWithNonceManager(user_address, [SupportedChain.Sepolia]);
+
+		expect(user.nonces[SupportedChain.Sepolia]?.[0]).toBe(0n);
+
+		const proposal = await makeProposal<ProposalType.UniswapV3LpSet>(
+			user,
+			ProposalType.UniswapV3LpSet,
+			{
+				collateral: getMockLiquidityPoolToken(SupportedChain.Sepolia, sepoliaAssetsWithPriceFeeds.weth, sepoliaAssetsWithPriceFeeds.usdc, "1"),
+				credit: getMockToken(SupportedChain.Sepolia, sepoliaAssetsWithPriceFeeds.usdc),
+				creditAmount,
+				ltv: {
+					[getUniqueCreditCollateralKey(
+						getMockToken(SupportedChain.Sepolia, sepoliaAssetsWithPriceFeeds.usdc),
+						getMockToken(SupportedChain.Sepolia, "0x1238536071E1c677A632429e3655c799b22cDA52"),
+					)]: Number(ltv),
+				},
+				apr: {
+					[getUniqueCreditCollateralKey(
+						getMockToken(SupportedChain.Sepolia, sepoliaAssetsWithPriceFeeds.usdc),
+						getMockToken(SupportedChain.Sepolia, "0x1238536071E1c677A632429e3655c799b22cDA52"),
+					)]: apr,
+				},
+				duration: {
+					days: durationDays,
+					date: undefined,
+				},
+				expirationDays,
+				utilizedCreditId: generateAddress(),
+				isOffer: true,
+				sourceOfFunds: user_address,
+				tokenAAllowlist: [sepoliaAssetsWithPriceFeeds.weth, sepoliaAssetsWithPriceFeeds.usdc],
+				tokenBAllowlist: [sepoliaAssetsWithPriceFeeds.weth, sepoliaAssetsWithPriceFeeds.usdc],
+				acceptorController: user_address,
+				acceptorControllerData: "0x",
+				minCreditAmountPercentage: 3,
+			},
+			{
+				api: {
+					persistProposal: vi.fn().mockImplementation((p) => p),
+					persistProposals: vi.fn().mockImplementation((p) => p),
+					updateNonces: vi.fn().mockImplementation((p) => p),
+				},
+				contract: contractMock,
+				loanContract: loanContractMock,
+			},
+		);
+
+		expect(contractMock.createOnChainProposal).toHaveBeenCalled();
+
+		expect(proposal).toBeDefined();
+		expect(proposal.proposerSpecHash).toBe(proposerSpecHash);
+		expect(proposal.collateralAddress).toBe(collateralAddress);
+		expect(proposal.creditAddress).toBe(creditAddress);
+		expect(proposal.availableCreditLimit).toBe(1n * 10n ** 18n);
+		expect(proposal.minCreditAmount).toBe(3n * 10n ** (18n - 2n)); // 3% of credit amount
+		expect(proposal.accruingInterestAPR).toBe(apr);
+		
+		const expectedExpiration =
+			Math.floor(date.getTime() / 1000) + expirationDays * 24 * 60 * 60;
+		expect(proposal.expiration).toBe(expectedExpiration);
+		expect(expectedExpiration).toBe(1740960000);
+
+		expect(proposal.durationOrDate).toBe(durationDays * 24 * 60 * 60);
+		expect(proposal.isOffer).toBe(true);
+		expect(proposal.refinancingLoanId).toBe(0n);
+		expect(proposal.nonceSpace).toBe(0n);
+		expect(proposal.nonce).toBe(0n);
+		expect(proposal.loanContract).toBe(
+			getLoanContractAddress(SupportedChain.Sepolia),
+		);
 	});
 
 	it("should assemble elastic proposal with token that has underlyingAddress property", async () => {
