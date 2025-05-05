@@ -1,15 +1,15 @@
-import { IProposalUniswapV3LpSetContract } from "src/contracts/uniswap-v3-lp-set-proposal-contract.js";
+import { IProposalUniswapV3LpSetContract } from '../contracts/uniswap-v3-lp-set-proposal-contract.js'
 import type { BaseTerm, IServerAPI } from "./types.js";
 import { getLendingCommonProposalFields, ILoanContract } from "./helpers.js";
-import { IProposalStrategy, StrategyTerm } from "src/models/strategies/types.js";
-import { IUniswapV3LpSetProposalBase } from "src/models/proposals/proposal-base.js";
+import { IProposalStrategy, StrategyTerm } from "../models/strategies/types.js";
+import { IUniswapV3LpSetProposalBase } from "../models/proposals/proposal-base.js";
 import { AddressString, getLoanContractAddress, getUniqueCreditCollateralKey, Hex, UserWithNonceManager } from "@pwndao/sdk-core";
-import { UniswapV3LpSetProposal } from "src/models/proposals/uniswap-v3-lp-set-proposal.js";
-import { calculateExpirationTimestamp, calculateMinCreditAmount } from "src/utils/proposal-calculations.js";
-import { calculateDurationInSeconds } from "src/utils/proposal-calculations.js";
+import { UniswapV3LpSetProposal } from "../models/proposals/uniswap-v3-lp-set-proposal.js";
+import { calculateExpirationTimestamp, calculateMinCreditAmount } from "../utils/proposal-calculations.js";
+import { calculateDurationInSeconds } from "../utils/proposal-calculations.js";
 import invariant from "ts-invariant";
-import { getFeedData } from "src/utils/chainlink-feeds.js";
-import { ChainsWithChainLinkFeedSupport } from "src/utils/chainlink-feeds.js";
+import { getFeedData } from "../utils/chainlink-feeds.js";
+import { ChainsWithChainLinkFeedSupport } from "../utils/chainlink-feeds.js";
 import { UniswapV3Position } from "../../../core/src/models/liquidity-position.js";
 
 export type CreateUniswapV3LpSetProposalParams = BaseTerm & {
@@ -132,6 +132,8 @@ export class UniswapV3LpSetProposalStrategy
 		isOffer: boolean,
 		sourceOfFunds: AddressString | null,
 		minCreditAmount?: bigint,
+		tokenAAllowlist?: string[],
+		tokenBAllowlist?: string[],
 	): CreateUniswapV3LpSetProposalParams[] {
 
 		invariant(isOffer, "UniswapV3LpSetProposal is always an offer");
@@ -140,6 +142,9 @@ export class UniswapV3LpSetProposalStrategy
 
 		const credit = this.term.creditAssets[0];
 		const collateral = this.term.collateralAssets[0];
+
+		invariant(tokenAAllowlist && tokenAAllowlist.length > 0, "Token A allowlist is required");
+		invariant(tokenBAllowlist && tokenBAllowlist.length > 0, "Token B allowlist is required");
 		
 		return [
 			{
@@ -157,8 +162,8 @@ export class UniswapV3LpSetProposalStrategy
 				isOffer: true,
 				sourceOfFunds,
 				minCreditAmount,
-				tokenAAllowlist: this.term.tokenAAllowlist || [],
-				tokenBAllowlist: this.term.tokenBAllowlist || [],
+				tokenAAllowlist,
+				tokenBAllowlist,
 				acceptorController: this.term.acceptorController || "",
 				acceptorControllerData: this.term.acceptorControllerData || "",
 				minCreditAmountPercentage: this.term.minCreditAmountPercentage || 0,

@@ -9,8 +9,10 @@ import type { ElasticProposal } from "../models/proposals/elastic-proposal.js";
 import type {
 	IElasticProposalBase,
 	IOracleProposalBase,
+	IUniswapV3LpSetProposalBase,
 } from "../models/proposals/proposal-base.js";
 import type { ProposalWithSignature } from "../models/strategies/types.js";
+import type { UniswapV3LpSetProposal } from "src/models/proposals/uniswap-v3-lp-set-proposal.js";
 
 /**
  * Converts common proposal fields to backend format
@@ -109,12 +111,35 @@ export const encodeChainLinkProposalForBackend = (
 };
 
 /**
+ * Encodes a UniswapV3LpSetProposal for the backend
+ * @param proposal UniswapV3LpSetProposal instance
+ * @returns Backend-formatted uniswap v3 lp set proposal data
+ */
+export const encodeUniswapV3LpSetProposalForBackend = (
+	proposal: UniswapV3LpSetProposal,
+): CreateProposalRequestSchemaRequest => {
+	const baseData = getBaseBackendProposalData(
+		proposal as ProposalWithSignature,
+	);
+
+	return {
+		...baseData,
+		token_a_allowlist: proposal.tokenAAllowlist,
+		token_b_allowlist: proposal.tokenBAllowlist,
+		acceptor_controller: proposal.acceptorController,
+		acceptor_controller_data: proposal.acceptorControllerData,
+		is_offer: true,
+	// biome-ignore lint/suspicious/noExplicitAny: Dont have type yet
+	} as any; // TODO: add types from backend
+};
+
+/**
  * Detects the proposal type and encodes it accordingly for the backend
  * @param proposal Any proposal instance
  * @returns Backend-formatted proposal data
  */
 export const encodeProposalForBackend = (
-	proposal: IElasticProposalBase | IOracleProposalBase,
+	proposal: IElasticProposalBase | IOracleProposalBase | IUniswapV3LpSetProposalBase,
 ): CreateProposalRequestSchemaRequest => {
 	// Detect the proposal type
 	if (
@@ -126,6 +151,10 @@ export const encodeProposalForBackend = (
 
 	if ("creditPerCollateralUnit" in proposal) {
 		return encodeElasticProposalForBackend(proposal as ElasticProposal);
+	}
+
+	if ("tokenAAllowlist" in proposal && "tokenBAllowlist" in proposal) {
+		return encodeUniswapV3LpSetProposalForBackend(proposal as UniswapV3LpSetProposal);
 	}
 
 	// If no specific type is detected, use the base encoder

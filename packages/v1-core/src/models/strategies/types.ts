@@ -25,10 +25,6 @@ export interface StrategyTerm {
 	durationDays: number;
 	expirationDays: number;
 
-	// 1.4 UniswapV3LpSet
-	tokenAAllowlist?: string[];
-	tokenBAllowlist?: string[];
-
 	// V1.4
 	acceptorController?: string;
 	acceptorControllerData?: string;

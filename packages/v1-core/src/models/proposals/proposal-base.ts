@@ -16,7 +16,7 @@ export enum ProposalType {
 	DutchAuction = "pwn_contracts.v1_3simpleloandutchauctionproposal",
 	Simple = "pwn_contracts.v1_3simpleloansimpleproposal",
 	ChainLink = "pwn_contracts.v1_3simpleloanelasticchainlinkproposal",
-	UniswapV3LpSet = "pwn_contracts.v1_4simpleloanuniswapv3lpsetproposal", // TODO: check if this is correct
+	UniswapV3LpSet = "pwn_contracts.v1_4simpleloanuniswapv3lpsetproposal",
 }
 
 export interface IProposalMisc {
@@ -183,7 +183,7 @@ export interface IOracleProposalBase
 	type: ProposalType.ChainLink;
 }
 
-export interface IUniswapV3LpSetProposalBase extends Omit<IOracleProposalBase, "type" | "proposalContract"> {
+export interface IUniswapV3LpSetProposalBase extends Omit<IOracleProposalBase, "type"> {
 	type: ProposalType.UniswapV3LpSet;
 
 	/**

@@ -1,8 +1,10 @@
-import { AddressString, Hex, MultiTokenCategory, SupportedChain } from "@pwndao/sdk-core";
+import { AddressString, EMPTY_32_BYTES, Hex, MultiTokenCategory, SupportedChain, V1_4_CHAIN_TO_ADDRESSES_MAP } from "@pwndao/sdk-core";
 import { ProposalType, type IUniswapV3LpSetProposalBase } from "./proposal-base.js";
+import { V1_4SimpleLoanUniswapV3LpSetProposalStruct } from "src/structs.js";
 
 export class UniswapV3LpSetProposal implements IUniswapV3LpSetProposalBase {
     type = ProposalType.UniswapV3LpSet as const;
+    proposalContract = V1_4_CHAIN_TO_ADDRESSES_MAP[SupportedChain.Sepolia].pwnSimpleLoanUniswapV3LpSetProposal; // TODO: later change to CHAIN_TO_ADDRESSES_MAP and dynamic chain id
 
     static ERC712_TYPES = {
         Proposal: [
@@ -41,6 +43,7 @@ export class UniswapV3LpSetProposal implements IUniswapV3LpSetProposalBase {
         this.checkCollateralStateFingerprint = proposal.checkCollateralStateFingerprint;
         this.collateralStateFingerprint = proposal.collateralStateFingerprint;
         this.collateralCategory = proposal.collateralCategory;
+        this.relatedStrategyId = proposal.relatedStrategyId;        
         this.sourceOfFunds = proposal.sourceOfFunds;
         this.allowedAcceptor = proposal.allowedAcceptor;
         this.tokenAAllowlist = proposal.tokenAAllowlist;
@@ -67,14 +70,8 @@ export class UniswapV3LpSetProposal implements IUniswapV3LpSetProposalBase {
         this.loanContract = proposal.loanContract;
     }
 
-    createProposalStruct(): any {
+    createProposalStruct(): V1_4SimpleLoanUniswapV3LpSetProposalStruct {
         return {
-            collateralCategory: this.collateralCategory,
-            collateralAddress: this.collateralAddress,
-            collateralId: this.collateralId,
-            checkCollateralStateFingerprint: this.checkCollateralStateFingerprint,
-            collateralStateFingerprint: this.collateralStateFingerprint,
-
             tokenAAllowlist: this.tokenAAllowlist,
             tokenBAllowlist: this.tokenBAllowlist,
             creditAddress: this.creditAddress,
@@ -88,8 +85,8 @@ export class UniswapV3LpSetProposal implements IUniswapV3LpSetProposalBase {
             accruingInterestAPR: Number(this.accruingInterestAPR),
             durationOrDate: Number(this.durationOrDate),
             expiration: this.expiration,
-            acceptorController: this.acceptorController,
-            acceptorControllerData: this.acceptorControllerData,
+            acceptorController: this.acceptorController ?? EMPTY_32_BYTES,
+            acceptorControllerData: this.acceptorControllerData ?? EMPTY_32_BYTES,
             proposer: this.proposer,
             proposerSpecHash: this.proposerSpecHash,
             isOffer: true,
@@ -108,6 +105,7 @@ export class UniswapV3LpSetProposal implements IUniswapV3LpSetProposalBase {
     sourceOfFunds: AddressString | null;
     allowedAcceptor: AddressString;
     chainId: SupportedChain;
+    relatedStrategyId?: string | undefined;
 
     tokenAAllowlist: AddressString[];
     tokenBAllowlist: AddressString[];
