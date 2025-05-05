@@ -38,7 +38,6 @@ import {
 	calculateDurationInSeconds,
 	calculateExpirationTimestamp,
 	calculateMinCreditAmount,
-	formatLtvForContract,
 	getLtvValue,
 } from "../utils/proposal-calculations.js";
 import { createUtilizedCreditId } from "../utils/shared-credit.js";
