@@ -1,15 +1,15 @@
-import { IProposalUniswapV3LpSetContract } from '../contracts/uniswap-v3-lp-set-proposal-contract.js'
+import type { IProposalUniswapV3LpSetContract } from '../contracts/uniswap-v3-lp-set-proposal-contract.js'
 import type { BaseTerm, IServerAPI } from "./types.js";
-import { getLendingCommonProposalFields, ILoanContract } from "./helpers.js";
-import { IProposalStrategy, StrategyTerm } from "../models/strategies/types.js";
-import { IUniswapV3LpSetProposalBase } from "../models/proposals/proposal-base.js";
-import { AddressString, getLoanContractAddress, getUniqueCreditCollateralKey, Hex, UserWithNonceManager } from "@pwndao/sdk-core";
+import { getLendingCommonProposalFields, type ILoanContract } from "./helpers.js";
+import type { IProposalStrategy, StrategyTerm } from "../models/strategies/types.js";
+import type { IUniswapV3LpSetProposalBase } from "../models/proposals/proposal-base.js";
+import { type AddressString, getLoanContractAddress, getUniqueCreditCollateralKey, type Hex, type UserWithNonceManager } from "@pwndao/sdk-core";
 import { UniswapV3LpSetProposal } from "../models/proposals/uniswap-v3-lp-set-proposal.js";
 import { calculateExpirationTimestamp, calculateMinCreditAmount } from "../utils/proposal-calculations.js";
 import { calculateDurationInSeconds } from "../utils/proposal-calculations.js";
 import invariant from "ts-invariant";
 import { getFeedData } from "../utils/chainlink-feeds.js";
-import { ChainsWithChainLinkFeedSupport } from "../utils/chainlink-feeds.js";
+import type { ChainsWithChainLinkFeedSupport } from "../utils/chainlink-feeds.js";
 import { UniswapV3Position } from "../../../core/src/models/liquidity-position.js";
 
 export type CreateUniswapV3LpSetProposalParams = BaseTerm & {

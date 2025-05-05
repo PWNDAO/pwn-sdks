@@ -1,16 +1,16 @@
 import { UniswapV3LpSetProposal } from 'src/models/proposals/uniswap-v3-lp-set-proposal.js'
 import {
     BaseProposalContract,
-    IServerAPI,
-    ProposalWithHash,
-    ProposalWithSignature,
+    type IServerAPI,
+    type ProposalWithHash,
+    type ProposalWithSignature,
     readPwnSimpleLoanUniswapV3LpSetProposalGetCreditAmount,
     readPwnSimpleLoanUniswapV3LpSetProposalGetProposalHash,
     writePwnSimpleLoanUniswapV3LpSetProposalMakeProposal,
     type IProposalContract
 } from '../index.js'
-import { AddressString, getUniswapV3LpSetProposalContractAddress, Hex, SupportedChain } from '@pwndao/sdk-core';
-import { Address } from 'viem';
+import { type AddressString, getUniswapV3LpSetProposalContractAddress, type Hex, type SupportedChain } from '@pwndao/sdk-core';
+import type { Address } from 'viem';
 import { getAccount } from '@wagmi/core';
 
 export interface IProposalUniswapV3LpSetContract
