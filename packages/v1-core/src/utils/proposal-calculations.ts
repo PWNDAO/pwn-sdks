@@ -78,8 +78,7 @@ export const calculateCollateralAmount = (params: {
 	const credit = new Decimal(creditAmount.toString());
 	const creditUsd = new Decimal(creditUsdPrice.toString());
 	const collateralUsd = new Decimal(collateralUsdPrice.toString());
-	const ltvValue = new Decimal(ltv);
-	const ltvDenominator = new Decimal(LTV_DENOMINATOR);
+	const ltvValue = new Decimal(ltv).div(1e4);
 
 	// Convert to USD value
 	const creditAmountUsd = credit
@@ -87,7 +86,7 @@ export const calculateCollateralAmount = (params: {
 		.div(new Decimal(10).pow(creditDecimals));
 
 	// Apply LTV ratio
-	const collateralAmountUsd = creditAmountUsd.mul(ltvDenominator).div(ltvValue);
+	const collateralAmountUsd = creditAmountUsd.div(ltvValue);
 
 	// Convert back to collateral tokens
 	const collateralAmount = collateralAmountUsd
