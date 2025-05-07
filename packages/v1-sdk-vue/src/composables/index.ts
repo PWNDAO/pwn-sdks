@@ -6,3 +6,4 @@ export * from "./use-make-proposals";
 export * from "./use-user-with-nonce";
 export * from "./use-user-nonces";
 export * from "./use-asset-price";
+export * from "./use-revoke-nonces";
