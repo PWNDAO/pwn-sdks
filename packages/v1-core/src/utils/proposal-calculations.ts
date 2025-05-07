@@ -1,5 +1,7 @@
 import type { Token } from "@pwndao/sdk-core";
 import { Decimal } from "decimal.js";
+import invariant from "ts-invariant";
+import { parseUnits } from "viem";
 import { LTV_DENOMINATOR } from "../factories/constants.js";
 
 /**
@@ -75,25 +77,24 @@ export const calculateCollateralAmount = (params: {
 		collateralUsdPrice,
 	} = params;
 
+	invariant(ltv > 0, "LTV cannot be zero");
+
 	const credit = new Decimal(creditAmount.toString());
 	const creditUsd = new Decimal(creditUsdPrice.toString());
 	const collateralUsd = new Decimal(collateralUsdPrice.toString());
 	const ltvValue = new Decimal(ltv).div(1e4);
 
-	// Convert to USD value
-	const creditAmountUsd = credit
+	const numerator = credit
 		.mul(creditUsd)
-		.div(new Decimal(10).pow(creditDecimals));
+		.mul(new Decimal(10).pow(collateralDecimals));
 
-	// Apply LTV ratio
-	const collateralAmountUsd = creditAmountUsd.div(ltvValue);
+	const denominator = ltvValue
+		.mul(collateralUsd)
+		.mul(new Decimal(10).pow(creditDecimals * 2));
 
-	// Convert back to collateral tokens
-	const collateralAmount = collateralAmountUsd
-		.mul(new Decimal(10).pow(collateralDecimals))
-		.div(collateralUsd);
-
-	return BigInt(collateralAmount.toFixed(0));
+	const collateralAmount = numerator.div(denominator);
+	const result = collateralAmount.mul(new Decimal(10).pow(collateralDecimals));
+	return BigInt(result.toFixed(0, Decimal.ROUND_DOWN));
 };
 
 /**

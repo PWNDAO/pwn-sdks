@@ -3,15 +3,15 @@ import { calculateCollateralAmount } from "./proposal-calculations.js";
 describe("Proposal Calculations", () => {
 	it("should calculate collateral amount correctly", () => {
 		const collateralAmount = calculateCollateralAmount({
-			creditAmount: BigInt(1000000000000000000),
+			creditAmount: BigInt(1e18),
 			ltv: 5000,
 			creditDecimals: 18,
 			collateralDecimals: 18,
-			creditUsdPrice: BigInt(1000000000000000000),
-			collateralUsdPrice: BigInt(1000000000000000000),
+			creditUsdPrice: BigInt(1e18),
+			collateralUsdPrice: BigInt(1e18),
 		});
 
-		expect(collateralAmount).toBe(BigInt(2000000000000000000n));
+		expect(collateralAmount).toBe(2000000000000000000n);
 	});
 
 	describe("Edge cases and overflow checks", () => {
@@ -115,7 +115,7 @@ describe("Proposal Calculations", () => {
 				collateralUsdPrice: BigInt("2000000000000000000000"), // $2,000 (18 decimals)
 			});
 
-			expect(collateralAmount).toBe(BigInt("721429"));
+			expect(collateralAmount).toBe(BigInt("721428571428571428"));
 		});
 	});
 });
