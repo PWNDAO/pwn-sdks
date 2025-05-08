@@ -106,6 +106,7 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 			domain,
 			types,
 			message,
+			primaryType,
 		);
 	}
 

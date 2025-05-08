@@ -118,7 +118,7 @@ export class SafeService {
 		domain: Record<string, unknown>,
 		types: Record<string, Array<{ name: string; type: string }>>,
 		message: Record<string, unknown>,
-		primaryType = "Multiproposal",
+		primaryType: string,
 	): Promise<Hex> {
 		try {
 			const hash = hashTypedData({
