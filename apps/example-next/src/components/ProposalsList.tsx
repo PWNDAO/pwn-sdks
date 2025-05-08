@@ -3,6 +3,7 @@ import { useStrategyProposals } from "@pwndao/sdk-v1-react";
 import { useAccount } from "wagmi";
 import { AcceptProposalButton } from "./AcceptProposalButton";
 import { RevokeProposals } from "./RevokeProposals";
+import { ProposalCard } from "./ProposalCard";
 
 export default function ProposalsList({
 	strategyId,
@@ -29,30 +30,11 @@ export default function ProposalsList({
 			) : proposals?.length ? (
 				<div className="space-y-4">
 					{proposals.map((proposal) => (
-						<div
+						<ProposalCard
 							key={proposal.hash}
-							className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow duration-200 bg-gray-50"
-						>
-							<div className="flex items-center justify-between">
-								<h2 className="text-lg font-semibold text-gray-700 truncate">
-									Proposal: 
-									{proposal.loanContract}
-								</h2>
-								<p className="mt-2 text-sm text-gray-600 bg-gray-100 inline-block px-2 py-1 rounded">
-									{proposal.type}
-								</p>
-
-								{address && (
-									<AcceptProposalButton
-										proposal={proposal}
-										acceptor={address}
-									/>
-								)}
-								<p className="mt-2 text-sm text-gray-600 bg-gray-100 inline-block px-2 py-1 rounded">
-									{proposal.sourceOfFunds}
-								</p>
-							</div>
-						</div>
+							proposal={proposal}
+							address={address}
+						/>
 					))}
 				</div>
 			) : (

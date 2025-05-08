@@ -49,9 +49,20 @@ export const API: IServerAPI = {
 				relatedThesisId: strategyId,
 				limit: 100,
 				offset: 0,
+				statuses: ["1"],
 			});
 			invariant(data.results !== undefined, "Error parsing response");
-			return data.results.map(parseBackendProposalResponse) ?? [];
+			return (
+				data.results.map((v) => {
+					try {
+						return parseBackendProposalResponse(v);
+					} catch (e) {
+						console.error(e);
+						return null;
+					}
+				})
+					.filter((v) => v !== null) ?? []
+			);
 		},
 		getAssetUsdUnitPrice: async (asset: BaseAsset) => {
 			const MAX_RETRIES = 3;

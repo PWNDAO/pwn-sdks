@@ -1,4 +1,7 @@
-import { calculateCollateralAmount } from "./proposal-calculations.js";
+import {
+	calculateCollateralAmount,
+	calculateMinCreditAmount,
+} from "./proposal-calculations.js";
 
 describe("Proposal Calculations", () => {
 	it("should calculate collateral amount correctly", () => {
@@ -116,6 +119,64 @@ describe("Proposal Calculations", () => {
 			});
 
 			expect(collateralAmount).toBe(BigInt("721428571428571428"));
+		});
+	});
+
+	describe("calculateMinCreditAmount", () => {
+		it("should calculate minimum credit amount correctly for 50%", () => {
+			const result = calculateMinCreditAmount(BigInt(1000), 50);
+			expect(result).toBe(BigInt(500));
+		});
+
+		it("should calculate minimum credit amount correctly for 25%", () => {
+			const result = calculateMinCreditAmount(BigInt(1000), 25);
+			expect(result).toBe(BigInt(250));
+		});
+
+		it("should handle large numbers correctly", () => {
+			const result = calculateMinCreditAmount(
+				BigInt("1000000000000000000"),
+				75,
+			);
+			expect(result).toBe(BigInt("750000000000000000"));
+		});
+
+		it("should handle small percentages correctly", () => {
+			const result = calculateMinCreditAmount(BigInt(1000), 1);
+			expect(result).toBe(BigInt(10));
+		});
+
+		it("should handle 100% correctly", () => {
+			const result = calculateMinCreditAmount(BigInt(1000), 100);
+			expect(result).toBe(BigInt(1000));
+		});
+
+		it("should handle zero credit amount", () => {
+			const result = calculateMinCreditAmount(BigInt(0), 50);
+			expect(result).toBe(BigInt(0));
+		});
+
+		it("should handle very small credit amounts", () => {
+			const result = calculateMinCreditAmount(BigInt(1), 50);
+			expect(result).toBe(BigInt(1));
+		});
+
+		it("should handle very large percentages", () => {
+			const result = calculateMinCreditAmount(BigInt(1000), 99);
+			expect(result).toBe(BigInt(990));
+		});
+
+		it("should handle decimal percentages correctly", () => {
+			const result = calculateMinCreditAmount(BigInt(1000), 33.33);
+			expect(result).toBe(BigInt(333));
+		});
+
+		it("should handle maximum BigInt values", () => {
+			const maxBigInt = BigInt(
+				"0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+			);
+			const result = calculateMinCreditAmount(maxBigInt, 50);
+			expect(result).toBeGreaterThan(BigInt(0));
 		});
 	});
 });

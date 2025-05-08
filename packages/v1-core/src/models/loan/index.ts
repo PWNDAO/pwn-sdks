@@ -1,4 +1,4 @@
-import { SupportedChain } from "@pwndao/sdk-core";
+import type { SupportedChain } from "@pwndao/sdk-core";
 
 export class Loan {
     constructor(

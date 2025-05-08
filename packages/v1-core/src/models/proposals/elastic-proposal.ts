@@ -4,7 +4,6 @@ import {
 	type MultiTokenCategory,
 	type SupportedChain,
 	getElasticProposalContractAddress,
-	getLoanContractAddress,
 } from "@pwndao/sdk-core";
 import type { V1_3SimpleLoanElasticProposalStruct } from "../../structs.js";
 import { type IElasticProposalBase, ProposalType } from "./proposal-base.js";

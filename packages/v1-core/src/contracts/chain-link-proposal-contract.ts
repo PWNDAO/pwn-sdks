@@ -14,8 +14,7 @@ import {
 } from "../index.js";
 import { BaseProposalContract } from "./base-proposal-contract.js";
 
-export interface IProposalChainLinkContract
-	extends IProposalContract<ChainLinkProposal> {
+export interface IProposalChainLinkContract extends IProposalContract<ChainLinkProposal> {
 	getCollateralAmount(proposal: ChainLinkProposal): Promise<bigint>;
 }
 

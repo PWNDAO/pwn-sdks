@@ -57,7 +57,10 @@ export const parseBackendProposalResponse = (
 			convertedData as unknown as IOracleProposalBase,
 			chainId,
 		);
-	} else if (convertedData.type === ProposalType.Elastic) {
+	} else if (
+		convertedData.type === ProposalType.Elastic ||
+		convertedData.type === ProposalType.ElasticV1
+	) {
 		proposal = new ElasticProposal(
 			{
 				...convertedData,

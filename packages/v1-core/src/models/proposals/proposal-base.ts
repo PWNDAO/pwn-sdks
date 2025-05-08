@@ -13,6 +13,7 @@ type ProposalTerms = Pick<
 
 export enum ProposalType {
 	Elastic = "pwn_contracts.v1_3simpleloanelasticproposal",
+	ElasticV1 = "pwn_contracts.v1_2simpleloanfungibleproposal",
 	DutchAuction = "pwn_contracts.v1_3simpleloandutchauctionproposal",
 	Simple = "pwn_contracts.v1_3simpleloansimpleproposal",
 	ChainLink = "pwn_contracts.v1_3simpleloanelasticchainlinkproposal",
@@ -132,7 +133,7 @@ export interface ICommonProposalFields extends ProposalTerms, IProposalMisc {
 	 * Address of a loan contract that will create a loan from the proposal.
 	 */
 	loanContract: AddressString;
-	
+
 	/**
 	 * Address of a source of funds. This can be the lenders address, if the loan is funded directly,
 	 * or a pool address from with the funds are withdrawn on the lenders behalf.

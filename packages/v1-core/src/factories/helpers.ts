@@ -21,6 +21,7 @@ import type {
 import type { ProposalWithHash, ProposalWithSignature } from "../models/strategies/types.js";
 import type { Proposal } from "../models/strategies/types.js";
 import type { ILenderSpec } from "../models/terms.js";
+import type { Loan } from "src/models/loan/index.js";
 
 type CommonProposalFieldsParams = {
 	user: UserWithNonceManager;
@@ -49,6 +50,11 @@ export interface IProposalContract<TProposal extends Proposal> {
 	createOnChainProposal(params: TProposal): Promise<ProposalWithSignature>;
 	getProposalHash(proposal: TProposal): Promise<Hex>;
 	createMultiProposal(proposals: ProposalWithHash[]): Promise<ProposalWithSignature[]>;
+	acceptProposal(
+		proposal: ProposalWithSignature,
+		acceptor: AddressString,
+		creditAmount: bigint,
+	): Promise<Loan>
 }
 
 export type ProposalContract =
