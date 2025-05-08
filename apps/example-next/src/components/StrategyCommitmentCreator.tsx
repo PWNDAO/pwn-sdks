@@ -10,9 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMakeProposals, useUserWithNonce } from "@pwndao/sdk-v1-react";
-import type {
-	Strategy,
-} from "@pwndao/v1-core";
+import type { Strategy } from "@pwndao/v1-core";
 import { createElasticProposals } from "@pwndao/v1-core";
 import { serialize } from "@wagmi/core";
 import { useState } from "react";
@@ -21,7 +19,7 @@ import { sepolia } from "wagmi/chains";
 import { injected } from "wagmi/connectors";
 
 interface StrategyCommitmentCreatorProps {
-	strategy: Strategy; // Replace with proper type from your SDK
+	strategy: Strategy;
 }
 
 export default function StrategyCommitmentCreator({
@@ -31,7 +29,6 @@ export default function StrategyCommitmentCreator({
 	const { connect } = useConnect();
 	const { disconnect } = useDisconnect();
 
-	// Form state
 	const [creditAmount, setCreditAmount] = useState("100");
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -46,7 +43,6 @@ export default function StrategyCommitmentCreator({
 		data: txHash,
 	} = useMakeProposals(user);
 
-	// Handle form submission
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setErrorMessage(null);
@@ -57,7 +53,6 @@ export default function StrategyCommitmentCreator({
 		}
 
 		try {
-			// Create proposals with proper parameters
 			const proposalsToCreate = createElasticProposals(
 				strategy,
 				address,
@@ -85,7 +80,6 @@ export default function StrategyCommitmentCreator({
 			</CardHeader>
 			<CardContent>
 				<form onSubmit={handleSubmit} className="space-y-4">
-					{/* Wallet Connection */}
 					<div className="p-4 bg-muted rounded-md">
 						{isConnected ? (
 							<div className="space-y-2">
@@ -113,7 +107,6 @@ export default function StrategyCommitmentCreator({
 						)}
 					</div>
 
-					{/* Credit Amount Input */}
 					<div className="space-y-2">
 						<Label htmlFor="creditAmount">Credit Amount</Label>
 						<Input
@@ -129,7 +122,6 @@ export default function StrategyCommitmentCreator({
 						</p>
 					</div>
 
-					{/* Strategy Terms Display */}
 					<div className="space-y-2">
 						<h3 className="font-medium">Strategy Terms</h3>
 						<div className="grid grid-cols-2 gap-4 text-sm">
@@ -158,7 +150,6 @@ export default function StrategyCommitmentCreator({
 						</div>
 					</div>
 
-					{/* Submit Button */}
 					<Button
 						type="submit"
 						disabled={isLoading || (!isConnected && !address)}
@@ -172,7 +163,6 @@ export default function StrategyCommitmentCreator({
 					</Button>
 				</form>
 
-				{/* Transaction Status */}
 				{isLoading && (
 					<div className="mt-6 p-4 bg-blue-50 text-blue-700 rounded-md">
 						<p className="font-medium">Transaction in progress...</p>

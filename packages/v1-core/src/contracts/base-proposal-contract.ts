@@ -18,6 +18,8 @@ import type { ProposalWithSignature } from "src/models/strategies/types.js";
 import type { Address, Chain, Hex, Log, PublicClient } from "viem";
 import { SafeService } from "../safe/safe-service.js";
 import type { SafeConfig } from "../safe/types.js";
+import { Loan } from "src/models/loan/index.js";
+import { AddressString } from "@pwndao/sdk-core";
 
 const SAFE_ABI = [
 	{
@@ -65,6 +67,12 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 	abstract createMultiProposal(
 		proposals: ProposalWithHash[],
 	): Promise<ProposalWithSignature[]>;
+
+	abstract acceptProposal(
+		proposal: ProposalWithSignature,
+		acceptor: AddressString,
+		creditAmount: bigint,
+	): Promise<Loan>
 
 	protected async signWithSafeWalletSupport(
 		domain: {

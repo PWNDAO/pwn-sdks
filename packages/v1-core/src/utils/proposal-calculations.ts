@@ -1,8 +1,6 @@
 import type { Token } from "@pwndao/sdk-core";
 import { Decimal } from "decimal.js";
 import invariant from "ts-invariant";
-import { parseUnits } from "viem";
-import { LTV_DENOMINATOR } from "../factories/constants.js";
 
 /**
  * Calculates the minimum credit amount based on a percentage of the total credit amount

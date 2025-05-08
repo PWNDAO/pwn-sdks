@@ -12,14 +12,15 @@ import type {
 	ProposalParamWithDeps,
 } from "../actions/types.js";
 import { API } from "../api.js";
-import type { IProposalElasticContract } from "../contracts/elastic-proposal-contract.js";
 import { ElasticProposalContract } from "../contracts/elastic-proposal-contract.js";
 import { SimpleLoanContract } from "../contracts/simple-loan-contract.js";
+import type { Loan } from "../models/loan/index.js";
 import { ElasticProposal } from "../models/proposals/elastic-proposal.js";
 import type { IElasticProposalBase } from "../models/proposals/proposal-base.js";
 import { ProposalType } from "../models/proposals/proposal-base.js";
 import type {
 	IProposalStrategy,
+	ProposalWithSignature,
 	Strategy,
 	StrategyTerm,
 } from "../models/strategies/types.js";
@@ -32,10 +33,8 @@ import {
 	getLtvValue,
 } from "../utils/proposal-calculations.js";
 import { createUtilizedCreditId } from "../utils/shared-credit.js";
-import {
-	type ILoanContract,
-	getLendingCommonProposalFields,
-} from "./helpers.js";
+import type { ILoanContract, IProposalContract } from "./helpers.js";
+import { getLendingCommonProposalFields } from "./helpers.js";
 import type { BaseTerm, IServerAPI } from "./types.js";
 
 export type CreateElasticProposalParams = BaseTerm & {
@@ -47,6 +46,16 @@ export interface IProposalElasticAPIDeps {
 	getAssetUsdUnitPrice: IServerAPI["get"]["getAssetUsdUnitPrice"];
 	persistProposals: IServerAPI["post"]["persistProposals"];
 	updateNonces: IServerAPI["post"]["updateNonce"];
+}
+
+export interface IProposalElasticContract
+	extends IProposalContract<ElasticProposal> {
+	getCollateralAmount(proposal: ElasticProposal): Promise<bigint>;
+	acceptProposal(
+		proposal: ProposalWithSignature,
+		acceptor: AddressString,
+		creditAmount: bigint,
+	): Promise<Loan>;
 }
 
 export class ElasticProposalStrategy
@@ -161,7 +170,10 @@ export class ElasticProposalStrategy
 		sourceOfFunds: AddressString | null,
 	): CreateElasticProposalParams[] {
 		const result: CreateElasticProposalParams[] = [];
-		invariant(this.term.minCreditAmountPercentage, "Min credit amount percentage is required for this proposal type");
+		invariant(
+			this.term.minCreditAmountPercentage,
+			"Min credit amount percentage is required for this proposal type",
+		);
 		for (const credit of this.term.creditAssets) {
 			for (const collateral of this.term.collateralAssets) {
 				result.push({
@@ -299,7 +311,10 @@ export const createElasticProposals = (
 ): ProposalParamWithDeps<ImplementedProposalTypes>[] => {
 	const proposals: ProposalParamWithDeps<ImplementedProposalTypes>[] = [];
 
-	invariant(strategy.terms.minCreditAmountPercentage, "Min credit amount is required for this proposal type");
+	invariant(
+		strategy.terms.minCreditAmountPercentage,
+		"Min credit amount is required for this proposal type",
+	);
 
 	const apiDeps = {
 		persistProposal: API.post.persistProposal,
@@ -334,7 +349,9 @@ export const createElasticProposals = (
 					minCreditAmountPercentage: strategy.terms.minCreditAmountPercentage,
 					isOffer,
 					relatedStrategyId: strategy.id,
-					sourceOfFunds: isPoolToken(creditAsset) ? creditAsset.underlyingAddress : null,
+					sourceOfFunds: isPoolToken(creditAsset)
+						? creditAsset.underlyingAddress
+						: null,
 					collateral: collateralAsset,
 					credit: creditAsset,
 				},
