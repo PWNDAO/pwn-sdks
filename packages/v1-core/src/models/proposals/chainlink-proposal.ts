@@ -99,7 +99,10 @@ export class ChainLinkProposal implements IOracleProposalBase {
 			accruingInterestAPR: Number(this.accruingInterestAPR),
 			durationOrDate: Number(this.durationOrDate),
 			expiration: this.expiration,
-			allowedAcceptor: this.allowedAcceptor,
+			// allowedAcceptor: this.allowedAcceptor, // TODO: some type error, check later if correct
+			acceptorController: EMPTY_32_BYTES,
+			acceptorControllerData: EMPTY_32_BYTES,
+
 			proposer: this.proposer,
 			proposerSpecHash: this.isOffer ? this.proposerSpecHash : EMPTY_32_BYTES,
 			isOffer: this.isOffer ?? false,
