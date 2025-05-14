@@ -7,9 +7,6 @@ import { UniswapV3Position } from "../../../core/src/models/liquidity-position.j
 import { invariant } from 'ts-invariant'
 export type CreateUniswapV3IndividualProposalParams = BaseTerm & {
     token0Denominator: boolean;
-    feedIntermediaryDenominations: AddressString[];
-    feedInvertFlags: boolean[];
-    loanToValue: bigint;
     acceptorController: AddressString;
     acceptorControllerData: Hex;
     collateralId: string;
@@ -42,11 +39,23 @@ export class UniswapV3LpIndividualProposalStrategy
 
         invariant(ltv, "LTV is undefined");
 
-        invariant(params.collateral instanceof UniswapV3Position, "Collateral must be a UniswapV3Position");
+        console.log({
+            collateral: params.collateral,
+            constructor: params.collateral.constructor.name,
+            prototype: Object.getPrototypeOf(params.collateral),
+            instanceOfUniswapV3: params.collateral instanceof UniswapV3Position,
+            type: typeof params.collateral
+        });
+
+        const castedCollateral = 'tokenId' in params.collateral && 'tokenA' in params.collateral && 'tokenB' in params.collateral
+            ? params.collateral as UniswapV3Position
+            : null;
+
+        invariant(castedCollateral, "Collateral is not a UniswapV3Position");
 
         const feedData = getFeedData(
-            params.collateral.chainId as ChainsWithChainLinkFeedSupport,
-            params.collateral.address,
+            castedCollateral.chainId as ChainsWithChainLinkFeedSupport,
+            params.token0Denominator ? castedCollateral.tokenA : castedCollateral.tokenB,
             "underlyingAddress" in params.credit && params.credit.underlyingAddress
                 ? params.credit.underlyingAddress
                 : params.credit.address,
@@ -56,12 +65,12 @@ export class UniswapV3LpIndividualProposalStrategy
 
         const creditAmount = await contract.getCreditAmount(
             params.credit.address,
-            BigInt(params.collateral.tokenId),
+            BigInt(castedCollateral.tokenId),
             params.token0Denominator,
-            params.feedIntermediaryDenominations,
-            params.feedInvertFlags,
+            feedData.feedIntermediaryDenominations,
+            feedData.feedInvertFlags,
             BigInt(ltv),
-            params.collateral.chainId,
+            castedCollateral.chainId,
         )
 
         const minCreditAmount = 
@@ -103,19 +112,19 @@ export class UniswapV3LpIndividualProposalStrategy
             {
                 ...commonFields,
                 isOffer: false,
-                feedIntermediaryDenominations: params.feedIntermediaryDenominations,
-                feedInvertFlags: params.feedInvertFlags,
+                feedIntermediaryDenominations: feedData.feedIntermediaryDenominations,
+                feedInvertFlags: feedData.feedInvertFlags,
                 loanToValue: BigInt(ltv),
                 minCreditAmount,
-                chainId: params.collateral.chainId,
-                collateralCategory: params.collateral.category,
-                collateralAddress: params.collateral.address,
-                collateralId: BigInt(params.collateral.tokenId),
+                chainId: castedCollateral.chainId,
+                collateralCategory: castedCollateral.category,
+                collateralAddress: castedCollateral.address,
+                collateralId: BigInt(castedCollateral.tokenId),
                 token0Denominator: params.token0Denominator,
                 acceptorController: params.acceptorController,
                 acceptorControllerData: params.acceptorControllerData
             },
-            params.collateral.chainId,
+            castedCollateral.chainId,
         );
     }    
 
@@ -126,9 +135,7 @@ export class UniswapV3LpIndividualProposalStrategy
         sourceOfFunds: AddressString | null,
         minCreditAmount: bigint,
         token0Denominator?: boolean,
-        feedIntermediaryDenominations?: AddressString[],
-        feedInvertFlags?: boolean[],
-        loanToValue?: bigint,
+        collateralId?: bigint,
     ): CreateUniswapV3IndividualProposalParams[] {
 
         invariant(!isOffer, "UniswapV3LpIndividualProposal is always a borrow request");
@@ -139,9 +146,7 @@ export class UniswapV3LpIndividualProposalStrategy
         const collateral = this.term.collateralAssets[0];
 
         invariant(token0Denominator, "Token 0 denominator is required");
-        invariant(feedIntermediaryDenominations && feedIntermediaryDenominations.length > 0, "Feed intermediary denominations are required");
-        invariant(feedInvertFlags && feedInvertFlags.length > 0, "Feed invert flags are required");
-        invariant(loanToValue, "Loan to value is required");
+        invariant(collateralId, "Collateral id is required");
     
         return [
             {
@@ -160,13 +165,11 @@ export class UniswapV3LpIndividualProposalStrategy
                 sourceOfFunds,
                 minCreditAmount,
                 token0Denominator,
-                feedIntermediaryDenominations,
-                feedInvertFlags,
-                loanToValue,
                 acceptorController: ZERO_ADDRESS,
                 acceptorControllerData: ZERO_ADDRESS,
                 collateralId: (collateral as UniswapV3Position).tokenId,
                 minCreditAmountPercentage: this.term.minCreditAmountPercentage || 0,
+                relatedStrategyId: this.term.relatedStrategyId,
             }
         ];
     }
@@ -179,9 +182,7 @@ export class UniswapV3LpIndividualProposalStrategy
         sourceOfFunds: AddressString | null,
         minCreditAmount: bigint,
         token0Denominator?: boolean,
-        feedIntermediaryDenominations?: AddressString[],
-        feedInvertFlags?: boolean[],
-        loanToValue?: bigint,
+        collateralId?: bigint,
     ): Promise<UniswapV3IndividualProposal[]> {
         const paramsArray = this.getProposalsParams(
             creditAmount,
@@ -190,9 +191,7 @@ export class UniswapV3LpIndividualProposalStrategy
             sourceOfFunds,
             minCreditAmount,
             token0Denominator,
-            feedIntermediaryDenominations,
-            feedInvertFlags,
-            loanToValue,
+            collateralId,
         );
 
         const result: UniswapV3IndividualProposal[] = [];
@@ -259,9 +258,7 @@ export const createUniswapV3LpIndividualProposal = async (
         params.sourceOfFunds,
         params.minCreditAmount,
         params.token0Denominator,
-        params.feedIntermediaryDenominations,
-        params.feedInvertFlags,
-        params.loanToValue,
+        BigInt(params.collateralId)
     );
 
     return proposals[0];
