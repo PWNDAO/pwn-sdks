@@ -13,9 +13,7 @@ export const proposalTypes = {
 	},
 };
 
-export type ImplementedProposalTypes = {
-	[K in ProposalType]: typeof proposalTypes[K] extends () => never ? never : K
-  }[ProposalType];
+export type ImplementedProposalTypes = keyof typeof proposalTypes;
 
 export type ProposalParamWithDeps<T extends ImplementedProposalTypes> = {
     type: T;

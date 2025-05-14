@@ -1,10 +1,7 @@
 import {
 	type AddressString,
 	SupportedChain,
-	type UserWithNonceManager,
-	ZERO_ADDRESS,
 	ZERO_FINGERPRINT,
-	getLoanContractAddress,
 	getUniqueCreditCollateralKey,
 } from "@pwndao/sdk-core";
 import {
