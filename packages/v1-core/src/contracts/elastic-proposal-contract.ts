@@ -4,13 +4,14 @@ import {
 	getLoanContractAddress,
 } from "@pwndao/sdk-core";
 import { getAccount, sendCalls } from "@wagmi/core";
-import type { Hex } from "viem";
+import { encodeFunctionData, type Hex } from "viem";
 import type { Address } from "viem";
 import {
 	type IProposalContract,
 	type IServerAPI,
 	type ProposalWithHash,
 	type ProposalWithSignature,
+	pwnSimpleLoanAbi,
 	readPwnSimpleLoanElasticProposalEncodeProposalData,
 	readPwnSimpleLoanElasticProposalGetProposalHash,
 	writePwnSimpleLoanCreateLoan,
@@ -198,8 +199,6 @@ export class ElasticProposalContract
 			creditAmount,
 		);
 
-		console.log("encodedProposalData", encodedProposalData);
-
 		const proposalInclusionProof = await getInclusionProof(proposal);
 
 		const proposalSpec = {
@@ -221,8 +220,6 @@ export class ElasticProposalContract
 
 		const extra = "0x";
 
-		debugger
-
 		const accepted = await writePwnSimpleLoanCreateLoan(this.config, {
 			address: getLoanContractAddress(proposal.chainId),
 			chainId: proposal.chainId,
@@ -240,15 +237,15 @@ export class ElasticProposalContract
 	 * @param acceptor - The address of the acceptor
 	 * @returns Array of created loans
 	 */
-	async acceptProposalsBatch(
-		proposals: Array<{
+	async acceptProposals(
+		proposals: {
 			proposal: ProposalWithSignature;
+			acceptor: AddressString;
 			creditAmount: bigint;
-		}>,
-		acceptor: AddressString,
+		}[],
 	): Promise<Loan[]> {
 		const calls = await Promise.all(
-			proposals.map(async ({ proposal, creditAmount }) => {
+			proposals.map(async ({ proposal, creditAmount, acceptor }) => {
 				// if proposal is lending offer sourceOfFunds is already set. If not then it's lender address
 				const sourceOfFunds =
 					proposal.isOffer && proposal.sourceOfFunds === null
@@ -285,16 +282,13 @@ export class ElasticProposalContract
 
 				const extra = "0x";
 
-				// Get the encoded data for the createLoan call
-				const encodedData = await writePwnSimpleLoanCreateLoan(this.config, {
-					address: getLoanContractAddress(proposal.chainId),
-					chainId: proposal.chainId,
-					args: [proposalSpec, lenderSpec, callerSpec, extra],
-				});
-
 				return {
 					to: getLoanContractAddress(proposal.chainId),
-					data: encodedData as Hex,
+					data: encodeFunctionData({
+						abi: pwnSimpleLoanAbi,
+						functionName: "createLOAN",
+						args: [proposalSpec, lenderSpec, callerSpec, extra],
+					}),
 				};
 			}),
 		);

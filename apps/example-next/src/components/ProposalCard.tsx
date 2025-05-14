@@ -8,9 +8,16 @@ import { AcceptProposalButton } from "./AcceptProposalButton";
 type ProposalCardProps = {
 	proposal: ProposalWithSignature;
 	address?: AddressString;
+	isSelected: boolean;
+	onSelect: (proposal: ProposalWithSignature) => void;
 };
 
-export const ProposalCard = ({ proposal, address }: ProposalCardProps) => {
+export const ProposalCard = ({
+	proposal,
+	address,
+	isSelected,
+	onSelect,
+}: ProposalCardProps) => {
 	const { data: erc20Metadata } = useReadContracts({
 		contracts: [
 			{
@@ -48,7 +55,16 @@ export const ProposalCard = ({ proposal, address }: ProposalCardProps) => {
 	}, [proposal.availableCreditLimit, creditMetadata]);
 
 	return (
-		<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow duration-200 bg-gray-50">
+		<div
+			className={`p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow duration-200 bg-gray-50 ${isSelected ? "border-teal-500" : ""}`}
+			onClick={() => onSelect(proposal)}
+			onKeyDown={(e) => {
+				if (e.key === "Enter") {
+					onSelect(proposal);
+				}
+			}}
+			aria-label="Select proposal"
+		>
 			<div className="flex flex-col items-center justify-between">
 				<h2 className="text-lg font-semibold text-gray-700">
 					Proposal:
@@ -66,7 +82,11 @@ export const ProposalCard = ({ proposal, address }: ProposalCardProps) => {
 				</p>
 
 				{address && (
-					<AcceptProposalButton proposal={proposal} acceptor={address} />
+					<AcceptProposalButton
+						proposal={proposal}
+						acceptor={address}
+						proposalType={proposal.type}
+					/>
 				)}
 				<p className="mt-2 text-sm text-gray-600 bg-gray-100 inline-block px-2 py-1 rounded">
 					{proposal.sourceOfFunds}

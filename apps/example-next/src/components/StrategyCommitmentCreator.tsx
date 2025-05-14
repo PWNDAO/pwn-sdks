@@ -10,8 +10,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMakeProposals, useUserWithNonce } from "@pwndao/sdk-v1-react";
-import type { Strategy } from "@pwndao/v1-core";
-import { createElasticProposals } from "@pwndao/v1-core";
+import type { ProposalParamWithDeps, Strategy } from "@pwndao/v1-core";
+import {
+	ProposalType,
+	createChainLinkProposals,
+	createElasticProposals,
+} from "@pwndao/v1-core";
 import { serialize } from "@wagmi/core";
 import { useState } from "react";
 import { useAccount, useConfig, useConnect, useDisconnect } from "wagmi";
@@ -53,12 +57,28 @@ export default function StrategyCommitmentCreator({
 		}
 
 		try {
-			const proposalsToCreate = createElasticProposals(
-				strategy,
-				address,
-				creditAmount,
-				config,
-			);
+			let proposalsToCreate: ProposalParamWithDeps<
+				ProposalType.ChainLink | ProposalType.Elastic
+			>[] = [];
+
+			console.log("strategy.type", strategy.type);
+
+			if (strategy.type === ProposalType.Elastic) {
+				proposalsToCreate = createElasticProposals(
+					strategy,
+					address,
+					creditAmount,
+					config,
+				) as ProposalParamWithDeps<ProposalType.Elastic>[];
+			} else if (strategy.type === ProposalType.ChainLink) {
+				debugger;
+				proposalsToCreate = createChainLinkProposals(
+					strategy,
+					address,
+					creditAmount,
+					config,
+				) as ProposalParamWithDeps<ProposalType.ChainLink>[];
+			}
 
 			const res = await makeProposal(proposalsToCreate);
 			console.log("Proposals created successfully:", res);

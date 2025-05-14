@@ -55,6 +55,13 @@ export interface IProposalContract<TProposal extends Proposal> {
 		acceptor: AddressString,
 		creditAmount: bigint,
 	): Promise<Loan>
+	acceptProposals(
+		proposals: {
+			proposal: ProposalWithSignature,
+			acceptor: AddressString,
+			creditAmount: bigint,
+		}[],
+	): Promise<Loan[]>
 }
 
 export type ProposalContract =

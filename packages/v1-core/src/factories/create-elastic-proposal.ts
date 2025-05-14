@@ -12,15 +12,13 @@ import type {
 	ProposalParamWithDeps,
 } from "../actions/types.js";
 import { API } from "../api.js";
-import { ElasticProposalContract } from "../contracts/elastic-proposal-contract.js";
+import { ElasticProposalContract, type IProposalElasticContract } from "../contracts/elastic-proposal-contract.js";
 import { SimpleLoanContract } from "../contracts/simple-loan-contract.js";
-import type { Loan } from "../models/loan/index.js";
 import { ElasticProposal } from "../models/proposals/elastic-proposal.js";
 import type { IElasticProposalBase } from "../models/proposals/proposal-base.js";
 import { ProposalType } from "../models/proposals/proposal-base.js";
 import type {
 	IProposalStrategy,
-	ProposalWithSignature,
 	Strategy,
 	StrategyTerm,
 } from "../models/strategies/types.js";
@@ -33,7 +31,7 @@ import {
 	getLtvValue,
 } from "../utils/proposal-calculations.js";
 import { createUtilizedCreditId } from "../utils/shared-credit.js";
-import type { ILoanContract, IProposalContract } from "./helpers.js";
+import type { ILoanContract } from "./helpers.js";
 import { getLendingCommonProposalFields } from "./helpers.js";
 import type { BaseTerm, IServerAPI } from "./types.js";
 
@@ -46,16 +44,6 @@ export interface IProposalElasticAPIDeps {
 	getAssetUsdUnitPrice: IServerAPI["get"]["getAssetUsdUnitPrice"];
 	persistProposals: IServerAPI["post"]["persistProposals"];
 	updateNonces: IServerAPI["post"]["updateNonce"];
-}
-
-export interface IProposalElasticContract
-	extends IProposalContract<ElasticProposal> {
-	getCollateralAmount(proposal: ElasticProposal): Promise<bigint>;
-	acceptProposal(
-		proposal: ProposalWithSignature,
-		acceptor: AddressString,
-		creditAmount: bigint,
-	): Promise<Loan>;
 }
 
 export class ElasticProposalStrategy

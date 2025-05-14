@@ -49,7 +49,7 @@ export const API: IServerAPI = {
 				relatedThesisId: strategyId,
 				limit: 100,
 				offset: 0,
-				statuses: ["1"],
+				statuses: [1],
 			});
 			invariant(data.results !== undefined, "Error parsing response");
 			return (

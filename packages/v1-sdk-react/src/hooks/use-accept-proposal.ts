@@ -1,34 +1,29 @@
-import type { AddressString } from "@pwndao/sdk-core";
-import { ElasticProposalContract, acceptProposal } from "@pwndao/v1-core";
-import type { ProposalWithSignature } from "@pwndao/v1-core";
+import {
+	acceptProposal,
+} from "@pwndao/v1-core";
+import type {
+	AcceptProposalDeps,
+	AcceptProposalRequest,
+} from "@pwndao/v1-core";
 import { useMutation } from "@tanstack/react-query";
-import { useMemo } from "react";
-import { useConfig } from "wagmi";
+import { useAccount } from "wagmi";
 
-export const useAcceptProposal = (acceptor: AddressString) => {
-	const config = useConfig();
-	const proposalContract = useMemo(() => {
-		return new ElasticProposalContract(config);
-	}, [config]);
+export function useAcceptProposal(contract: AcceptProposalDeps) {
+	const { address } = useAccount();
 
-	return useMutation({
+	const acceptProposalsMutation = useMutation({
 		mutationFn: async ({
-			proposal,
-			creditAmount,
+			proposalsToAccept,
 		}: {
-			proposal: ProposalWithSignature;
-			creditAmount: bigint;
+			proposalsToAccept: AcceptProposalRequest[];
 		}) => {
-			return await acceptProposal(
-				{
-					proposalToAccept: proposal,
-					acceptor,
-					creditAmount,
-				},
-				{
-					proposalContract,
-				},
-			);
+			if (!address) {
+				throw new Error("No wallet connected");
+			}
+
+			return acceptProposal(proposalsToAccept, contract);
 		},
 	});
-};
+
+	return acceptProposalsMutation;
+}

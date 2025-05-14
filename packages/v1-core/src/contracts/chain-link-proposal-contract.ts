@@ -1,6 +1,10 @@
-import { getChainLinkProposalContractAddress } from "@pwndao/sdk-core";
-import { getAccount } from "@wagmi/core";
-import type { Hex } from "viem";
+import {
+	type AddressString,
+	getChainLinkProposalContractAddress,
+	getLoanContractAddress,
+} from "@pwndao/sdk-core";
+import { getAccount, sendCalls, sendTransaction } from "@wagmi/core";
+import { type Hex, encodeFunctionData } from "viem";
 import type { Address } from "viem";
 import type { IServerAPI } from "../factories/types.js";
 import {
@@ -8,13 +12,21 @@ import {
 	type IProposalContract,
 	type ProposalWithHash,
 	type ProposalWithSignature,
+	pwnSimpleLoanAbi,
+	readPwnSimpleLoanElasticChainlinkProposalEncodeProposalData,
 	readPwnSimpleLoanElasticChainlinkProposalGetCollateralAmount,
 	readPwnSimpleLoanElasticChainlinkProposalGetProposalHash,
+	writePwnSimpleLoanCreateLoan,
 	writePwnSimpleLoanElasticChainlinkProposalMakeProposal,
 } from "../index.js";
+import { Loan } from "../models/loan/index.js";
+import type { V1_3SimpleLoanElasticChainlinkProposalStruct } from "../structs.js";
+import { getProposalAddressByType } from "../utils/contract-addresses.js";
 import { BaseProposalContract } from "./base-proposal-contract.js";
+import { getInclusionProof, mayUserSendCalls } from "./utilts.js";
 
-export interface IProposalChainLinkContract extends IProposalContract<ChainLinkProposal> {
+export interface IProposalChainLinkContract
+	extends IProposalContract<ChainLinkProposal> {
 	getCollateralAmount(proposal: ChainLinkProposal): Promise<bigint>;
 }
 
@@ -22,6 +34,171 @@ export class ChainLinkProposalContract
 	extends BaseProposalContract<ChainLinkProposal>
 	implements IProposalChainLinkContract
 {
+	async encodeProposalData(
+		proposal: ProposalWithSignature,
+		creditAmount: bigint,
+	) {
+		const data =
+			await readPwnSimpleLoanElasticChainlinkProposalEncodeProposalData(
+				this.config,
+				{
+					address: getProposalAddressByType(proposal.type, proposal.chainId),
+					chainId: proposal.chainId,
+					args: [
+						proposal.createProposalStruct() as V1_3SimpleLoanElasticChainlinkProposalStruct,
+						{
+							creditAmount,
+						},
+					],
+				},
+			);
+		return data;
+	}
+
+	/**
+	 * This function accept a proposal with a credit amount.
+	 * Then it resolves the sourceOfFunds from the proposal, encodes it and accepts the proposal.
+	 * @param proposal - The proposal to accept
+	 * @param acceptor - The address of the acceptor
+	 * @param creditAmount - The amount of credit to accept
+	 * @returns The loan object
+	 */
+	async acceptProposal(
+		proposal: ProposalWithSignature,
+		acceptor: AddressString,
+		creditAmount: bigint,
+	): Promise<Loan> {
+		// if proposal is lending offer sourceOfFunds is alreday set. If not then it's lender address
+		const sourceOfFunds =
+			proposal.isOffer && proposal.sourceOfFunds === null
+				? proposal.proposer
+				: acceptor;
+
+		Object.assign(proposal, {
+			sourceOfFunds,
+		});
+
+		const encodedProposalData = await this.encodeProposalData(
+			proposal,
+			creditAmount,
+		);
+
+		const proposalInclusionProof = await getInclusionProof(proposal);
+
+		const proposalSpec = {
+			proposalContract: proposal.proposalContract,
+			proposalData: encodedProposalData,
+			proposalInclusionProof,
+			signature: proposal.signature as Hex,
+		};
+
+		const lenderSpec = {
+			sourceOfFunds: proposal.sourceOfFunds,
+		};
+
+		const callerSpec = {
+			refinancingLoanId: 0n,
+			revokeNonce: false,
+			nonce: 0n,
+		};
+
+		const extra = "0x";
+
+		const accepted = await writePwnSimpleLoanCreateLoan(this.config, {
+			address: getLoanContractAddress(proposal.chainId),
+			chainId: proposal.chainId,
+			args: [proposalSpec, lenderSpec, callerSpec, extra],
+		});
+
+		console.log("accepted", accepted);
+
+		return new Loan(0n, proposal.chainId);
+	}
+
+	async acceptProposals(
+		proposals: {
+			proposal: ProposalWithSignature;
+			acceptor: AddressString;
+			creditAmount: bigint;
+		}[],
+	) {
+		const calls = await Promise.all(
+			proposals.map(async ({ proposal, creditAmount, acceptor }) => {
+				// if proposal is lending offer sourceOfFunds is already set. If not then it's lender address
+				const sourceOfFunds =
+					proposal.isOffer && proposal.sourceOfFunds === null
+						? proposal.proposer
+						: acceptor;
+
+				Object.assign(proposal, {
+					sourceOfFunds,
+				});
+
+				const encodedProposalData = await this.encodeProposalData(
+					proposal,
+					creditAmount,
+				);
+
+				const proposalInclusionProof = await getInclusionProof(proposal);
+
+				const proposalSpec = {
+					proposalContract: proposal.proposalContract,
+					proposalData: encodedProposalData,
+					proposalInclusionProof,
+					signature: proposal.signature as Hex,
+				};
+
+				const lenderSpec = {
+					sourceOfFunds,
+				};
+
+				const callerSpec = {
+					refinancingLoanId: 0n,
+					revokeNonce: false,
+					nonce: 0n,
+				};
+
+				const extra = "0x";
+
+				return {
+					to: getLoanContractAddress(proposal.chainId),
+					data: encodeFunctionData({
+						abi: pwnSimpleLoanAbi,
+						functionName: "createLOAN",
+						args: [proposalSpec, lenderSpec, callerSpec, extra],
+					}),
+				};
+			}),
+		);
+
+		if (await mayUserSendCalls(this.config, proposals[0].proposal.chainId)) {
+			const hash = await sendCalls(this.config, {
+				calls,
+			});
+
+			const account = getAccount(this.config);
+			const isSafe = account?.address
+				? await this.safeService.isSafeAddress(account.address as Address)
+				: false;
+
+			if (isSafe) {
+				await this.safeService.waitForTransaction(hash as unknown as Hex);
+			}
+
+			return proposals.map(
+				(_, index) => new Loan(BigInt(index), proposals[0].proposal.chainId),
+			);
+		}
+
+		for (const call of calls) {
+			await sendTransaction(this.config, call);
+		}
+
+		return proposals.map(
+			(_, index) => new Loan(BigInt(index), proposals[0].proposal.chainId),
+		);
+	}
+
 	async createMultiProposal(
 		proposals: ProposalWithHash[],
 	): Promise<ProposalWithSignature[]> {

@@ -2,17 +2,41 @@ import type {
 	CollateralAssetInThesisSchemaWorkaround,
 	ThesisSchemaWorkaround,
 } from "@pwndao/api-sdk";
+import {
+	type AddressString,
+	ERC20Token,
+	PoolToken,
+	type SupportedProtocol,
+} from "@pwndao/sdk-core";
 import invariant from "ts-invariant";
 import { MIN_CREDIT_CALCULATION_DENOMINATOR } from "../../factories/constants.js";
 import { ProposalType } from "../../models/proposals/proposal-base.js";
 import type { Strategy, StrategyTerm } from "../../models/strategies/types.js";
-import { type AddressString, ERC20Token } from "@pwndao/sdk-core";
 
 type AssetModel = CollateralAssetInThesisSchemaWorkaround;
-type CreditAssetModel = Omit<AssetModel, "ltv" | "apr" | "allocationPercentage">;
+type CreditAssetModel = Omit<
+	AssetModel,
+	"ltv" | "apr" | "allocationPercentage"
+>;
 
-const parseStrategyToken = (token: AssetModel | CreditAssetModel) => {
+const parseStrategyToken = (
+	token: AssetModel | CreditAssetModel,
+	isPoolHook = false,
+) => {
 	invariant(token.decimals !== null, "token.decimals is required");
+
+	if (isPoolHook && token?.underlyingTokenAddress) {
+		return new PoolToken(
+			token.chainId,
+			token.address as AddressString,
+			token.underlyingTokenAddress as AddressString,
+			token.decimals,
+			undefined, // TODO: add protocol
+			token.name ?? undefined,
+			token.symbol ?? undefined,
+			token.thumbnailUrl ?? undefined,
+		);
+	}
 	return new ERC20Token(
 		token.chainId,
 		token.address as AddressString,
@@ -59,12 +83,16 @@ export const parseBackendStrategiesResponse = (
 			creditAssets || [],
 			backendData.ltv,
 		),
-		creditAssets: creditAssets.map((v) => parseStrategyToken(v)),
+		creditAssets: backendData.creditsStats?.map((v) =>
+			parseStrategyToken(v.creditAssetMetadata, !!v.amountsStats.isPoolHook),
+		),
 		collateralAssets:
-			backendData.collateralAssets?.map(parseStrategyToken) || [],
+			backendData.collateralAssets?.map((v) => parseStrategyToken(v)) || [],
 		durationDays: backendData.loanDurationDays,
 		expirationDays: backendData.proposalExpirationDays,
-		minCreditAmountPercentage: backendData.minAllowedBorrowPercentage * MIN_CREDIT_CALCULATION_DENOMINATOR,
+		minCreditAmountPercentage:
+			backendData.minAllowedBorrowPercentage *
+			MIN_CREDIT_CALCULATION_DENOMINATOR,
 		id: backendData.id,
 		relatedStrategyId: backendData.id,
 	};
@@ -80,7 +108,10 @@ export const parseBackendStrategiesResponse = (
 			avatar: backendData.curator.avatar,
 			description: backendData.curator.description,
 		},
-		type: backendData.thesisType === 1 ? ProposalType.Elastic : ProposalType.ChainLink,
+		type:
+			backendData.thesisType === 1
+				? ProposalType.Elastic
+				: ProposalType.ChainLink,
 		lendingStats: {
 			totalCommittedAmount: backendData.creditsStats.reduce(
 				(acc, v) => acc + BigInt(v.amountsStats.totalCommittedAmount || 0),

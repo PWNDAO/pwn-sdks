@@ -79,12 +79,15 @@ export class ChainLinkProposalStrategy
 
 		invariant(ltv, "LTV is undefined");
 
+		const creditAddress =
+			"underlyingAddress" in params.credit && params.credit.underlyingAddress
+				? params.credit.underlyingAddress
+				: params.credit.address;
+
 		const feedData = getFeedData(
 			params.collateral.chainId as ChainsWithChainLinkFeedSupport,
 			params.collateral.address,
-			"underlyingAddress" in params.credit && params.credit.underlyingAddress
-				? params.credit.underlyingAddress
-				: params.credit.address,
+			creditAddress,
 		);
 		invariant(
 			feedData,
@@ -151,10 +154,10 @@ export class ChainLinkProposalStrategy
 		for (const credit of this.term.creditAssets) {
 			invariant(
 				!(
-					(!minCreditAmount && !this.term.minCreditAmountPercentage) || 
+					(!minCreditAmount && !this.term.minCreditAmountPercentage) ||
 					(minCreditAmount && this.term.minCreditAmountPercentage)
 				),
-				"Either minCreditAmountPercentage or minCreditAmount must be provided for this proposal type"
+				"Either minCreditAmountPercentage or minCreditAmount must be provided for this proposal type",
 			);
 
 			for (const collateral of this.term.collateralAssets) {
@@ -195,7 +198,7 @@ export class ChainLinkProposalStrategy
 			utilizedCreditId,
 			isOffer,
 			sourceOfFunds,
-			minCreditAmount
+			minCreditAmount,
 		);
 		const result: ChainLinkProposal[] = [];
 
@@ -278,7 +281,6 @@ export const createChainLinkProposals = (
 	strategy: Strategy,
 	address: AddressString,
 	creditAmount: string,
-	minCreditAmount: string,
 	config: Config,
 	isOffer = true,
 ) => {
@@ -315,7 +317,6 @@ export const createChainLinkProposals = (
 					utilizedCreditId: utilizedCreditId,
 					minCreditAmountPercentage:
 						strategy.terms.minCreditAmountPercentage || 0,
-					minCreditAmount: BigInt(minCreditAmount),
 					relatedStrategyId: strategy.id,
 					collateral: collateralAsset,
 					credit: creditAsset,
@@ -327,4 +328,6 @@ export const createChainLinkProposals = (
 			});
 		}
 	}
+
+	return proposals;
 };

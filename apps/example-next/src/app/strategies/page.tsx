@@ -17,6 +17,8 @@ import { formatUnits } from "viem";
 export default function StrategiesPage() {
 	const { data: strategies, isLoading } = useStrategies(SupportedChain.Sepolia);
 
+	console.log(strategies);
+
 	return (
 		<div className="container mx-auto px-4 py-8">
 			<h1 className="text-3xl font-bold mb-8">Strategies</h1>
@@ -29,6 +31,9 @@ export default function StrategiesPage() {
 							<CardDescription className="text-sm text-gray-500">
 								ID: {strategy.id}
 							</CardDescription>
+							<CardDescription className="text-sm text-gray-500">
+								Strategy Type: {strategy.type}
+							</CardDescription>
 						</CardHeader>
 						<CardContent isLoading={isLoading}>
 							<p className="mb-4">{strategy.description}</p>
@@ -40,7 +45,7 @@ export default function StrategiesPage() {
 											strategy.lendingStats.totalCommittedAmount,
 											18,
 										) || "0"}{" "}
-										USD
+										{strategy.terms.creditAssets[0].symbol}
 									</span>
 								</div>
 								<div className="flex justify-between">

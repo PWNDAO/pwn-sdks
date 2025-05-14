@@ -1,12 +1,16 @@
 import { SimpleMerkleTree } from "@openzeppelin/merkle-tree";
 import { allProposalHashesForRoot } from "@pwndao/api-sdk";
-import { ZERO_FINGERPRINT, type Hex } from "@pwndao/sdk-core";
+import { type Hex, ZERO_FINGERPRINT } from "@pwndao/sdk-core";
+import { type Config, getCapabilities } from "@wagmi/core";
 import type { ProposalWithSignature } from "../models/strategies/types.js";
 
 export const getInclusionProof = async (
 	proposalWithHash: ProposalWithSignature,
 ): Promise<Hex[]> => {
-	if (!proposalWithHash.multiproposalMerkleRoot || proposalWithHash.multiproposalMerkleRoot === ZERO_FINGERPRINT) {
+	if (
+		!proposalWithHash.multiproposalMerkleRoot ||
+		proposalWithHash.multiproposalMerkleRoot === ZERO_FINGERPRINT
+	) {
 		return [];
 	}
 
@@ -24,4 +28,17 @@ export const getInclusionProof = async (
 		}
 	}
 	return [];
+};
+
+export const mayUserSendCalls = async (config: Config, chainId: number) => {
+	try {
+		const capabilities = await getCapabilities(config);
+
+		const okStatus = ["ready", "supported"];
+
+		return okStatus.includes(capabilities[chainId]?.atomic.status);
+	} catch (error) {
+		console.error(error);
+		return false;
+	}
 };
