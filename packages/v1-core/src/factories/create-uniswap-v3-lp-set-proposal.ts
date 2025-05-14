@@ -47,9 +47,27 @@ export class UniswapV3LpSetProposalStrategy
 
 		invariant(ltv, "LTV is undefined");
 
+		const collateralCasted = (
+			'tokenId' in params.collateral && 
+			'tokenA' in params.collateral && 
+			'tokenB' in params.collateral) ? 
+				params.collateral as UniswapV3Position : null ;
+		
+		invariant(collateralCasted, "Collateral doesn't have required fields to be a UniswapV3Position");
+
+		const collateralClass = new UniswapV3Position(
+			collateralCasted.chainId,
+			collateralCasted.address,
+			collateralCasted.tokenA,
+			collateralCasted.tokenB,
+			collateralCasted.tokenId,
+		);
+
+		invariant(collateralClass instanceof UniswapV3Position, "Collateral must be instanceOf UniswapV3Position");
+
         const feedData = getFeedData(
-            params.collateral.chainId as ChainsWithChainLinkFeedSupport,
-            params.collateral.address,
+            collateralClass.chainId as ChainsWithChainLinkFeedSupport,
+            params.tokenAAllowlist[0] as AddressString, //TODO: for 1st iteration, it's always [0] from the tokenAAllowlist
             "underlyingAddress" in params.credit && params.credit.underlyingAddress
                 ? params.credit.underlyingAddress
                 : params.credit.address,
@@ -57,23 +75,14 @@ export class UniswapV3LpSetProposalStrategy
 
         invariant(feedData, "We did not find a suitable price feed. Create classic elastic proposal instead.");
 
-		invariant(params.collateral instanceof UniswapV3Position, "Collateral must be a UniswapV3Position");
-        const creditAmount = await contract.getCreditAmount(
-            params.credit.address,
-            BigInt(params.collateral.tokenId),
-            true,
-            feedData.feedIntermediaryDenominations,
-            feedData.feedInvertFlags,
-            BigInt(ltv),
-            params.collateral.chainId,
-        )
+		invariant(params.creditAmount, "Credit amount is undefined");
 
 		const minCreditAmount = 
 			params.minCreditAmount && !params.minCreditAmountPercentage
 				? params.minCreditAmount
 				: params.minCreditAmountPercentage
 					? calculateMinCreditAmount(
-							creditAmount,
+							params.creditAmount,
 							params.minCreditAmountPercentage,
 						)
 					: undefined;
@@ -116,13 +125,13 @@ export class UniswapV3LpSetProposalStrategy
 				chainId: params.collateral.chainId,
 				collateralCategory: params.collateral.category,
 				collateralAddress: params.collateral.address,
-				collateralId: BigInt(params.collateral.tokenId),
+				collateralId: BigInt(collateralClass.tokenId),
 				tokenAAllowlist: params.tokenAAllowlist.map(token => token as `0x${string}`),
 				tokenBAllowlist: params.tokenBAllowlist.map(token => token as `0x${string}`),
 				acceptorController: params.acceptorController as `0x${string}`,
 				acceptorControllerData: params.acceptorControllerData as `0x${string}`,
 			},
-			params.collateral.chainId,
+			collateralClass.chainId,
 		);
 	}
 

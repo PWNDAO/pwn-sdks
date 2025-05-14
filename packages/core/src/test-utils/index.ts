@@ -77,6 +77,7 @@ export const getMockLiquidityPoolToken = (
 	tokenA: AddressString,
 	tokenB: AddressString,
 	tokenId: string,
+	tokenAddress: AddressString,
 ) => {
-	return new UniswapV3Position(chain, "0x1238536071E1c677A632429e3655c799b22cDA52", tokenA, tokenB, tokenId);
+	return new UniswapV3Position(chain, tokenAddress, tokenA, tokenB, tokenId);
 };
