@@ -11,6 +11,8 @@ export * from "./factories/create-chain-link-proposal.js";
 export * from "./factories/types.js";
 export * from "./factories/helpers.js";
 export * from "./factories/constants.js";
+export * from "./factories/create-uniswap-v3-lp-individual-proposal.js";
+export * from "./factories/create-uniswap-v3-lp-set-proposal.js";
 
 export * from "./views/get-user-with-nonce.js";
 export * from "./views/get-strategies.js";
