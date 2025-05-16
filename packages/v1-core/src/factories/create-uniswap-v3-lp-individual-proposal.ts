@@ -3,7 +3,7 @@ import { type BaseTerm, type StrategyTerm, type IProposalStrategy, type IUniswap
 import { UniswapV3IndividualProposal } from "../models/proposals/uniswap-v3-lp-individual-proposal.js";
 import { calculateDurationInSeconds, calculateMinCreditAmount } from "../utils/proposal-calculations.js";
 import { calculateExpirationTimestamp } from "../utils/proposal-calculations.js";
-import { UniswapV3Position } from "../../../core/src/models/liquidity-position.js";
+import type { UniswapV3Position } from "../../../core/src/models/liquidity-position.js";
 import { invariant } from 'ts-invariant'
 export type CreateUniswapV3IndividualProposalParams = BaseTerm & {
     token0Denominator: boolean;
