@@ -39,14 +39,6 @@ export class UniswapV3LpIndividualProposalStrategy
 
         invariant(ltv, "LTV is undefined");
 
-        console.log({
-            collateral: params.collateral,
-            constructor: params.collateral.constructor.name,
-            prototype: Object.getPrototypeOf(params.collateral),
-            instanceOfUniswapV3: params.collateral instanceof UniswapV3Position,
-            type: typeof params.collateral
-        });
-
         const castedCollateral = 'tokenId' in params.collateral && 'tokenA' in params.collateral && 'tokenB' in params.collateral
             ? params.collateral as UniswapV3Position
             : null;

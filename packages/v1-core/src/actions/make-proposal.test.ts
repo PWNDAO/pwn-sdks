@@ -383,12 +383,16 @@ describe("Test make proposal", () => {
 
 		expect(user.nonces[SupportedChain.Sepolia]?.[0]).toBe(0n);
 
+		const collateral = getMockLiquidityPoolToken(SupportedChain.Sepolia, sepoliaAssetsWithPriceFeeds.weth, sepoliaAssetsWithPriceFeeds.usdc, "1", lpTokenAddress);
+		const credit = getMockToken(SupportedChain.Sepolia, sepoliaAssetsWithPriceFeeds.usdc);
+
+
 		const proposal = await makeProposal<ProposalType.UniswapV3Individual>(
 			user,
 			ProposalType.UniswapV3Individual,
 			{
-				collateral: getMockLiquidityPoolToken(SupportedChain.Sepolia, sepoliaAssetsWithPriceFeeds.weth, sepoliaAssetsWithPriceFeeds.usdc, "1", lpTokenAddress),
-				credit: getMockToken(SupportedChain.Sepolia, sepoliaAssetsWithPriceFeeds.usdc),
+				collateral,
+				credit,
 				creditAmount,
 				ltv: {
 					[getUniqueCreditCollateralKey(
