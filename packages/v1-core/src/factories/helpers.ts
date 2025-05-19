@@ -22,6 +22,7 @@ import type { ProposalWithHash, ProposalWithSignature } from "../models/strategi
 import type { Proposal } from "../models/strategies/types.js";
 import type { ILenderSpec } from "../models/terms.js";
 import type { Loan } from "src/models/loan/index.js";
+import type { Config, ReadContractsParameters } from "@wagmi/core";
 
 type CommonProposalFieldsParams = {
 	user: UserWithNonceManager;
@@ -43,6 +44,8 @@ export interface ILoanContract {
 }
 
 export interface IProposalContract<TProposal extends Proposal> {
+	config: Config;
+
 	createProposal(
 		params: TProposal,
 		deps: { persistProposal: IServerAPI["post"]["persistProposal"] },
@@ -62,6 +65,8 @@ export interface IProposalContract<TProposal extends Proposal> {
 			creditAmount: bigint,
 		}[],
 	): Promise<Loan[]>
+
+	getReadCollateralAmount(proposal: TProposal): ReadContractsParameters['contracts'][number];
 }
 
 export type ProposalContract =

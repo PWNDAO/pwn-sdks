@@ -98,6 +98,7 @@ describe("Test make proposals", () => {
 					utilizedCreditId: generateAddress(),
 					minCreditAmountPercentage: 3,
 					relatedStrategyId: "1",
+					sourceOfFunds: null,
 					isOffer: true,
 				},
 				deps: {
@@ -138,6 +139,7 @@ describe("Test make proposals", () => {
 					utilizedCreditId: generateAddress(),
 					minCreditAmountPercentage: 3,
 					relatedStrategyId: "1",
+					sourceOfFunds: null,
 					isOffer: true,
 				},
 				deps: {

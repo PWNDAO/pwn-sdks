@@ -3,7 +3,13 @@ import {
 	getChainLinkProposalContractAddress,
 	getLoanContractAddress,
 } from "@pwndao/sdk-core";
-import { getAccount, sendCalls, sendTransaction } from "@wagmi/core";
+import {
+	getAccount,
+	readContract,
+	sendCalls,
+	sendTransaction,
+	switchChain,
+} from "@wagmi/core";
 import { type Hex, encodeFunctionData } from "viem";
 import type { Address } from "viem";
 import type { IServerAPI } from "../factories/types.js";
@@ -12,11 +18,11 @@ import {
 	type IProposalContract,
 	type ProposalWithHash,
 	type ProposalWithSignature,
+	type ProposalsToAccept,
 	pwnSimpleLoanAbi,
+	pwnSimpleLoanElasticChainlinkProposalAbi,
 	readPwnSimpleLoanElasticChainlinkProposalEncodeProposalData,
-	readPwnSimpleLoanElasticChainlinkProposalGetCollateralAmount,
 	readPwnSimpleLoanElasticChainlinkProposalGetProposalHash,
-	writePwnSimpleLoanCreateLoan,
 	writePwnSimpleLoanElasticChainlinkProposalMakeProposal,
 } from "../index.js";
 import { Loan } from "../models/loan/index.js";
@@ -55,80 +61,16 @@ export class ChainLinkProposalContract
 		return data;
 	}
 
-	/**
-	 * This function accept a proposal with a credit amount.
-	 * Then it resolves the sourceOfFunds from the proposal, encodes it and accepts the proposal.
-	 * @param proposal - The proposal to accept
-	 * @param acceptor - The address of the acceptor
-	 * @param creditAmount - The amount of credit to accept
-	 * @returns The loan object
-	 */
-	async acceptProposal(
-		proposal: ProposalWithSignature,
-		acceptor: AddressString,
-		creditAmount: bigint,
-	): Promise<Loan> {
-		// if proposal is lending offer sourceOfFunds is alreday set. If not then it's lender address
-		const sourceOfFunds =
-			proposal.isOffer && proposal.sourceOfFunds === null
-				? proposal.proposer
-				: acceptor;
-
-		Object.assign(proposal, {
-			sourceOfFunds,
-		});
-
-		const encodedProposalData = await this.encodeProposalData(
-			proposal,
-			creditAmount,
-		);
-
-		const proposalInclusionProof = await getInclusionProof(proposal);
-
-		const proposalSpec = {
-			proposalContract: proposal.proposalContract,
-			proposalData: encodedProposalData,
-			proposalInclusionProof,
-			signature: proposal.signature as Hex,
-		};
-
-		const lenderSpec = {
-			sourceOfFunds: proposal.sourceOfFunds,
-		};
-
-		const callerSpec = {
-			refinancingLoanId: 0n,
-			revokeNonce: false,
-			nonce: 0n,
-		};
-
-		const extra = "0x";
-
-		const accepted = await writePwnSimpleLoanCreateLoan(this.config, {
-			address: getLoanContractAddress(proposal.chainId),
-			chainId: proposal.chainId,
-			args: [proposalSpec, lenderSpec, callerSpec, extra],
-		});
-
-		console.log("accepted", accepted);
-
-		return new Loan(0n, proposal.chainId);
-	}
-
 	async acceptProposals(
-		proposals: {
-			proposal: ProposalWithSignature;
-			acceptor: AddressString;
-			creditAmount: bigint;
-		}[],
+		proposals: [ProposalsToAccept, ...ProposalsToAccept[]],
 	) {
 		const calls = await Promise.all(
 			proposals.map(async ({ proposal, creditAmount, acceptor }) => {
 				// if proposal is lending offer sourceOfFunds is already set. If not then it's lender address
 				const sourceOfFunds =
-					proposal.isOffer && proposal.sourceOfFunds === null
+					proposal.sourceOfFunds || (proposal.isOffer && !proposal.sourceOfFunds
 						? proposal.proposer
-						: acceptor;
+						: acceptor);
 
 				Object.assign(proposal, {
 					sourceOfFunds,
@@ -171,9 +113,20 @@ export class ChainLinkProposalContract
 			}),
 		);
 
-		if (await mayUserSendCalls(this.config, proposals[0].proposal.chainId)) {
+		const approvals = await this.getApprovalCalls(proposals);
+
+		const chainId = proposals[0].proposal.chainId;
+
+		const callsWithApprovals = approvals.concat(calls);
+
+		// currently only signle chain-context is supported
+		await switchChain(this.config, {
+			chainId,
+		});
+
+		if (await mayUserSendCalls(this.config, chainId)) {
 			const hash = await sendCalls(this.config, {
-				calls,
+				calls: callsWithApprovals,
 			});
 
 			const account = getAccount(this.config);
@@ -190,7 +143,7 @@ export class ChainLinkProposalContract
 			);
 		}
 
-		for (const call of calls) {
+		for (const call of callsWithApprovals) {
 			await sendTransaction(this.config, call);
 		}
 
@@ -303,23 +256,25 @@ export class ChainLinkProposalContract
 		}) as ProposalWithSignature;
 	}
 
+	getReadCollateralAmount(proposal: ChainLinkProposal) {
+		return {
+			abi: pwnSimpleLoanElasticChainlinkProposalAbi,
+			functionName: "getCollateralAmount",
+			address: getChainLinkProposalContractAddress(proposal.chainId),
+			chainId: proposal.chainId,
+			args: [
+				proposal.creditAddress,
+				proposal.availableCreditLimit,
+				proposal.collateralAddress,
+				proposal.feedIntermediaryDenominations,
+				proposal.feedInvertFlags,
+				proposal.loanToValue,
+			],
+		} as const;
+	}
+
 	async getCollateralAmount(proposal: ChainLinkProposal): Promise<bigint> {
-		const data =
-			await readPwnSimpleLoanElasticChainlinkProposalGetCollateralAmount(
-				this.config,
-				{
-					address: getChainLinkProposalContractAddress(proposal.chainId),
-					chainId: proposal.chainId,
-					args: [
-						proposal.creditAddress,
-						proposal.availableCreditLimit,
-						proposal.collateralAddress,
-						proposal.feedIntermediaryDenominations,
-						proposal.feedInvertFlags,
-						proposal.loanToValue,
-					],
-				},
-			);
-		return data;
+		const data = this.getReadCollateralAmount(proposal);
+		return await readContract(this.config, data);
 	}
 }

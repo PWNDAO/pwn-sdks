@@ -10,7 +10,6 @@ describe("Test accept proposal", () => {
 		const acceptor = faker.finance.ethereumAddress() as AddressString;
 		const creditAmount = BigInt(1e18);
 
-		const acceptMock = vi.fn();
 		const acceptProposalsMock = vi.fn();
 		const reqParams = {
 			proposalToAccept: proposal,
@@ -20,15 +19,21 @@ describe("Test accept proposal", () => {
 
 		await acceptProposal([reqParams], {
 			proposalContract: {
-				acceptProposal: acceptMock,
 				acceptProposals: acceptProposalsMock,
 			},
 		});
 
-		expect(acceptMock).toHaveBeenCalledWith(
-			reqParams.proposalToAccept,
-			acceptor,
-			creditAmount,
+		expect(acceptProposalsMock).toHaveBeenCalledWith(
+			[
+				{
+					proposal: proposal,
+					acceptor,
+					creditAmount,
+					proposalContract: {
+						acceptProposals: acceptProposalsMock,
+					},
+				},
+			],
 		);
 	});
 
@@ -37,7 +42,6 @@ describe("Test accept proposal", () => {
 		const acceptor = faker.finance.ethereumAddress() as AddressString;
 		const creditAmount = -1n;
 
-		const acceptMock = vi.fn();
 		const acceptProposalsMock = vi.fn();
 
 		const reqParams = {
@@ -51,7 +55,6 @@ describe("Test accept proposal", () => {
 		await expect(
 			acceptProposal([reqParams], {
 				proposalContract: {
-					acceptProposal: acceptMock,
 					acceptProposals: acceptProposalsMock,
 				},
 			}),

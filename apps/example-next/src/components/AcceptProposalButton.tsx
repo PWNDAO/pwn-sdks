@@ -12,9 +12,11 @@ import { useConfig } from "wagmi";
 
 export const fixProposalLtv = (proposal: ProposalWithSignature) => {
 	if (proposal.type === ProposalType.ChainLink) {
-		Object.assign(proposal, {
-			loanToValue: BigInt(proposal.loanToValue) / 100n,
-		});
+		if (proposal.loanToValue.toString().length === 6) {
+			Object.assign(proposal, {
+				loanToValue: BigInt(proposal.loanToValue) / 100n,
+			});
+		}
 	}
 	return proposal;
 };

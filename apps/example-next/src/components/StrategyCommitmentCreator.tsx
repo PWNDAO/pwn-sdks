@@ -61,8 +61,6 @@ export default function StrategyCommitmentCreator({
 				ProposalType.ChainLink | ProposalType.Elastic
 			>[] = [];
 
-			console.log("strategy.type", strategy.type);
-
 			if (strategy.type === ProposalType.Elastic) {
 				proposalsToCreate = createElasticProposals(
 					strategy,
@@ -71,7 +69,6 @@ export default function StrategyCommitmentCreator({
 					config,
 				) as ProposalParamWithDeps<ProposalType.Elastic>[];
 			} else if (strategy.type === ProposalType.ChainLink) {
-				debugger;
 				proposalsToCreate = createChainLinkProposals(
 					strategy,
 					address,

@@ -48,6 +48,7 @@ export const AcceptProposals = ({
 	}
 
 	const handleAcceptProposals = () => {
+		console.log("accepting proposals", proposals);
 		acceptProposal({
 			proposalsToAccept: proposals.map((proposal) => ({
 				proposalToAccept: fixProposalLtv(proposal),

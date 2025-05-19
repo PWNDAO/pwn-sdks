@@ -6,7 +6,6 @@ import {
 	type AddressString,
 	ERC20Token,
 	PoolToken,
-	type SupportedProtocol,
 } from "@pwndao/sdk-core";
 import invariant from "ts-invariant";
 import { MIN_CREDIT_CALCULATION_DENOMINATOR } from "../../factories/constants.js";

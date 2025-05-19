@@ -1,4 +1,5 @@
 import { SimpleMerkleTree } from "@openzeppelin/merkle-tree";
+import type { AddressString } from "@pwndao/sdk-core";
 import {
 	type Config,
 	getAccount,
@@ -7,19 +8,26 @@ import {
 	signTypedData,
 	watchContractEvent,
 } from "@wagmi/core";
-import type { GetAccountReturnType } from "@wagmi/core";
+import type { GetAccountReturnType, ReadContractsParameters } from "@wagmi/core";
 import type {
 	IProposalContract,
 	IServerAPI,
 	Proposal,
 	ProposalWithHash,
+	ProposalsToAccept,
 } from "src/index.js";
-import type { ProposalWithSignature } from "src/models/strategies/types.js";
-import type { Address, Chain, Hex, Log, PublicClient } from "viem";
+import type { Loan } from "../models/loan/index.js";
+import type { ProposalWithSignature } from "../models/strategies/types.js";
+import type {
+	Address,
+	Chain,
+	Hex,
+	Log,
+	PublicClient,
+} from "viem";
 import { SafeService } from "../safe/safe-service.js";
 import type { SafeConfig } from "../safe/types.js";
-import type { Loan } from "src/models/loan/index.js";
-import type { AddressString } from "@pwndao/sdk-core";
+import { getApprovals } from "../utils/approvals-helper.js";
 
 const SAFE_ABI = [
 	{
@@ -49,7 +57,7 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 	protected readonly safeService: SafeService;
 
 	constructor(
-		protected readonly config: Config,
+		readonly config: Config,
 		safeConfig?: Partial<SafeConfig>,
 	) {
 		const publicClient = getPublicClient(config) as PublicClient;
@@ -68,11 +76,13 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 		proposals: ProposalWithHash[],
 	): Promise<ProposalWithSignature[]>;
 
-	abstract acceptProposal(
-		proposal: ProposalWithSignature,
-		acceptor: AddressString,
-		creditAmount: bigint,
-	): Promise<Loan>
+	abstract acceptProposals(
+		proposals: {
+			proposal: ProposalWithSignature;
+			acceptor: AddressString;
+			creditAmount: bigint;
+		}[],
+	): Promise<Loan[]>;
 
 	protected async signWithSafeWalletSupport(
 		domain: {
@@ -172,4 +182,13 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 			message: { multiproposalMerkleRoot },
 		} as const;
 	}
+
+
+	async getApprovalCalls(
+		proposals: ProposalsToAccept[],
+	): Promise<{ to: AddressString; data: Hex }[]> {
+		return getApprovals(proposals);
+	}
+
+	abstract getReadCollateralAmount(proposal: TProposal): ReadContractsParameters['contracts'][number];
 }

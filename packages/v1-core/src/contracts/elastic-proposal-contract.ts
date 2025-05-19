@@ -3,7 +3,7 @@ import {
 	getElasticProposalContractAddress,
 	getLoanContractAddress,
 } from "@pwndao/sdk-core";
-import { getAccount, sendCalls } from "@wagmi/core";
+import { getAccount, readContract, sendCalls } from "@wagmi/core";
 import { encodeFunctionData, type Hex } from "viem";
 import type { Address } from "viem";
 import {
@@ -12,12 +12,12 @@ import {
 	type ProposalWithHash,
 	type ProposalWithSignature,
 	pwnSimpleLoanAbi,
+	pwnSimpleLoanElasticProposalAbi,
 	readPwnSimpleLoanElasticProposalEncodeProposalData,
 	readPwnSimpleLoanElasticProposalGetProposalHash,
 	writePwnSimpleLoanCreateLoan,
 	writePwnSimpleLoanElasticProposalMakeProposal,
 } from "../index.js";
-import { readPwnSimpleLoanElasticProposalGetCollateralAmount } from "../index.js";
 import { Loan } from "../models/loan/index.js";
 import { ElasticProposal } from "../models/proposals/elastic-proposal.js";
 import type { V1_3SimpleLoanElasticProposalStruct } from "../structs.js";
@@ -139,16 +139,19 @@ export class ElasticProposalContract
 		}) as ProposalWithSignature;
 	}
 
+	getReadCollateralAmount(proposal: ElasticProposal) {
+		return {
+			abi: pwnSimpleLoanElasticProposalAbi,
+			functionName: 'getCollateralAmount',
+			address: getElasticProposalContractAddress(proposal.chainId),
+			chainId: proposal.chainId,
+			args: [proposal.availableCreditLimit, proposal.creditPerCollateralUnit],
+		} as const;
+	}
+
 	async getCollateralAmount(proposal: ElasticProposal): Promise<bigint> {
-		const data = await readPwnSimpleLoanElasticProposalGetCollateralAmount(
-			this.config,
-			{
-				address: getElasticProposalContractAddress(proposal.chainId),
-				chainId: proposal.chainId,
-				args: [proposal.availableCreditLimit, proposal.creditPerCollateralUnit],
-			},
-		);
-		return data;
+		const data = this.getReadCollateralAmount(proposal);
+		return readContract(this.config, data);
 	}
 
 	async encodeProposalData(
