@@ -1,6 +1,6 @@
 {
 	"name": "@pwndao/v1-core",
-	"version": "0.0.2-3",
+	"version": "0.0.2-4",
 	"type": "module",
 	"main": "./dist/index.js",
 	"module": "./dist/index.js",
@@ -17,8 +17,8 @@
 	"dependencies": {
 		"@moleculexyz/wagmi-safe-wait-for-tx": "^1.0.0",
 		"@openzeppelin/merkle-tree": "^1.0.8",
-		"@pwndao/api-sdk": "0.0.2-3",
-		"@pwndao/sdk-core": "0.0.2-3",
+		"@pwndao/api-sdk": "0.0.2-4",
+		"@pwndao/sdk-core": "0.0.2-4",
 		"abitype": "^1.0.8",
 		"decimal.js": "^10.5.0",
 		"ts-invariant": "^0.10.3"
