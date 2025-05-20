@@ -1,10 +1,10 @@
 import type { AddressString } from "@pwndao/sdk-core";
-import {
-	type ReadContractsParameters,
-	readContracts,
-} from "@wagmi/core";
+import { type ReadContractsParameters, readContracts } from "@wagmi/core";
 import { type Hex, encodeFunctionData, erc20Abi } from "viem";
 import type { ProposalsToAccept } from "../actions/types.js";
+import type { BaseProposalContract } from "../contracts/base-proposal-contract.js";
+import type { ChainLinkProposal } from "../models/proposals/chainlink-proposal.js";
+import type { ElasticProposal } from "../models/proposals/elastic-proposal.js";
 
 export const getAmountsOfCreditAssets = async (
 	proposals: ProposalsToAccept[],
@@ -19,13 +19,13 @@ export const getAmountsOfCreditAssets = async (
 	> = {};
 
 	for (const proposalToAccept of proposals) {
-		const { proposal, creditAmount } = proposalToAccept;
+		const { proposalToAccept: proposal, creditAmount, acceptor } = proposalToAccept;
 		const uniqueKey = `${proposal.creditAddress}-${proposal.chainId}` as const;
 		if (!amountGroupedByCreditAsset[uniqueKey]) {
 			amountGroupedByCreditAsset[uniqueKey] = {
 				amount: BigInt(0),
 				proposals: [],
-				acceptor: proposal.proposer,
+				acceptor: acceptor,
 			};
 		}
 		amountGroupedByCreditAsset[uniqueKey].amount += creditAmount;
@@ -37,6 +37,7 @@ export const getAmountsOfCreditAssets = async (
 
 export const getAmountsOfCollateralAssets = async (
 	proposals: ProposalsToAccept[],
+	contract: BaseProposalContract<ElasticProposal | ChainLinkProposal>,
 ) => {
 	const groupedByCollateral: Record<
 		`${string}-${string}`,
@@ -51,20 +52,16 @@ export const getAmountsOfCollateralAssets = async (
 		return groupedByCollateral;
 	}
 
-	const config = proposals[0].proposalContract.config;
-
-	const amounts = await readContracts(config, {
+	const amounts = await readContracts(contract.config, {
 		contracts: proposals.map((proposal) => {
-			return proposal.proposalContract.getReadCollateralAmount(
-				proposal.proposal,
-			);
+			return contract.getReadCollateralAmount(proposal.proposalToAccept);
 		}),
 	});
 
 	for (const [index, result] of amounts.entries()) {
 		const relatedProposal = proposals[index];
 		const key =
-			`${relatedProposal.proposal.collateralAddress}-${relatedProposal.proposal.chainId}` as const;
+			`${relatedProposal.proposalToAccept.collateralAddress}-${relatedProposal.proposalToAccept.chainId}` as const;
 
 		if (!groupedByCollateral[key]) {
 			groupedByCollateral[key] = {
@@ -80,12 +77,15 @@ export const getAmountsOfCollateralAssets = async (
 	return groupedByCollateral;
 };
 
-export const getApprovals = async (proposalsToAccept: ProposalsToAccept[]) => {
+export const getApprovals = async (
+	proposalsToAccept: ProposalsToAccept[],
+	contract: BaseProposalContract<ElasticProposal | ChainLinkProposal>,
+) => {
 	const borrowingProposals: ProposalsToAccept[] = [];
 	const lendingProposals: ProposalsToAccept[] = [];
 
 	for (const proposalToAccept of proposalsToAccept) {
-		if (proposalToAccept.proposal.isOffer) {
+		if (proposalToAccept.proposalToAccept.isOffer) {
 			lendingProposals.push(proposalToAccept);
 		} else {
 			borrowingProposals.push(proposalToAccept);
@@ -93,7 +93,10 @@ export const getApprovals = async (proposalsToAccept: ProposalsToAccept[]) => {
 	}
 
 	const borrowingAmounts = await getAmountsOfCreditAssets(borrowingProposals);
-	const lendingAmounts = await getAmountsOfCollateralAssets(lendingProposals);
+	const lendingAmounts = await getAmountsOfCollateralAssets(
+		lendingProposals,
+		contract,
+	);
 
 	const items = [
 		...Object.entries(borrowingAmounts),
@@ -116,7 +119,7 @@ export const getApprovals = async (proposalsToAccept: ProposalsToAccept[]) => {
 			abi: erc20Abi,
 			address: assetAddress as AddressString,
 			functionName: "allowance",
-			args: [acceptor, proposals[0].proposal.loanContract],
+			args: [acceptor, proposals[0].proposalToAccept.loanContract],
 		} as const);
 
 		existingApprovalsAndBalancesCall.push({
@@ -127,7 +130,7 @@ export const getApprovals = async (proposalsToAccept: ProposalsToAccept[]) => {
 		} as const);
 	}
 
-	const config = proposalsToAccept[0].proposalContract.config;
+	const config = contract.config;
 
 	const existingApprovalsAndBalances = await readContracts(config, {
 		contracts: existingApprovalsAndBalancesCall,
@@ -148,7 +151,7 @@ export const getApprovals = async (proposalsToAccept: ProposalsToAccept[]) => {
 				data: encodeFunctionData({
 					abi: erc20Abi,
 					functionName: "approve",
-					args: [proposals[0].proposal.loanContract, amount],
+					args: [proposals[0].proposalToAccept.loanContract, amount],
 				}),
 			});
 		}

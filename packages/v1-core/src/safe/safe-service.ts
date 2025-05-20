@@ -1,7 +1,6 @@
 import { safeWaitForTransactionReceipt } from "@moleculexyz/wagmi-safe-wait-for-tx";
 import {
 	type Config,
-	ReadContractsParameters,
 	getAccount,
 	getBytecode,
 	readContract,

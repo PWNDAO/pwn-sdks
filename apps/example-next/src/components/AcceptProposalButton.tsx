@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import type { AddressString } from "@pwndao/sdk-core";
-import { useAcceptProposal } from "@pwndao/sdk-v1-react";
+import type {  ERC20TokenLike, AddressString } from "@pwndao/sdk-core";
+import { useAcceptProposals } from "@pwndao/sdk-v1-react";
 import {
 	ChainLinkProposalContract,
 	ElasticProposalContract,
@@ -25,10 +25,12 @@ export const AcceptProposalButton = ({
 	proposal,
 	acceptor,
 	proposalType,
+	creditAsset,
 }: {
 	proposal: ProposalWithSignature;
 	acceptor: AddressString;
 	proposalType: ProposalType;
+	creditAsset: ERC20TokenLike
 }) => {
 	const config = useConfig();
 
@@ -46,7 +48,7 @@ export const AcceptProposalButton = ({
 		mutate: acceptProposal,
 		isPending,
 		error,
-	} = useAcceptProposal({
+	} = useAcceptProposals({
 		proposalContract,
 	});
 
@@ -59,6 +61,7 @@ export const AcceptProposalButton = ({
 					proposalToAccept: fixProposalLtv(proposal),
 					creditAmount,
 					acceptor,
+					creditAsset,
 				},
 			],
 		});

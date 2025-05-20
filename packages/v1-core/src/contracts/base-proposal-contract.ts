@@ -1,33 +1,45 @@
 import { SimpleMerkleTree } from "@openzeppelin/merkle-tree";
-import type { AddressString } from "@pwndao/sdk-core";
+import {
+	type AddressString,
+	type Hex,
+	getLoanContractAddress,
+} from "@pwndao/sdk-core";
 import {
 	type Config,
 	getAccount,
 	getPublicClient,
 	readContract,
+	sendCalls,
+	sendTransaction,
 	signTypedData,
+	switchChain,
 	watchContractEvent,
 } from "@wagmi/core";
-import type { GetAccountReturnType, ReadContractsParameters } from "@wagmi/core";
 import type {
-	IProposalContract,
-	IServerAPI,
-	Proposal,
-	ProposalWithHash,
-	ProposalsToAccept,
-} from "src/index.js";
-import type { Loan } from "../models/loan/index.js";
-import type { ProposalWithSignature } from "../models/strategies/types.js";
-import type {
-	Address,
-	Chain,
-	Hex,
-	Log,
-	PublicClient,
+	GetAccountReturnType,
+	ReadContractsParameters,
+} from "@wagmi/core";
+import type { AcceptProposalRequest } from "src/actions/accept-proposals.js";
+import {
+	type Address,
+	type Chain,
+	type Log,
+	type PublicClient,
+	encodeFunctionData,
 } from "viem";
+import {
+	type IProposalContract,
+	type IServerAPI,
+	type Proposal,
+	type ProposalWithHash,
+	type ProposalsToAccept,
+	pwnSimpleLoanAbi,
+} from "../index.js";
+import type { ProposalWithSignature } from "../models/strategies/types.js";
 import { SafeService } from "../safe/safe-service.js";
 import type { SafeConfig } from "../safe/types.js";
 import { getApprovals } from "../utils/approvals-helper.js";
+import { getInclusionProof, mayUserSendCalls } from "./utilts.js";
 
 const SAFE_ABI = [
 	{
@@ -64,25 +76,47 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 		this.safeService = new SafeService(publicClient, config, safeConfig);
 	}
 
+	abstract encodeProposalData(
+		proposal: ProposalWithSignature,
+		creditAmount: bigint,
+	): Promise<Hex>;
+
 	abstract getProposalHash(proposal: TProposal): Promise<Hex>;
+
 	abstract createProposal(
 		params: TProposal,
 		deps: { persistProposal: IServerAPI["post"]["persistProposal"] },
 	): Promise<ProposalWithSignature>;
+
 	abstract createOnChainProposal(
 		params: TProposal,
 	): Promise<ProposalWithSignature>;
-	abstract createMultiProposal(
-		proposals: ProposalWithHash[],
-	): Promise<ProposalWithSignature[]>;
 
-	abstract acceptProposals(
-		proposals: {
-			proposal: ProposalWithSignature;
-			acceptor: AddressString;
-			creditAmount: bigint;
-		}[],
-	): Promise<Loan[]>;
+	async createMultiProposal(
+		proposals: ProposalWithHash[],
+	): Promise<ProposalWithSignature[]> {
+		const structToSign = this.getMerkleTreeForSigning(proposals);
+
+		const signature = await this.signWithSafeWalletSupport(
+			structToSign.domain,
+			structToSign.types,
+			structToSign.primaryType,
+			structToSign.message,
+		);
+
+		const merkleRoot = structToSign.message.multiproposalMerkleRoot;
+
+		return proposals.map(
+			(proposal) =>
+				({
+					...proposal,
+					signature,
+					hash: proposal.hash,
+					isOnChain: false,
+					multiproposalMerkleRoot: merkleRoot,
+				}) as ProposalWithSignature,
+		);
+	}
 
 	protected async signWithSafeWalletSupport(
 		domain: {
@@ -118,7 +152,6 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 			});
 		}
 
-		// Handle Safe signature
 		return await this.safeService.signTypedData(
 			account.address as Address,
 			domain,
@@ -184,12 +217,106 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 		} as const;
 	}
 
-
 	async getApprovalCalls(
 		proposals: ProposalsToAccept[],
 	): Promise<{ to: AddressString; data: Hex }[]> {
-		return getApprovals(proposals);
+		return getApprovals(proposals, this);
 	}
 
-	abstract getReadCollateralAmount(proposal: TProposal): ReadContractsParameters['contracts'][number];
+	abstract getReadCollateralAmount(
+		proposal: TProposal,
+	): ReadContractsParameters["contracts"][number];
+
+	async acceptProposals(
+		proposals: [AcceptProposalRequest, ...AcceptProposalRequest[]],
+	) {
+		const calls = await Promise.all(
+			proposals.map(
+				async ({
+					proposalToAccept: proposal,
+					creditAmount,
+					acceptor
+				}) => {
+
+					// if proposal is lending offer sourceOfFunds is already set. If not then it's lender address
+					const sourceOfFunds =
+						proposal.sourceOfFunds ||
+						(proposal.isOffer && !proposal.sourceOfFunds
+							? proposal.proposer
+							: acceptor);
+
+					Object.assign(proposal, {
+						sourceOfFunds,
+					});
+
+					const encodedProposalData = await this.encodeProposalData(
+						proposal,
+						creditAmount,
+					);
+
+					const proposalInclusionProof = await getInclusionProof(proposal);
+
+					const proposalSpec = {
+						proposalContract: proposal.proposalContract,
+						proposalData: encodedProposalData,
+						proposalInclusionProof,
+						signature: proposal.signature as Hex,
+					};
+
+					const lenderSpec = {
+						sourceOfFunds,
+					};
+
+					const callerSpec = {
+						refinancingLoanId: 0n,
+						revokeNonce: false,
+						nonce: 0n,
+					};
+
+					const extra = "0x";
+
+					return {
+						to: getLoanContractAddress(proposal.chainId),
+						data: encodeFunctionData({
+							abi: pwnSimpleLoanAbi,
+							functionName: "createLOAN",
+							args: [proposalSpec, lenderSpec, callerSpec, extra],
+						}),
+					};
+				},
+			),
+		);
+
+		const approvals = await this.getApprovalCalls(proposals);
+
+		const chainId = proposals[0].proposalToAccept.chainId;
+
+		const callsWithApprovals = approvals.concat(calls);
+
+		// currently only signle chain-context is supported
+		await switchChain(this.config, {
+			chainId,
+		});
+
+		if (await mayUserSendCalls(this.config, chainId)) {
+			const hash = await sendCalls(this.config, {
+				calls: callsWithApprovals,
+			});
+
+			const account = getAccount(this.config);
+			const isSafe = account?.address
+				? await this.safeService.isSafeAddress(account.address as Address)
+				: false;
+
+			if (isSafe) {
+				await this.safeService.waitForTransaction(hash as unknown as Hex);
+			}
+
+			return 
+		}
+
+		for (const call of callsWithApprovals) {
+			await sendTransaction(this.config, call);
+		}
+	}
 }

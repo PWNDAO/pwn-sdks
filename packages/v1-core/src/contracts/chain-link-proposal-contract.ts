@@ -1,35 +1,20 @@
-import {
-	type AddressString,
-	getChainLinkProposalContractAddress,
-	getLoanContractAddress,
-} from "@pwndao/sdk-core";
-import {
-	getAccount,
-	readContract,
-	sendCalls,
-	sendTransaction,
-	switchChain,
-} from "@wagmi/core";
-import { type Hex, encodeFunctionData } from "viem";
+import { getChainLinkProposalContractAddress } from "@pwndao/sdk-core";
+import { getAccount, readContract } from "@wagmi/core";
+import type { Hex } from "viem";
 import type { Address } from "viem";
 import type { IServerAPI } from "../factories/types.js";
 import {
 	ChainLinkProposal,
 	type IProposalContract,
-	type ProposalWithHash,
 	type ProposalWithSignature,
-	type ProposalsToAccept,
-	pwnSimpleLoanAbi,
 	pwnSimpleLoanElasticChainlinkProposalAbi,
 	readPwnSimpleLoanElasticChainlinkProposalEncodeProposalData,
 	readPwnSimpleLoanElasticChainlinkProposalGetProposalHash,
 	writePwnSimpleLoanElasticChainlinkProposalMakeProposal,
 } from "../index.js";
-import { Loan } from "../models/loan/index.js";
 import type { V1_3SimpleLoanElasticChainlinkProposalStruct } from "../structs.js";
 import { getProposalAddressByType } from "../utils/contract-addresses.js";
 import { BaseProposalContract } from "./base-proposal-contract.js";
-import { getInclusionProof, mayUserSendCalls } from "./utilts.js";
 
 export interface IProposalChainLinkContract
 	extends IProposalContract<ChainLinkProposal> {
@@ -59,123 +44,6 @@ export class ChainLinkProposalContract
 				},
 			);
 		return data;
-	}
-
-	async acceptProposals(
-		proposals: [ProposalsToAccept, ...ProposalsToAccept[]],
-	) {
-		const calls = await Promise.all(
-			proposals.map(async ({ proposal, creditAmount, acceptor }) => {
-				// if proposal is lending offer sourceOfFunds is already set. If not then it's lender address
-				const sourceOfFunds =
-					proposal.sourceOfFunds || (proposal.isOffer && !proposal.sourceOfFunds
-						? proposal.proposer
-						: acceptor);
-
-				Object.assign(proposal, {
-					sourceOfFunds,
-				});
-
-				const encodedProposalData = await this.encodeProposalData(
-					proposal,
-					creditAmount,
-				);
-
-				const proposalInclusionProof = await getInclusionProof(proposal);
-
-				const proposalSpec = {
-					proposalContract: proposal.proposalContract,
-					proposalData: encodedProposalData,
-					proposalInclusionProof,
-					signature: proposal.signature as Hex,
-				};
-
-				const lenderSpec = {
-					sourceOfFunds,
-				};
-
-				const callerSpec = {
-					refinancingLoanId: 0n,
-					revokeNonce: false,
-					nonce: 0n,
-				};
-
-				const extra = "0x";
-
-				return {
-					to: getLoanContractAddress(proposal.chainId),
-					data: encodeFunctionData({
-						abi: pwnSimpleLoanAbi,
-						functionName: "createLOAN",
-						args: [proposalSpec, lenderSpec, callerSpec, extra],
-					}),
-				};
-			}),
-		);
-
-		const approvals = await this.getApprovalCalls(proposals);
-
-		const chainId = proposals[0].proposal.chainId;
-
-		const callsWithApprovals = approvals.concat(calls);
-
-		// currently only signle chain-context is supported
-		await switchChain(this.config, {
-			chainId,
-		});
-
-		if (await mayUserSendCalls(this.config, chainId)) {
-			const hash = await sendCalls(this.config, {
-				calls: callsWithApprovals,
-			});
-
-			const account = getAccount(this.config);
-			const isSafe = account?.address
-				? await this.safeService.isSafeAddress(account.address as Address)
-				: false;
-
-			if (isSafe) {
-				await this.safeService.waitForTransaction(hash as unknown as Hex);
-			}
-
-			return proposals.map(
-				(_, index) => new Loan(BigInt(index), proposals[0].proposal.chainId),
-			);
-		}
-
-		for (const call of callsWithApprovals) {
-			await sendTransaction(this.config, call);
-		}
-
-		return proposals.map(
-			(_, index) => new Loan(BigInt(index), proposals[0].proposal.chainId),
-		);
-	}
-
-	async createMultiProposal(
-		proposals: ProposalWithHash[],
-	): Promise<ProposalWithSignature[]> {
-		const structToSign = this.getMerkleTreeForSigning(proposals);
-
-		const signature = await this.signWithSafeWalletSupport(
-			structToSign.domain,
-			structToSign.types,
-			structToSign.primaryType,
-			structToSign.message,
-		);
-
-		const merkleRoot = structToSign.message.multiproposalMerkleRoot;
-
-		return proposals.map(
-			(proposal) =>
-				({
-					...proposal,
-					signature,
-					hash: proposal.hash,
-					isOnChain: false,
-					multiproposalMerkleRoot: merkleRoot,
-				}) as ProposalWithSignature,
-		);
 	}
 
 	async getProposalHash(proposal: ChainLinkProposal): Promise<Hex> {

@@ -1,5 +1,8 @@
-import type { AddressString } from "@pwndao/sdk-core";
-import { useAcceptProposal } from "@pwndao/sdk-v1-react";
+import type {
+	ERC20TokenLike,
+	AddressString,
+} from "@pwndao/sdk-core";
+import { useAcceptProposals } from "@pwndao/sdk-v1-react";
 import {
 	ChainLinkProposalContract,
 	ElasticProposalContract,
@@ -11,7 +14,7 @@ import { useConfig } from "wagmi";
 import { fixProposalLtv } from "./AcceptProposalButton";
 
 type AcceptProposalsProps = {
-	proposals: ProposalWithSignature[];
+	proposals: (ProposalWithSignature & { creditAsset: ERC20TokenLike })[];
 	proposer?: AddressString;
 };
 
@@ -33,13 +36,13 @@ export const AcceptProposals = ({
 			return new ChainLinkProposalContract(config);
 		}
 		throw new Error("Invalid proposal type");
-	}, [config, proposals[0]?.type]);
+	}, [config, proposals[0]?.type, proposals.length]);
 
 	const {
 		mutate: acceptProposal,
 		isPending,
 		error,
-	} = useAcceptProposal({
+	} = useAcceptProposals({
 		proposalContract,
 	});
 
@@ -48,12 +51,12 @@ export const AcceptProposals = ({
 	}
 
 	const handleAcceptProposals = () => {
-		console.log("accepting proposals", proposals);
 		acceptProposal({
 			proposalsToAccept: proposals.map((proposal) => ({
 				proposalToAccept: fixProposalLtv(proposal),
 				acceptor: proposer,
 				creditAmount: BigInt(proposal.availableCreditLimit),
+				creditAsset: proposal.creditAsset,
 			})),
 		});
 	};

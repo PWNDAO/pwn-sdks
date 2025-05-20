@@ -1,8 +1,12 @@
 "use client";
+
 import { useStrategyProposals } from "@pwndao/sdk-v1-react";
 import type { ProposalWithSignature } from "@pwndao/v1-core";
+import type { ERC20TokenLike } from "@pwndao/sdk-core";
+
 import { useState } from "react";
 import { useAccount } from "wagmi";
+
 import { ProposalCard } from "./ProposalCard";
 import { RevokeProposals } from "./RevokeProposals";
 import { AcceptProposals } from "./AcceptProposals";
@@ -16,23 +20,26 @@ export default function ProposalsList({
 	const { address } = useAccount();
 
 	const [selectedProposals, setSelectedProposals] = useState<
-		ProposalWithSignature[]
+		(ProposalWithSignature & { creditAsset: ERC20TokenLike })[]
 	>([]);
 
-	const handleSelectProposal = (proposal: ProposalWithSignature) => {
+	const handleSelectProposal = (
+		proposal: ProposalWithSignature,
+		creditAsset: ERC20TokenLike
+	) => {
 		setSelectedProposals((prev) => {
 			if (prev.some((p) => p.hash === proposal.hash)) {
 				return prev.filter((p) => p.hash !== proposal.hash);
 			}
-			return [...prev, proposal];
+			Object.assign(proposal, { creditAsset });
+
+			return [...prev, proposal as ProposalWithSignature & { creditAsset: ERC20TokenLike }];
 		});
 	};
 
 	const isSelected = (proposal: ProposalWithSignature) => {
 		return selectedProposals.some((p) => p.hash === proposal.hash);
 	};
-
-	console.log(selectedProposals);
 
 	return (
 		<div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">

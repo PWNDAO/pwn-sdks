@@ -1,4 +1,4 @@
-import { acceptProposal } from "@pwndao/v1-core";
+import { acceptProposals } from "@pwndao/v1-core";
 import type {
 	AcceptProposalDeps,
 	AcceptProposalRequest,
@@ -7,7 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import invariant from "ts-invariant";
 import { useAccount } from "wagmi";
 
-export function useAcceptProposal(contract: AcceptProposalDeps) {
+export function useAcceptProposals(contract: AcceptProposalDeps) {
 	const { address } = useAccount();
 
 	const acceptProposalsMutation = useMutation({
@@ -19,7 +19,7 @@ export function useAcceptProposal(contract: AcceptProposalDeps) {
 			invariant(proposalsToAccept.length > 0, "Proposals must be provided");
 			invariant(address, "No wallet connected");
 
-			return acceptProposal(proposalsToAccept, contract);
+			return acceptProposals(proposalsToAccept, contract);
 		},
 	});
 

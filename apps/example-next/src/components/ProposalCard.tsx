@@ -1,4 +1,4 @@
-import type { AddressString } from "@pwndao/sdk-core";
+import { ERC20Token, type AddressString, type ERC20TokenLike } from "@pwndao/sdk-core";
 import type { ProposalWithSignature } from "@pwndao/v1-core";
 import { useMemo } from "react";
 import { erc20Abi, formatUnits } from "viem";
@@ -9,7 +9,7 @@ type ProposalCardProps = {
 	proposal: ProposalWithSignature;
 	address?: AddressString;
 	isSelected: boolean;
-	onSelect: (proposal: ProposalWithSignature) => void;
+	onSelect: (proposal: ProposalWithSignature, creditAsset: ERC20TokenLike) => void;
 };
 
 export const ProposalCard = ({
@@ -111,8 +111,6 @@ export const ProposalCard = ({
 		return `${formatted} ${creditMetadata?.symbol}`;
 	}, [proposal.availableCreditLimit, creditMetadata]);
 
-	console.log(creditMetadata);
-
 	const formattedAllowance = useMemo(() => {
 		if (proposal.isOffer) {
 			const allowance = creditMetadata?.allowance ?? 0n;
@@ -135,13 +133,21 @@ export const ProposalCard = ({
 		return `Allowed to collateralize up to ${formattedAllowance}`;
 	}, [proposal.isOffer, formattedAllowance]);
 
+	const creditAsset = useMemo(() => {
+		return new ERC20Token(
+			proposal.chainId,
+			proposal.creditAddress,
+			creditMetadata.decimals
+		)
+	}, [proposal.chainId, proposal.creditAddress, creditMetadata.decimals])
+
 	return (
 		<div
 			className={`p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow duration-200 bg-gray-50 ${isSelected ? "border-teal-500" : ""}`}
-			onClick={() => onSelect(proposal)}
+			onClick={() => onSelect(proposal, creditAsset)}
 			onKeyDown={(e) => {
 				if (e.key === "Enter") {
-					onSelect(proposal);
+					onSelect(proposal, creditAsset);
 				}
 			}}
 			aria-label="Select proposal"
@@ -168,6 +174,7 @@ export const ProposalCard = ({
 						proposal={proposal}
 						acceptor={address}
 						proposalType={proposal.type}
+						creditAsset={creditAsset}
 					/>
 				)}
 				<p className="mt-2 text-sm text-gray-600 bg-gray-100 inline-block px-2 py-1 rounded">

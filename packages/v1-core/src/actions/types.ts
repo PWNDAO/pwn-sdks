@@ -1,8 +1,8 @@
 import { ProposalType } from "../models/proposals/proposal-base.js";
 import { createElasticProposal } from "../factories/create-elastic-proposal.js";
 import { createChainLinkElasticProposal } from "../factories/create-chain-link-proposal.js";
-import type { IProposalContract, ProposalWithSignature } from "src/index.js";
-import type { AddressString } from "@pwndao/sdk-core";
+import type { ProposalWithSignature } from "src/index.js";
+import type { AddressString, ERC20TokenLike } from "@pwndao/sdk-core";
 
 export const proposalTypes = {
 	[ProposalType.Elastic]: createElasticProposal,
@@ -24,8 +24,8 @@ export type ProposalParamWithDeps<T extends ImplementedProposalTypes> = {
 };
 
 export type ProposalsToAccept = {
-	proposal: ProposalWithSignature;
-	proposalContract: IProposalContract<ProposalWithSignature>;
+	proposalToAccept: ProposalWithSignature;
 	acceptor: AddressString;
 	creditAmount: bigint;
+	creditAsset: ERC20TokenLike;
 }
