@@ -8,7 +8,7 @@ import {
 	type ProposalWithSignature,
 } from "@pwndao/v1-core";
 import { useMemo } from "react";
-import { useConfig } from "wagmi";
+import { useConfig, useAccount } from "wagmi";
 
 export const fixProposalLtv = (proposal: ProposalWithSignature) => {
 	if (proposal.type === ProposalType.ChainLink) {
@@ -33,6 +33,7 @@ export const AcceptProposalButton = ({
 	creditAsset: ERC20TokenLike
 }) => {
 	const config = useConfig();
+	const { address } = useAccount();
 
 	const proposalContract = useMemo(() => {
 		if (proposalType === ProposalType.Elastic) {
@@ -55,7 +56,8 @@ export const AcceptProposalButton = ({
 	const handleAcceptProposal = () => {
 		const creditAmount = BigInt(proposal.availableCreditLimit);
 
-		acceptProposal({
+		acceptProposal(
+			{
 			proposalsToAccept: [
 				{
 					proposalToAccept: fixProposalLtv(proposal),
@@ -64,7 +66,9 @@ export const AcceptProposalButton = ({
 					creditAsset,
 				},
 			],
-		});
+			userAddress: address,
+		},
+		);
 	};
 
 	return (

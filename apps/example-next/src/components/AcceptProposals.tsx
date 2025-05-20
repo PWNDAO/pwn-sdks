@@ -10,7 +10,7 @@ import {
 	type ProposalWithSignature,
 } from "@pwndao/v1-core";
 import { useMemo } from "react";
-import { useConfig } from "wagmi";
+import { useConfig, useAccount } from "wagmi";
 import { fixProposalLtv } from "./AcceptProposalButton";
 
 type AcceptProposalsProps = {
@@ -23,6 +23,7 @@ export const AcceptProposals = ({
 	proposer,
 }: AcceptProposalsProps) => {
 	const config = useConfig();
+	const { address } = useAccount();
 
 	const proposalContract = useMemo(() => {
 		if (proposals.length === 0) {
@@ -58,6 +59,7 @@ export const AcceptProposals = ({
 				creditAmount: BigInt(proposal.availableCreditLimit),
 				creditAsset: proposal.creditAsset,
 			})),
+			userAddress: address,
 		});
 	};
 
