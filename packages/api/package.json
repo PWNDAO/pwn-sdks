@@ -1,6 +1,6 @@
 {
   "name": "@pwndao/api-sdk",
-  "version": "0.0.2-4",
+  "version": "0.0.2-rc.1",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
