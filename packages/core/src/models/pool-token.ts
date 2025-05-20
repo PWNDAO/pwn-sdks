@@ -17,13 +17,14 @@ export class PoolToken extends ERC20Token {
 		p_address: AddressString,
 		public underlyingAddress: AddressString,
 		decimals: number,
-		public protocol: SupportedProtocol,
+		public protocol?: SupportedProtocol,
 		name?: string,
 		symbol?: string,
+		icon?: string,
 	) {
-		super(chainId, p_address, decimals, name, symbol);
+		super(chainId, p_address, decimals, name, symbol, icon);
 
-		this._underlyingToken = new ERC20Token(chainId, underlyingAddress, decimals, name, symbol);
+		this._underlyingToken = new ERC20Token(chainId, underlyingAddress, decimals, name, symbol, icon);
 	}
 
 	

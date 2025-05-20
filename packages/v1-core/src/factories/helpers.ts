@@ -1,5 +1,6 @@
 import type {
 	AddressString,
+	ERC20TokenLike,
 	Hex,
 	SupportedChain,
 	Token,
@@ -21,6 +22,7 @@ import type {
 import type { ProposalWithHash, ProposalWithSignature } from "../models/strategies/types.js";
 import type { Proposal } from "../models/strategies/types.js";
 import type { ILenderSpec } from "../models/terms.js";
+import type { Config, ReadContractsParameters } from "@wagmi/core";
 
 type CommonProposalFieldsParams = {
 	user: UserWithNonceManager;
@@ -42,13 +44,31 @@ export interface ILoanContract {
 }
 
 export interface IProposalContract<TProposal extends Proposal> {
+	config: Config;
+
 	createProposal(
 		params: TProposal,
 		deps: { persistProposal: IServerAPI["post"]["persistProposal"] },
 	): Promise<ProposalWithSignature>;
+
 	createOnChainProposal(params: TProposal): Promise<ProposalWithSignature>;
+
 	getProposalHash(proposal: TProposal): Promise<Hex>;
+
 	createMultiProposal(proposals: ProposalWithHash[]): Promise<ProposalWithSignature[]>;
+
+	acceptProposals(
+		proposals: {
+			proposalToAccept: ProposalWithSignature,
+			acceptor: AddressString,
+			creditAmount: bigint,
+			creditAsset: ERC20TokenLike,
+		}[],
+	): Promise<void>
+
+	getReadCollateralAmount(proposal: TProposal): ReadContractsParameters['contracts'][number];
+
+	encodeProposalData(proposal: ProposalWithSignature, creditAmount: bigint): Promise<Hex>;
 }
 
 export type ProposalContract =

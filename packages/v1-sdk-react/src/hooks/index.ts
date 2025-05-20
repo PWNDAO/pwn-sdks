@@ -4,6 +4,7 @@ export * from "./use-strategy";
 export * from "./use-strategies";
 export * from "./use-strategy-proposals";
 export * from "./use-make-proposals";
+export * from "./use-accept-proposals";
 export * from "./use-revoke-nonces";
 export * from "./use-asset-price";
 export * from "./use-elastic-chainlink-collateral-amount";
