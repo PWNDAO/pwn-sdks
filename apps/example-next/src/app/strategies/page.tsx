@@ -29,6 +29,9 @@ export default function StrategiesPage() {
 							<CardDescription className="text-sm text-gray-500">
 								ID: {strategy.id}
 							</CardDescription>
+							<CardDescription className="text-sm text-gray-500">
+								Strategy Type: {strategy.type}
+							</CardDescription>
 						</CardHeader>
 						<CardContent isLoading={isLoading}>
 							<p className="mb-4">{strategy.description}</p>
@@ -40,7 +43,7 @@ export default function StrategiesPage() {
 											strategy.lendingStats.totalCommittedAmount,
 											18,
 										) || "0"}{" "}
-										USD
+										{strategy.terms.creditAssets[0].symbol}
 									</span>
 								</div>
 								<div className="flex justify-between">

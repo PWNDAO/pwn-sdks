@@ -1,17 +1,19 @@
 import { getChainLinkProposalContractAddress } from "@pwndao/sdk-core";
-import { getAccount } from "@wagmi/core";
+import { getAccount, readContract } from "@wagmi/core";
 import type { Hex } from "viem";
 import type { Address } from "viem";
 import type { IServerAPI } from "../factories/types.js";
 import {
 	ChainLinkProposal,
 	type IProposalContract,
-	type ProposalWithHash,
 	type ProposalWithSignature,
-	readPwnSimpleLoanElasticChainlinkProposalGetCollateralAmount,
+	pwnSimpleLoanElasticChainlinkProposalAbi,
+	readPwnSimpleLoanElasticChainlinkProposalEncodeProposalData,
 	readPwnSimpleLoanElasticChainlinkProposalGetProposalHash,
 	writePwnSimpleLoanElasticChainlinkProposalMakeProposal,
 } from "../index.js";
+import type { V1_3SimpleLoanElasticChainlinkProposalStruct } from "../structs.js";
+import { getProposalAddressByType } from "../utils/contract-addresses.js";
 import { BaseProposalContract } from "./base-proposal-contract.js";
 
 export interface IProposalChainLinkContract
@@ -23,30 +25,25 @@ export class ChainLinkProposalContract
 	extends BaseProposalContract<ChainLinkProposal>
 	implements IProposalChainLinkContract
 {
-	async createMultiProposal(
-		proposals: ProposalWithHash[],
-	): Promise<ProposalWithSignature[]> {
-		const structToSign = this.getMerkleTreeForSigning(proposals);
-
-		const signature = await this.signWithSafeWalletSupport(
-			structToSign.domain,
-			structToSign.types,
-			structToSign.primaryType,
-			structToSign.message,
-		);
-
-		const merkleRoot = structToSign.message.multiproposalMerkleRoot;
-
-		return proposals.map(
-			(proposal) =>
-				({
-					...proposal,
-					signature,
-					hash: proposal.hash,
-					isOnChain: false,
-					multiproposalMerkleRoot: merkleRoot,
-				}) as ProposalWithSignature,
-		);
+	async encodeProposalData(
+		proposal: ProposalWithSignature,
+		creditAmount: bigint,
+	) {
+		const data =
+			await readPwnSimpleLoanElasticChainlinkProposalEncodeProposalData(
+				this.config,
+				{
+					address: getProposalAddressByType(proposal.type, proposal.chainId),
+					chainId: proposal.chainId,
+					args: [
+						proposal.createProposalStruct() as V1_3SimpleLoanElasticChainlinkProposalStruct,
+						{
+							creditAmount,
+						},
+					],
+				},
+			);
+		return data;
 	}
 
 	async getProposalHash(proposal: ChainLinkProposal): Promise<Hex> {
@@ -127,23 +124,25 @@ export class ChainLinkProposalContract
 		}) as ProposalWithSignature;
 	}
 
+	getReadCollateralAmount(proposal: ChainLinkProposal) {
+		return {
+			abi: pwnSimpleLoanElasticChainlinkProposalAbi,
+			functionName: "getCollateralAmount",
+			address: getChainLinkProposalContractAddress(proposal.chainId),
+			chainId: proposal.chainId,
+			args: [
+				proposal.creditAddress,
+				proposal.availableCreditLimit,
+				proposal.collateralAddress,
+				proposal.feedIntermediaryDenominations,
+				proposal.feedInvertFlags,
+				proposal.loanToValue,
+			],
+		} as const;
+	}
+
 	async getCollateralAmount(proposal: ChainLinkProposal): Promise<bigint> {
-		const data =
-			await readPwnSimpleLoanElasticChainlinkProposalGetCollateralAmount(
-				this.config,
-				{
-					address: getChainLinkProposalContractAddress(proposal.chainId),
-					chainId: proposal.chainId,
-					args: [
-						proposal.creditAddress,
-						proposal.availableCreditLimit,
-						proposal.collateralAddress,
-						proposal.feedIntermediaryDenominations,
-						proposal.feedInvertFlags,
-						proposal.loanToValue,
-					],
-				},
-			);
-		return data;
+		const data = this.getReadCollateralAmount(proposal);
+		return await readContract(this.config, data);
 	}
 }

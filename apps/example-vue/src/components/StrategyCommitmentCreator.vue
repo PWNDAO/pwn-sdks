@@ -11,8 +11,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useMakeProposals, useUserWithNonce } from '@pwndao/sdk-v1-vue';
 import {
-  type ImplementedProposalTypes,
-  type ProposalParamWithDeps,
   type Strategy,
   createElasticProposals,
 } from '@pwndao/v1-core';

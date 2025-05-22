@@ -6,7 +6,17 @@ import { createElasticProposal } from "../factories/create-elastic-proposal.js";
 import { ProposalType } from "../models/proposals/proposal-base.js";
 import { createUniswapV3LpSetProposal } from "../factories/create-uniswap-v3-lp-set-proposal.js";
 import { createUniswapV3LpIndividualProposal } from "../factories/create-uniswap-v3-lp-individual-proposal.js";
-const proposalTypes = {
+
+type ProposalTypeMap = {
+    [ProposalType.Elastic]: typeof createElasticProposal;
+    [ProposalType.ChainLink]: typeof createChainLinkElasticProposal;
+    [ProposalType.DutchAuction]: () => void;
+    [ProposalType.Simple]: () => void;
+	[ProposalType.UniswapV3LpSet]: typeof createUniswapV3LpSetProposal;
+	[ProposalType.UniswapV3Individual]: typeof createUniswapV3LpIndividualProposal;
+};
+
+const proposalTypes: ProposalTypeMap = {
 	[ProposalType.Elastic]: createElasticProposal,
 	[ProposalType.ChainLink]: createChainLinkElasticProposal,
 	[ProposalType.DutchAuction]: () => {
@@ -19,11 +29,11 @@ const proposalTypes = {
 	[ProposalType.UniswapV3Individual]: createUniswapV3LpIndividualProposal,
 };
 
-export const makeProposal = async <T extends ProposalType>(
+export const makeProposal = async <T extends keyof ProposalTypeMap>(
 	user: UserWithNonceManager | undefined,
 	proposalType: T,
-	proposalParams: Parameters<(typeof proposalTypes)[T]>[0],
-	deps: Parameters<(typeof proposalTypes)[T]>[1],
+	proposalParams: Parameters<ProposalTypeMap[T]>[0],
+	deps: Parameters<ProposalTypeMap[T]>[1],
 ) => {
 	invariant(
 		proposalTypes[proposalType],

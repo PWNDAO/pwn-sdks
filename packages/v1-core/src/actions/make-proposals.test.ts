@@ -1,10 +1,7 @@
 import {
 	type AddressString,
 	SupportedChain,
-	type UserWithNonceManager,
-	ZERO_ADDRESS,
 	ZERO_FINGERPRINT,
-	getLoanContractAddress,
 	getUniqueCreditCollateralKey,
 } from "@pwndao/sdk-core";
 import {
@@ -101,6 +98,7 @@ describe("Test make proposals", () => {
 					utilizedCreditId: generateAddress(),
 					minCreditAmountPercentage: 3,
 					relatedStrategyId: "1",
+					sourceOfFunds: null,
 					isOffer: true,
 				},
 				deps: {
@@ -141,6 +139,7 @@ describe("Test make proposals", () => {
 					utilizedCreditId: generateAddress(),
 					minCreditAmountPercentage: 3,
 					relatedStrategyId: "1",
+					sourceOfFunds: null,
 					isOffer: true,
 				},
 				deps: {

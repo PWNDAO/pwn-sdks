@@ -1,5 +1,6 @@
 import type {
 	AddressString,
+	ERC20TokenLike,
 	Hex,
 	SupportedChain,
 	Token,
@@ -11,6 +12,8 @@ import {
 	getUniqueCreditCollateralKey,
 	isPoolToken,
 } from "@pwndao/sdk-core";
+import type { WaitForCallsStatusReturnType } from "@wagmi/core";
+import type { SendTransactionReturnType } from "viem";
 import type { IProposalChainLinkContract } from "../contracts/chain-link-proposal-contract.js";
 import type { IProposalElasticContract } from "../contracts/elastic-proposal-contract.js";
 import type { IServerAPI } from "../factories/types.js";
@@ -23,6 +26,8 @@ import type { Proposal } from "../models/strategies/types.js";
 import type { ILenderSpec } from "../models/terms.js";
 import type { IProposalUniswapV3LpSetContract } from "src/contracts/uniswap-v3-lp-set-proposal-contract.js";
 import type { IProposalUniswapV3LpIndividualContract } from "src/contracts/uniswap-v3-lp-individual-proposal-contract.js";
+import type { Config, ReadContractsParameters } from "@wagmi/core";
+
 type CommonProposalFieldsParams = {
 	user: UserWithNonceManager;
 	nonce: bigint;
@@ -43,13 +48,31 @@ export interface ILoanContract {
 }
 
 export interface IProposalContract<TProposal extends Proposal> {
+	config: Config;
+
 	createProposal(
 		params: TProposal,
 		deps: { persistProposal: IServerAPI["post"]["persistProposal"] },
 	): Promise<ProposalWithSignature>;
+
 	createOnChainProposal(params: TProposal): Promise<ProposalWithSignature>;
+
 	getProposalHash(proposal: TProposal): Promise<Hex>;
+
 	createMultiProposal(proposals: ProposalWithHash[]): Promise<ProposalWithSignature[]>;
+
+	acceptProposals(
+		proposals: {
+			proposalToAccept: ProposalWithSignature,
+			acceptor: AddressString,
+			creditAmount: bigint,
+			creditAsset: ERC20TokenLike,
+		}[],
+	): Promise<WaitForCallsStatusReturnType | { status?: "success", receipts: SendTransactionReturnType[] }>
+
+	getReadCollateralAmount(proposal: TProposal): ReadContractsParameters['contracts'][number];
+
+	encodeProposalData(proposal: ProposalWithSignature, creditAmount: bigint): Promise<Hex>;
 }
 
 export type ProposalContract =
