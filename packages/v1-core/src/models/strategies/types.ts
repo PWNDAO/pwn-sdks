@@ -9,12 +9,15 @@ import type {
 import type { CreateElasticProposalParams } from "../../factories/create-elastic-proposal.js";
 import type { ChainLinkProposal } from "../proposals/chainlink-proposal.js";
 import type { ElasticProposal } from "../proposals/elastic-proposal.js";
+import type { UniswapV3LpSetProposal } from "../proposals/uniswap-v3-lp-set-proposal.js";
 import type {
 	IElasticProposalBase,
 	IOracleProposalBase,
+	IUniswapV3IndividualProposalBase,
+	IUniswapV3LpSetProposalBase,
 } from "../proposals/proposal-base.js";
 import type { ProposalType } from "../proposals/proposal-base.js";
-
+import type { UniswapV3IndividualProposal } from "../proposals/uniswap-v3-lp-individual-proposal.js"
 export interface StrategyTerm {
 	creditAssets: ERC20TokenLike[];
 	collateralAssets: Token[];
@@ -22,6 +25,10 @@ export interface StrategyTerm {
 	ltv: Record<string, number>;
 	durationDays: number;
 	expirationDays: number;
+
+	// V1.4
+	acceptorController?: string;
+	acceptorControllerData?: string;
 	/**
 	 * The minimum credit amount percentage for a proposal to be created
 	 * With 1e4 precision
@@ -32,7 +39,7 @@ export interface StrategyTerm {
 }
 
 export interface IProposalStrategy<
-	T extends IElasticProposalBase | IOracleProposalBase,
+	T extends IElasticProposalBase | IOracleProposalBase | IUniswapV3LpSetProposalBase | IUniswapV3IndividualProposalBase,
 > {
 	term: StrategyTerm;
 	getProposalsParams(
@@ -78,7 +85,7 @@ export type Strategy = {
 	};
 };
 
-export type Proposal = ElasticProposal | ChainLinkProposal;
+export type Proposal = ElasticProposal | ChainLinkProposal | UniswapV3LpSetProposal | UniswapV3IndividualProposal;
 
 export type ProposalWithHash = Proposal & {
 	hash: Hex;

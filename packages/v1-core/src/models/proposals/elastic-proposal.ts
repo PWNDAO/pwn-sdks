@@ -56,7 +56,9 @@ export class ElasticProposal implements IElasticProposalBase {
 			accruingInterestAPR: Number(this.accruingInterestAPR),
 			durationOrDate: Number(this.durationOrDate),
 			expiration: this.expiration,
-			allowedAcceptor: this.allowedAcceptor,
+			// allowedAcceptor: this.allowedAcceptor, // TODO: some type error, check later if correct
+			acceptorController: EMPTY_32_BYTES, // TODO: add this once V1.4 is implemented
+			acceptorControllerData: EMPTY_32_BYTES, // TODO: add this once V1.4 is implemented
 			proposer: this.proposer,
 			proposerSpecHash: this.isOffer ? this.proposerSpecHash : EMPTY_32_BYTES,
 			isOffer: this.isOffer ?? false,

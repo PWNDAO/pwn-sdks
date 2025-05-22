@@ -39,3 +39,5 @@ export type V1_3_SUPPORTED_CHAINS = Exclude<
 	SupportedChain,
 	V1_2_SUPPORTED_CHAINS
 >;
+
+export type V1_4_SUPPORTED_CHAINS = SupportedChain.Sepolia;
