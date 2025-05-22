@@ -12,6 +12,8 @@ import {
 	getUniqueCreditCollateralKey,
 	isPoolToken,
 } from "@pwndao/sdk-core";
+import type { WaitForCallsStatusReturnType } from "@wagmi/core";
+import type { SendTransactionReturnType } from "viem";
 import type { IProposalChainLinkContract } from "../contracts/chain-link-proposal-contract.js";
 import type { IProposalElasticContract } from "../contracts/elastic-proposal-contract.js";
 import type { IServerAPI } from "../factories/types.js";
@@ -64,7 +66,7 @@ export interface IProposalContract<TProposal extends Proposal> {
 			creditAmount: bigint,
 			creditAsset: ERC20TokenLike,
 		}[],
-	): Promise<void>
+	): Promise<WaitForCallsStatusReturnType | { status?: "success", receipts: SendTransactionReturnType[] }>
 
 	getReadCollateralAmount(proposal: TProposal): ReadContractsParameters['contracts'][number];
 

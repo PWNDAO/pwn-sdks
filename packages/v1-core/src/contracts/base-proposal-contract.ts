@@ -14,10 +14,12 @@ import {
 	signTypedData,
 	switchChain,
 	watchContractEvent,
+	waitForCallsStatus,
 } from "@wagmi/core";
 import type {
 	GetAccountReturnType,
 	ReadContractsParameters,
+	WaitForCallsStatusReturnType,
 } from "@wagmi/core";
 import type { AcceptProposalRequest } from "src/actions/accept-proposals.js";
 import {
@@ -27,6 +29,7 @@ import {
 	type PublicClient,
 	encodeFunctionData,
 } from "viem";
+import type { SendTransactionReturnType } from "viem";
 import {
 	type IProposalContract,
 	type IServerAPI,
@@ -229,7 +232,7 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 
 	async acceptProposals(
 		proposals: [AcceptProposalRequest, ...AcceptProposalRequest[]],
-	) {
+	): Promise<WaitForCallsStatusReturnType | { status?: "success", receipts: SendTransactionReturnType[] }> {
 		const calls = await Promise.all(
 			proposals.map(
 				async ({
@@ -303,20 +306,19 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 				calls: callsWithApprovals,
 			});
 
-			const account = getAccount(this.config);
-			const isSafe = account?.address
-				? await this.safeService.isSafeAddress(account.address as Address)
-				: false;
-
-			if (isSafe) {
-				await this.safeService.waitForTransaction(hash as unknown as Hex);
-			}
-
-			return 
+			return await waitForCallsStatus(this.config, hash)
 		}
 
+		const receipts: SendTransactionReturnType[] = []
+
 		for (const call of callsWithApprovals) {
-			await sendTransaction(this.config, call);
+			const receipt = await sendTransaction(this.config, call);
+			receipts.push(receipt)
+		}
+
+		return {
+			status: "success",
+			receipts,
 		}
 	}
 }
