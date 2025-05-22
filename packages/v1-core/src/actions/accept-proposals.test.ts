@@ -1,5 +1,11 @@
 import { faker } from "@faker-js/faker";
-import { type AddressString, getMockToken, SupportedChain } from "@pwndao/sdk-core";
+import {
+	type AddressString,
+	SupportedChain,
+	generateAddress,
+	getMockToken,
+	getUniqueKey,
+} from "@pwndao/sdk-core";
 import { describe, it, vi } from "vitest";
 import type { ProposalWithSignature } from "../models/strategies/types.js";
 import { acceptProposals } from "./accept-proposals.js";
@@ -28,14 +34,17 @@ describe("Test accept proposals", () => {
 			},
 		});
 
-		expect(acceptProposalsMock).toHaveBeenCalledWith([
-			{
-				proposalToAccept: proposal,
-				acceptor,
-				creditAmount,
-				creditAsset: mockToken,
-			},
-		]);
+		expect(acceptProposalsMock).toHaveBeenCalledWith(
+			[
+				{
+					proposalToAccept: proposal,
+					acceptor,
+					creditAmount,
+					creditAsset: mockToken,
+				},
+			],
+			{},
+		);
 	});
 
 	it("Credit amount must be greater than zero", async () => {
@@ -87,24 +96,109 @@ describe("Test accept proposals", () => {
 		const mockError = "All proposals must be on the same chain";
 
 		await expect(
-			acceptProposals([
+			acceptProposals(
+				[
+					{
+						...reqParams,
+						proposalToAccept: {
+							...proposal,
+							chainId: SupportedChain.Ethereum,
+						} as ProposalWithSignature,
+					},
+					{
+						...reqParams,
+						proposalToAccept: {
+							...proposal,
+							chainId: SupportedChain.Base,
+						} as ProposalWithSignature,
+					},
+				],
 				{
-					...reqParams,
-					proposalToAccept: {
-						...proposal,
-						chainId: SupportedChain.Ethereum,
-					} as ProposalWithSignature,
+					proposalContract,
 				},
-				{
-					...reqParams,
-					proposalToAccept: {
-						...proposal,
-						chainId: SupportedChain.Base,
-					} as ProposalWithSignature,
-				},
-			], {
-				proposalContract,
-			}),
+			),
 		).rejects.toThrow(mockError);
+	});
+
+	it("Extra approval calls are added when needed", async () => {
+		const proposal = vi.fn() as unknown as ProposalWithSignature;
+		const acceptor = faker.finance.ethereumAddress() as AddressString;
+		const creditAmount = BigInt(1e18);
+		const mockToken = getMockToken();
+
+		const acceptProposalsMock = vi.fn();
+		const encodeProposalDataMock = vi.fn();
+
+		const reqParams = {
+			proposalToAccept: proposal,
+			acceptor,
+			creditAmount,
+			creditAsset: mockToken,
+		};
+
+		const additionalToApprove = {
+			[`${mockToken.address}-${SupportedChain.Ethereum}`]: {
+				amount: BigInt(1e18),
+				asset: mockToken,
+				spender: generateAddress(),
+			},
+		};
+
+		await acceptProposals(
+			[reqParams],
+			{
+				proposalContract: {
+					acceptProposals: acceptProposalsMock,
+					encodeProposalData: encodeProposalDataMock,
+				},
+			},
+			additionalToApprove,
+		);
+
+		expect(acceptProposalsMock).toHaveBeenCalledWith(
+			[
+				{
+					proposalToAccept: proposal,
+					acceptor,
+					creditAmount,
+					creditAsset: mockToken,
+				},
+			],
+			additionalToApprove,
+		);
+	});
+
+	it("Should issue approval with no proposals and totalToApprove provided", async () => {
+		const mockToken = getMockToken();
+
+		const acceptProposalsMock = vi.fn();
+		const encodeProposalDataMock = vi.fn();
+
+		const spender = generateAddress();
+
+		await acceptProposals(
+			[],
+			{
+				proposalContract: {
+					acceptProposals: acceptProposalsMock,
+					encodeProposalData: encodeProposalDataMock,
+				},
+			},
+			{
+				[getUniqueKey(mockToken)]: {
+					amount: BigInt(1e18),
+					asset: mockToken,
+					spender,
+				},
+			},
+		);
+
+		expect(acceptProposalsMock).toHaveBeenCalledWith([], {
+			[getUniqueKey(mockToken)]: {
+				amount: BigInt(1e18),
+				asset: mockToken,
+				spender,
+			},
+		});
 	});
 });

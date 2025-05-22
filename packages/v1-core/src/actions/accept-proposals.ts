@@ -1,4 +1,8 @@
-import type { AddressString, ERC20TokenLike } from "@pwndao/sdk-core";
+import type {
+	AddressString,
+	ERC20TokenLike,
+	UniqueKey,
+} from "@pwndao/sdk-core";
 import invariant from "ts-invariant";
 
 import type { IProposalContract } from "../factories/helpers.js";
@@ -31,17 +35,31 @@ export interface AcceptProposalDeps {
  * @param deps - Dependencies containing the proposal contract with acceptProposals method
  *
  * @throws {Error} If:
- *   - No proposals are provided
  *   - Any proposal has credit amount <= 0
  *   - Proposals are from different chains
+ *   - Proposals are not provided and totalToApprove is empty
  *
- * @returns Promise that resolves when all proposals are accepted
+ * @returns If atomic batching is enabled, the function will return a list of calls with approvals.
+ * Otherwise, it will return a promise with all calls to execute.
  */
 export const acceptProposals = async (
 	proposals: AcceptProposalRequest[],
 	deps: AcceptProposalDeps,
+	totalToApprove: Partial<{
+		[key in UniqueKey]: {
+			amount: bigint;
+			asset: ERC20TokenLike;
+			/**
+			 * In case of pool token, the spender is the pool hook address and must be provided
+			 */
+			spender?: AddressString;
+		};
+	}> = {},
 ) => {
-	invariant(proposals.length > 0, "Proposals must be provided");
+	invariant(
+		proposals.length > 0 || Object.keys(totalToApprove).length > 0,
+		"Proposals must be provided",
+	);
 
 	const chainIds = new Set();
 	for (const proposal of proposals) {
@@ -52,7 +70,11 @@ export const acceptProposals = async (
 		chainIds.add(proposal.proposalToAccept.chainId);
 	}
 
-	invariant(chainIds.size === 1, "All proposals must be on the same chain");
+	// chainId size 0 if no proposals are provided and only total to approve
+	invariant(
+		chainIds.size === 0 || chainIds.size === 1,
+		"All proposals must be on the same chain",
+	);
 
-	await deps.proposalContract.acceptProposals(proposals);
+	return await deps.proposalContract.acceptProposals(proposals, totalToApprove);
 };

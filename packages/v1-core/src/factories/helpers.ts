@@ -2,10 +2,13 @@ import type {
 	AddressString,
 	ERC20TokenLike,
 	Hex,
-	SupportedChain,
 	Token,
+	UniqueKey,
 	UserWithNonceManager,
 } from "@pwndao/sdk-core";
+
+import type { SupportedChain } from "@pwndao/sdk-core";
+
 import {
 	ZERO_ADDRESS,
 	ZERO_FINGERPRINT,
@@ -13,7 +16,7 @@ import {
 	isPoolToken,
 } from "@pwndao/sdk-core";
 import type { WaitForCallsStatusReturnType } from "@wagmi/core";
-import type { SendTransactionReturnType } from "viem";
+import type { Config, ReadContractsParameters } from "@wagmi/core";
 import type { IProposalChainLinkContract } from "../contracts/chain-link-proposal-contract.js";
 import type { IProposalElasticContract } from "../contracts/elastic-proposal-contract.js";
 import type { IServerAPI } from "../factories/types.js";
@@ -21,10 +24,12 @@ import type {
 	ICommonProposalFields,
 	IProposalMisc,
 } from "../models/proposals/proposal-base.js";
-import type { ProposalWithHash, ProposalWithSignature } from "../models/strategies/types.js";
+import type {
+	ProposalWithHash,
+	ProposalWithSignature,
+} from "../models/strategies/types.js";
 import type { Proposal } from "../models/strategies/types.js";
 import type { ILenderSpec } from "../models/terms.js";
-import type { Config, ReadContractsParameters } from "@wagmi/core";
 
 type CommonProposalFieldsParams = {
 	user: UserWithNonceManager;
@@ -57,20 +62,37 @@ export interface IProposalContract<TProposal extends Proposal> {
 
 	getProposalHash(proposal: TProposal): Promise<Hex>;
 
-	createMultiProposal(proposals: ProposalWithHash[]): Promise<ProposalWithSignature[]>;
+	createMultiProposal(
+		proposals: ProposalWithHash[],
+	): Promise<ProposalWithSignature[]>;
 
 	acceptProposals(
 		proposals: {
-			proposalToAccept: ProposalWithSignature,
-			acceptor: AddressString,
-			creditAmount: bigint,
-			creditAsset: ERC20TokenLike,
+			proposalToAccept: ProposalWithSignature;
+			acceptor: AddressString;
+			creditAmount: bigint;
+			creditAsset: ERC20TokenLike;
 		}[],
-	): Promise<WaitForCallsStatusReturnType | { status?: "success", receipts: SendTransactionReturnType[] }>
+		totalToApprove: {
+			[key in UniqueKey]: {
+				amount: bigint;
+				asset: ERC20TokenLike;
+				spender?: AddressString;
+			};
+		},
+	): Promise<
+		| WaitForCallsStatusReturnType
+		| { callsWithApprovals: { to: AddressString; data: Hex }[] }
+	>;
 
-	getReadCollateralAmount(proposal: TProposal): ReadContractsParameters['contracts'][number];
+	getReadCollateralAmount(
+		proposal: TProposal,
+	): ReadContractsParameters["contracts"][number];
 
-	encodeProposalData(proposal: ProposalWithSignature, creditAmount: bigint): Promise<Hex>;
+	encodeProposalData(
+		proposal: ProposalWithSignature,
+		creditAmount: bigint,
+	): Promise<Hex>;
 }
 
 export type ProposalContract =
@@ -101,10 +123,13 @@ export const getLendingCommonProposalFields = async (
 		isOffer,
 	} = params;
 
-	const proposerSpecHash = isOffer ? await deps.loanContract.getLenderSpecHash(
-		{
-			sourceOfFunds: sourceOfFunds ?? user.address,
-		}, params.collateral.chainId)
+	const proposerSpecHash = isOffer
+		? await deps.loanContract.getLenderSpecHash(
+				{
+					sourceOfFunds: sourceOfFunds ?? user.address,
+				},
+				params.collateral.chainId,
+			)
 		: ZERO_FINGERPRINT;
 
 	const creditAddress = isPoolToken(credit)

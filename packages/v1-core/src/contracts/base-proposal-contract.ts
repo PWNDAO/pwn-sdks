@@ -1,7 +1,9 @@
 import { SimpleMerkleTree } from "@openzeppelin/merkle-tree";
 import {
 	type AddressString,
+	type ERC20TokenLike,
 	type Hex,
+	type UniqueKey,
 	getLoanContractAddress,
 } from "@pwndao/sdk-core";
 import {
@@ -10,7 +12,6 @@ import {
 	getPublicClient,
 	readContract,
 	sendCalls,
-	sendTransaction,
 	signTypedData,
 	switchChain,
 	watchContractEvent,
@@ -29,7 +30,6 @@ import {
 	type PublicClient,
 	encodeFunctionData,
 } from "viem";
-import type { SendTransactionReturnType } from "viem";
 import {
 	type IProposalContract,
 	type IServerAPI,
@@ -222,8 +222,15 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 
 	async getApprovalCalls(
 		proposals: ProposalsToAccept[],
+		totalToApprove: {
+			[key in UniqueKey]: {
+				amount: bigint;
+				asset: ERC20TokenLike;
+				spender?: AddressString;
+			};
+		},
 	): Promise<{ to: AddressString; data: Hex }[]> {
-		return getApprovals(proposals, this);
+		return getApprovals(proposals, this, totalToApprove);
 	}
 
 	abstract getReadCollateralAmount(
@@ -232,7 +239,14 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 
 	async acceptProposals(
 		proposals: [AcceptProposalRequest, ...AcceptProposalRequest[]],
-	): Promise<WaitForCallsStatusReturnType | { status?: "success", receipts: SendTransactionReturnType[] }> {
+		totalToApprove: {
+			[key in UniqueKey]: {
+				amount: bigint;
+				asset: ERC20TokenLike;
+				spender?: AddressString;
+			};
+		},
+	): Promise<WaitForCallsStatusReturnType | { callsWithApprovals: { to: AddressString; data: Hex }[] }> {
 		const calls = await Promise.all(
 			proposals.map(
 				async ({
@@ -290,7 +304,7 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 			),
 		);
 
-		const approvals = await this.getApprovalCalls(proposals);
+		const approvals = await this.getApprovalCalls(proposals, totalToApprove);
 
 		const chainId = proposals[0].proposalToAccept.chainId;
 
@@ -309,16 +323,8 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 			return await waitForCallsStatus(this.config, hash)
 		}
 
-		const receipts: SendTransactionReturnType[] = []
-
-		for (const call of callsWithApprovals) {
-			const receipt = await sendTransaction(this.config, call);
-			receipts.push(receipt)
-		}
-
 		return {
-			status: "success",
-			receipts,
+			callsWithApprovals,
 		}
 	}
 }

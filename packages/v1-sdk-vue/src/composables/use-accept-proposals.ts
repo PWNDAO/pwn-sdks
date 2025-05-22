@@ -1,4 +1,4 @@
-import type { AddressString } from "@pwndao/sdk-core";
+import type { AddressString, ERC20TokenLike, UniqueKey } from "@pwndao/sdk-core";
 import { acceptProposals } from "@pwndao/v1-core";
 import type {
 	AcceptProposalDeps,
@@ -6,7 +6,6 @@ import type {
 } from "@pwndao/v1-core";
 import { useMutation } from "@tanstack/vue-query";
 import { invariant } from "ts-invariant";
-import { toValue } from "vue";
 
 export function useAcceptProposals(
 	contract: AcceptProposalDeps,
@@ -15,14 +14,22 @@ export function useAcceptProposals(
 		mutationFn: async ({
 			proposalsToAccept,
 			userAddress,
+			totalToApprove = {},
 		}: {
 			proposalsToAccept: AcceptProposalRequest[];
 			userAddress?: AddressString;
+			totalToApprove?: Partial<{
+				[key in UniqueKey]: {
+					amount: bigint;
+					asset: ERC20TokenLike;
+					spender?: AddressString;
+				};
+			}>;
 		}) => {
 			invariant(proposalsToAccept.length > 0, "Proposals must be provided");
 			invariant(userAddress, "No wallet connected");
 
-			return acceptProposals(proposalsToAccept, contract);
+			return acceptProposals(proposalsToAccept, contract, totalToApprove);
 		},
 	});
 
