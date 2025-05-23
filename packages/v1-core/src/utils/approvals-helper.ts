@@ -13,6 +13,19 @@ import type { ProposalsToAccept } from "../actions/types.js";
 import type { BaseProposalContract } from "../contracts/base-proposal-contract.js";
 import type { Proposal } from "../models/strategies/types.js";
 
+type TotalToApproveMap = {
+	[key in UniqueKey]?: {
+		amount: bigint;
+		asset: ERC20TokenLike;
+		spender?: AddressString;
+	};
+};
+
+type ApprovalItem = [
+	string,
+	{ proposals: ProposalsToAccept[]; amount: bigint },
+];
+
 export type GroupedAssets = Record<
 	UniqueKey,
 	{
@@ -162,16 +175,99 @@ export const createApprovalTransaction = (
 	}),
 });
 
+function createPoolTokenApprovalTransactions(
+	asset: ERC20TokenLike,
+	spender: AddressString,
+	amount: bigint,
+	totalToApprove: TotalToApproveMap,
+): ApprovalTransaction[] {
+	const results: ApprovalTransaction[] = [];
+	results.push(createApprovalTransaction(asset.address, spender, amount));
+
+	if (!isPoolToken(asset)) {
+		throw new Error("Asset must be a PoolToken to access underlyingAddress");
+	}
+
+	const underlyingAssetKey = getUniqueKey({
+		address: asset.underlyingAddress,
+		chainId: asset.chainId,
+	});
+
+	const underlyingAssetNeedsToBeApproved =
+		totalToApprove[underlyingAssetKey as UniqueKey];
+
+	results.push(
+		createApprovalTransaction(
+			asset.underlyingAddress,
+			getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain),
+			amount + (underlyingAssetNeedsToBeApproved?.amount ?? 0n),
+		),
+	);
+
+	delete totalToApprove[underlyingAssetKey as UniqueKey];
+	return results;
+}
+
+function createStandardTokenApprovalTransaction(
+	assetAddress: string,
+	loanContract: AddressString,
+	amount: bigint,
+): ApprovalTransaction {
+	return createApprovalTransaction(assetAddress, loanContract, amount);
+}
+
+function handleApprovalForKey(
+	key: string,
+	proposals: ProposalsToAccept[],
+	amount: bigint,
+	allowance: bigint,
+	balance: bigint,
+	totalToApprove: TotalToApproveMap,
+	results: ApprovalTransaction[],
+) {
+	const approval = totalToApprove?.[key as UniqueKey];
+	const { amount: amountToApprove = amount, asset, spender } = approval || {};
+	const [assetAddress] = key.split("/");
+
+	if (asset && isPoolToken(asset) && spender) {
+		const tokenMatches = isAddressEqual(
+			asset?.address as `0x${string}`,
+			assetAddress as `0x${string}`,
+		);
+		if (tokenMatches) {
+			results.push(
+				...createPoolTokenApprovalTransactions(
+					asset,
+					spender,
+					amountToApprove,
+					totalToApprove,
+				),
+			);
+		} else {
+			results.push(
+				createStandardTokenApprovalTransaction(
+					assetAddress,
+					proposals[0].proposalToAccept.loanContract,
+					amountToApprove,
+				),
+			);
+		}
+	} else {
+		results.push(
+			createStandardTokenApprovalTransaction(
+				assetAddress,
+				proposals[0].proposalToAccept.loanContract,
+				amountToApprove,
+			),
+		);
+	}
+	delete totalToApprove[key as UniqueKey];
+}
+
 export const processCheckResults = (
-	items: [string, { proposals: ProposalsToAccept[]; amount: bigint }][],
+	items: ApprovalItem[],
 	existingApprovalsAndBalances: ContractCallResult[],
-	totalToApprove: {
-		[key in UniqueKey]?: {
-			amount: bigint;
-			asset: ERC20TokenLike;
-			spender?: AddressString;
-		};
-	},
+	totalToApprove: TotalToApproveMap,
 ): ApprovalTransaction[] => {
 	const results: ApprovalTransaction[] = [];
 	let index = 0;
@@ -179,136 +275,55 @@ export const processCheckResults = (
 	for (const [key, { proposals, amount }] of items) {
 		const allowance = existingApprovalsAndBalances[index].result as bigint;
 		const balance = existingApprovalsAndBalances[index + 1].result as bigint;
-
-		const [assetAddress] = key.split("/");
-
-		// Check if we need to add an approval transaction
 		if (allowance < amount && balance >= amount) {
-			const {
-				amount: amountToApprove,
-				asset,
-				spender,
-			} = totalToApprove?.[key as UniqueKey] ?? { amount: amount };
-
-			if (asset && isPoolToken(asset) && spender) {
-				const tokenMatches = isAddressEqual(
-					asset?.address as `0x${string}`,
-					assetAddress as `0x${string}`,
-				);
-				if (tokenMatches) {
-					results.push(
-						createApprovalTransaction(asset.address, spender, amountToApprove),
-					);
-
-					const underlyingAssetKey = getUniqueKey({
-						address: asset.underlyingAddress,
-						chainId: asset.chainId,
-					});
-
-					const underlyingAssetNeedsToBeApproved = totalToApprove[underlyingAssetKey]
-
-
-					if (underlyingAssetNeedsToBeApproved) {
-						results.push(
-							createApprovalTransaction(
-								asset.underlyingAddress,
-								getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain),
-								amountToApprove + underlyingAssetNeedsToBeApproved.amount,
-							),
-						);
-
-						// remove underlying asset from totalToApprove because it's already processed
-						delete totalToApprove[underlyingAssetKey];
-					} else {
-						results.push(
-							createApprovalTransaction(
-								asset.underlyingAddress,
-								getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain),
-								amountToApprove,
-							),
-						);
-					}
-
-				}
-			} else {
-				results.push(
-					createApprovalTransaction(
-						assetAddress,
-						proposals[0].proposalToAccept.loanContract,
-						amountToApprove,
-					),
-				);
-			}
-
-			// if we don't remove key here then on the next iteration we will use the same amount
-			delete totalToApprove[key as UniqueKey];
+			handleApprovalForKey(
+				key,
+				proposals,
+				amount,
+				allowance,
+				balance,
+				totalToApprove,
+				results,
+			);
 		}
-
-		// Check for insufficient balance
 		if (allowance >= amount && amount > balance) {
 			throw new Error(
 				`Not enough balance for ${key}. Total required: ${amount}, allowance: ${allowance}, balance: ${balance}`,
 			);
 		}
-
 		index += 2;
 	}
 
-	// if no keys left we already covered it above. If some left — it's extra approvals to issue
-	if (Object.keys(totalToApprove).length > 0) {
-		for (const [, approvalValues] of Object.entries(totalToApprove)) {
-			const { amount, asset, spender } = approvalValues || {};
-
-			if (!amount || !asset) {
-				continue;
-			}
-
-			// for pool token we need to approve token to spender (pool hook) and underlying token to loan contract
-			if (isPoolToken(asset)) {
-				if (!spender) {
-					throw new Error("Spender is required for pool token");
-				}
-
-				results.push(createApprovalTransaction(asset.address, spender, amount));
-
-				const underlyingAssetKey = getUniqueKey({
-					address: asset.underlyingAddress,
-					chainId: asset.chainId,
-				});
-
-				const underlyingAssetNeedsToBeApproved = totalToApprove[underlyingAssetKey]
-				
-				if (underlyingAssetNeedsToBeApproved) {
-					results.push(
-						createApprovalTransaction(
-							asset.underlyingAddress,
-							getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain),
-							amount + underlyingAssetNeedsToBeApproved.amount,
-						),
-					);
-
-					// remove underlying asset from totalToApprove because it's already processed
-					delete totalToApprove[underlyingAssetKey];
-				} else {
-					results.push(
-						createApprovalTransaction(
-							asset.underlyingAddress,
-							getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain),
-							amount,
-						),
-					);
-				}
-
-			} else {
-				results.push(
-					createApprovalTransaction(
-						asset.address,
-						getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain),
-						amount,
-					),
-				);
-			}
+	while (Object.keys(totalToApprove).length > 0) {
+		const [uniqueToApproveKey, approvalValues] =
+			Object.entries(totalToApprove)[0];
+		const { amount, asset, spender } = approvalValues || {};
+		if (!amount || !asset) {
+			delete totalToApprove[uniqueToApproveKey as UniqueKey];
+			continue;
 		}
+		if (isPoolToken(asset)) {
+			if (!spender) {
+				throw new Error("Spender is required for pool token");
+			}
+			results.push(
+				...createPoolTokenApprovalTransactions(
+					asset,
+					spender,
+					amount,
+					totalToApprove,
+				),
+			);
+		} else {
+			results.push(
+				createApprovalTransaction(
+					asset.address,
+					getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain),
+					amount,
+				),
+			);
+		}
+		delete totalToApprove[getUniqueKey(asset) as UniqueKey];
 	}
 
 	return results;
@@ -317,18 +332,11 @@ export const processCheckResults = (
 export const getApprovals = async (
 	proposalsToAccept: ProposalsToAccept[],
 	contract: BaseProposalContract<Proposal>,
-	totalToApprove: {
-		[key in UniqueKey]?: {
-			amount: bigint;
-			asset: ERC20TokenLike;
-			spender?: AddressString;
-		};
-	} = {},
+	totalToApprove: TotalToApproveMap = {},
 ): Promise<ApprovalTransaction[]> => {
 	const { borrowingProposals, lendingProposals } =
 		categorizeProposals(proposalsToAccept);
 
-	// Get grouped amounts for both types
 	const borrowingAmounts = await getAmountsOfCreditAssets(borrowingProposals);
 	const lendingAmounts = await getAmountsOfCollateralAssets(
 		lendingProposals,

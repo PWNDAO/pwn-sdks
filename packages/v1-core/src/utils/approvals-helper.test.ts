@@ -280,6 +280,36 @@ describe("Approvals Helper", () => {
 		expect(approvals).toHaveLength(2);
 	});
 
+	it("Should issue 2 approvals when is accepting borrowing proposal with no proposals", async () => {
+		const proposals = [createMockProposalRequest()];
+		const spender = generateAddress();
+		const poolTokenUnderlyingAddress = generateAddress();
+
+		const mockToken2 = getMockPoolToken(
+			mockAddress1,
+			SupportedProtocol.AAVE,
+			chainId,
+			poolTokenUnderlyingAddress,
+		);
+
+		const totalToApprove = {
+			[getUniqueKey({
+				address: poolTokenUnderlyingAddress,
+				chainId,
+			})]: {
+				amount: 5000n,
+				asset: mockToken2,
+				spender,
+			},
+		};
+
+		const contractWithType =
+			mockProposalContract as unknown as BaseProposalContract<Proposal>;
+		const approvals = await getApprovals([], contractWithType, totalToApprove);
+
+		expect(approvals).toHaveLength(2);
+	});
+
 	it("Should issue 2 + 2 approvals when is accepting borrowing proposal with pool token as credit asset and a separate credit", async () => {
 		const proposals = [createMockProposalRequest()];
 		const spender = generateAddress();
@@ -375,6 +405,60 @@ describe("Approvals Helper", () => {
 				} as ProposalWithSignature,
 			},
 		], contractWithType, totalToApprove);
+
+		expect(approvals).toHaveLength(2);
+
+
+		const tx1Decoded = decodeFunctionData({
+			abi: erc20Abi,
+			data: approvals[0].data,
+		});
+
+		const tx2Decoded = decodeFunctionData({
+			abi: erc20Abi,
+			data: approvals[1].data,
+		});
+
+		expect(tx1Decoded.args[1]).toBe(5000n);
+		expect(tx2Decoded.args[1]).toBe(10000n);
+	});
+
+	it("Should correctly summarize amount of pool and underlying tokens to approve with no proposals", async () => {
+		const spender = generateAddress();
+		const token3Address = generateAddress();
+
+		const mockToken3 = getMockToken(
+			SupportedChain.Ethereum,
+			token3Address,
+			18,
+		);
+
+		const mockToken2 = getMockPoolToken(
+			mockToken3.address,
+			SupportedProtocol.AAVE,
+			chainId,
+			mockAddress1,
+		);
+
+		const totalToApprove = {
+			[getUniqueKey({
+				address: mockToken2.address,
+				chainId,
+			})]: {
+				amount: 5000n,
+				asset: mockToken2,
+				spender,
+			},
+			[getUniqueKey(mockToken3)]: {
+				amount: 5000n,
+				asset: mockToken3,
+				spender,
+			},
+		};
+
+		const contractWithType =
+			mockProposalContract as unknown as BaseProposalContract<Proposal>;
+		const approvals = await getApprovals([], contractWithType, totalToApprove);
 
 		expect(approvals).toHaveLength(2);
 
