@@ -66,7 +66,7 @@ export class SafeService {
 				functionName: "getThreshold",
 			});
 
-			return readThreshold > 1;
+			return readThreshold >= 1;
 		} catch (error) {
 			console.error("Error checking Safe address:", error);
 			return false;
