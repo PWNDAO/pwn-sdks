@@ -210,10 +210,6 @@ describe("Approvals Helper", () => {
 		it("Should issue approval for proposal and additional approval for unrelated token", async () => {
 			const proposals = [createMockProposalRequest()];
 			const spender = generateAddress();
-			const uniqueKey = getUniqueKey({
-				address: mockAddress1,
-				chainId,
-			});
 			const mockToken2 = getMockPoolToken(
 				mockAddress1,
 				SupportedProtocol.AAVE,
@@ -244,59 +240,92 @@ describe("Approvals Helper", () => {
 		});
 	});
 
-	describe("acceptProposals", () => {
-		it("Should call acceptProposals on the contract", async () => {
-			const proposals = [createMockProposalRequest()];
+	it("Should issue 2 approvals when is accepting borrowing proposal with pool token as credit asset", async () => {
+		const proposals = [createMockProposalRequest()];
+		const spender = generateAddress();
+		const poolTokenUnderlyingAddress = generateAddress();
 
-			await acceptProposals(proposals, mockDeps);
+		const mockToken2 = getMockPoolToken(
+			mockAddress1,
+			SupportedProtocol.AAVE,
+			chainId,
+			poolTokenUnderlyingAddress,
+		);
 
-			expect(mockProposalContract.acceptProposals).toHaveBeenCalledWith(
-				proposals,
-				{},
-			);
-		});
+		const totalToApprove = {
+			[getUniqueKey({
+				address: poolTokenUnderlyingAddress,
+				chainId,
+			})]: {
+				amount: 5000n,
+				asset: mockToken2,
+				spender,
+			},
+		};
 
-		it("Should pass totalToApprove to the contract", async () => {
-			const proposals = [createMockProposalRequest()];
-			const totalToApprove = {
-				uniqueKey: 5000n,
-			};
+		const contractWithType =
+			mockProposalContract as unknown as BaseProposalContract<Proposal>;
+		const approvals = await getApprovals([
+			{
+				...proposals[0],
+				proposalToAccept: {
+					...proposals[0].proposalToAccept,
+					creditAddress: mockToken2.address,
+				} as ProposalWithSignature,
+			},
+		], contractWithType, totalToApprove);
 
-			await acceptProposals(proposals, mockDeps, totalToApprove);
-
-			expect(mockProposalContract.acceptProposals).toHaveBeenCalledWith(
-				proposals,
-				totalToApprove,
-			);
-		});
-
-		it("Should throw error when no proposals provided", async () => {
-			await expect(acceptProposals([], mockDeps)).rejects.toThrow(
-				"Proposals must be provided",
-			);
-		});
-
-		it("Should throw error when credit amount is zero", async () => {
-			const invalidProposal = createMockProposalRequest();
-			invalidProposal.creditAmount = 0n;
-
-			await expect(
-				acceptProposals([invalidProposal], mockDeps),
-			).rejects.toThrow("Credit amount must be greater than zero");
-		});
-
-		it("Should throw error when proposals are from different chains", async () => {
-			const proposal1 = createMockProposalRequest();
-
-			// Create a proposal with a different chain ID
-			const proposal2 = createMockProposalRequest();
-			const differentChainProposal =
-				proposal2.proposalToAccept as Partial<ProposalWithSignature>;
-			differentChainProposal.chainId = SupportedChain.Polygon;
-
-			await expect(
-				acceptProposals([proposal1, proposal2], mockDeps),
-			).rejects.toThrow("All proposals must be on the same chain");
-		});
+		expect(approvals).toHaveLength(2);
 	});
+
+	it("Should issue 2 + 2 approvals when is accepting borrowing proposal with pool token as credit asset and a separate credit", async () => {
+		const proposals = [createMockProposalRequest()];
+		const spender = generateAddress();
+		const poolTokenUnderlyingAddress = generateAddress();
+
+		const mockToken2 = getMockPoolToken(
+			mockAddress1,
+			SupportedProtocol.AAVE,
+			chainId,
+			poolTokenUnderlyingAddress,
+		);
+
+		const mockToken3 = getMockPoolToken(
+			mockAddress2,
+			SupportedProtocol.AAVE,
+			chainId,
+			generateAddress(),
+		);
+
+		const totalToApprove = {
+			[getUniqueKey({
+				address: poolTokenUnderlyingAddress,
+				chainId,
+			})]: {
+				amount: 5000n,
+				asset: mockToken2,
+				spender,
+			},
+			[getUniqueKey(mockToken3)]: {
+				amount: 5000n,
+				asset: mockToken3,
+				spender,
+			},
+		};
+
+		const contractWithType =
+			mockProposalContract as unknown as BaseProposalContract<Proposal>;
+		const approvals = await getApprovals([
+			{
+				...proposals[0],
+				proposalToAccept: {
+					...proposals[0].proposalToAccept,
+					creditAddress: mockToken2.address,
+				} as ProposalWithSignature,
+			},
+		], contractWithType, totalToApprove);
+
+		expect(approvals).toHaveLength(4);
+	});
+
 });

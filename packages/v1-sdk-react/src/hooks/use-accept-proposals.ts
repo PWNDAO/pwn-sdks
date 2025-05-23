@@ -26,7 +26,6 @@ export function useAcceptProposals(
 				};
 			}>;
 		}) => {
-			invariant(proposalsToAccept.length > 0, "Proposals must be provided");
 			invariant(userAddress, "No wallet connected");
 
 			return acceptProposals(proposalsToAccept, contract, totalToApprove);

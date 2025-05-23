@@ -80,6 +80,10 @@ export interface IProposalContract<TProposal extends Proposal> {
 				spender?: AddressString;
 			};
 		},
+		extraSendCalls: {
+			to: AddressString;
+			data: Hex;
+		}[],
 	): Promise<
 		| WaitForCallsStatusReturnType
 		| { callsWithApprovals: { to: AddressString; data: Hex }[] }

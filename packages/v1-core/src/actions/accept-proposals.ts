@@ -1,6 +1,7 @@
 import type {
 	AddressString,
 	ERC20TokenLike,
+	Hex,
 	UniqueKey,
 } from "@pwndao/sdk-core";
 import invariant from "ts-invariant";
@@ -55,6 +56,10 @@ export const acceptProposals = async (
 			spender?: AddressString;
 		};
 	}> = {},
+	extraSendCalls: {
+		to: AddressString;
+		data: Hex;
+	}[] = [],
 ) => {
 	invariant(
 		proposals.length > 0 || Object.keys(totalToApprove).length > 0,
@@ -76,5 +81,15 @@ export const acceptProposals = async (
 		"All proposals must be on the same chain",
 	);
 
-	return await deps.proposalContract.acceptProposals(proposals, totalToApprove);
+	return await deps.proposalContract.acceptProposals(
+		proposals,
+		totalToApprove as {
+			[key in UniqueKey]: {
+				amount: bigint;
+				asset: ERC20TokenLike;
+				spender?: AddressString;
+			};
+		},
+		extraSendCalls,
+	);
 };

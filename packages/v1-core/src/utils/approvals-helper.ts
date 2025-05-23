@@ -8,7 +8,7 @@ import {
 	isPoolToken,
 } from "@pwndao/sdk-core";
 import { type ReadContractsParameters, readContracts } from "@wagmi/core";
-import { type Hex, encodeFunctionData, erc20Abi } from "viem";
+import { type Hex, encodeFunctionData, erc20Abi, isAddressEqual } from "viem";
 import type { ProposalsToAccept } from "../actions/types.js";
 import type { BaseProposalContract } from "../contracts/base-proposal-contract.js";
 import type { Proposal } from "../models/strategies/types.js";
@@ -184,16 +184,38 @@ export const processCheckResults = (
 
 		// Check if we need to add an approval transaction
 		if (allowance < amount && balance >= amount) {
-			const amountToApprove =
-				totalToApprove?.[key as UniqueKey]?.amount ?? amount;
+			const {
+				amount: amountToApprove,
+				asset,
+				spender,
+			} = totalToApprove?.[key as UniqueKey] ?? { amount: amount };
 
-			results.push(
-				createApprovalTransaction(
-					assetAddress,
-					proposals[0].proposalToAccept.loanContract,
-					amountToApprove,
-				),
-			);
+			if (asset && isPoolToken(asset) && spender) {
+				const tokenMatches = isAddressEqual(
+					asset?.address as `0x${string}`,
+					assetAddress as `0x${string}`,
+				);
+				if (tokenMatches) {
+					results.push(
+						createApprovalTransaction(asset.address, spender, amount),
+					);
+					results.push(
+						createApprovalTransaction(
+							asset.underlyingAddress,
+							getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain),
+							amount,
+						),
+					);
+				}
+			} else {
+				results.push(
+					createApprovalTransaction(
+						assetAddress,
+						proposals[0].proposalToAccept.loanContract,
+						amountToApprove,
+					),
+				);
+			}
 
 			// if we don't remove key here then on the next iteration we will use the same amount
 			delete totalToApprove[key as UniqueKey];
@@ -211,9 +233,7 @@ export const processCheckResults = (
 
 	// if no keys left we already covered it above. If some left — it's extra approvals to issue
 	if (Object.keys(totalToApprove).length > 0) {
-		for (const [, approvalValues] of Object.entries(
-			totalToApprove,
-		)) {
+		for (const [, approvalValues] of Object.entries(totalToApprove)) {
 			const { amount, asset, spender } = approvalValues || {};
 
 			if (!amount || !asset) {

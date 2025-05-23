@@ -3,6 +3,7 @@ import {
 	type AddressString,
 	SupportedChain,
 	generateAddress,
+	getMockPoolToken,
 	getMockToken,
 	getUniqueKey,
 } from "@pwndao/sdk-core";
@@ -11,14 +12,17 @@ import type { ProposalWithSignature } from "../models/strategies/types.js";
 import { acceptProposals } from "./accept-proposals.js";
 
 describe("Test accept proposals", () => {
+	const proposalContract = {
+		acceptProposals: vi.fn(),
+		encodeProposalData: vi.fn(),
+	};
+
 	it("Should accept proposals", async () => {
 		const proposal = vi.fn() as unknown as ProposalWithSignature;
 		const acceptor = faker.finance.ethereumAddress() as AddressString;
 		const creditAmount = BigInt(1e18);
 		const mockToken = getMockToken();
 
-		const acceptProposalsMock = vi.fn();
-		const encodeProposalDataMock = vi.fn();
 
 		const reqParams = {
 			proposalToAccept: proposal,
@@ -27,14 +31,9 @@ describe("Test accept proposals", () => {
 			creditAsset: mockToken,
 		};
 
-		await acceptProposals([reqParams], {
-			proposalContract: {
-				acceptProposals: acceptProposalsMock,
-				encodeProposalData: encodeProposalDataMock,
-			},
-		});
+		await acceptProposals([reqParams], { proposalContract });
 
-		expect(acceptProposalsMock).toHaveBeenCalledWith(
+		expect(proposalContract.acceptProposals).toHaveBeenCalledWith(
 			[
 				{
 					proposalToAccept: proposal,
@@ -44,6 +43,7 @@ describe("Test accept proposals", () => {
 				},
 			],
 			{},
+			[]
 		);
 	});
 
@@ -52,9 +52,6 @@ describe("Test accept proposals", () => {
 		const acceptor = faker.finance.ethereumAddress() as AddressString;
 		const creditAmount = 0n;
 		const mockToken = getMockToken();
-
-		const acceptProposalsMock = vi.fn();
-		const encodeProposalDataMock = vi.fn();
 
 		const reqParams = {
 			proposalToAccept: proposal,
@@ -66,12 +63,7 @@ describe("Test accept proposals", () => {
 		const mockError = "Credit amount must be greater than zero";
 
 		await expect(
-			acceptProposals([reqParams], {
-				proposalContract: {
-					acceptProposals: acceptProposalsMock,
-					encodeProposalData: encodeProposalDataMock,
-				},
-			}),
+			acceptProposals([reqParams], { proposalContract }),
 		).rejects.toThrow(mockError);
 	});
 
@@ -80,11 +72,6 @@ describe("Test accept proposals", () => {
 		const acceptor = faker.finance.ethereumAddress() as AddressString;
 		const creditAmount = BigInt(1e18);
 		const mockToken = getMockToken();
-
-		const proposalContract = {
-			acceptProposals: vi.fn(),
-			encodeProposalData: vi.fn(),
-		};
 
 		const reqParams = {
 			proposalToAccept: proposal,
@@ -126,9 +113,6 @@ describe("Test accept proposals", () => {
 		const creditAmount = BigInt(1e18);
 		const mockToken = getMockToken();
 
-		const acceptProposalsMock = vi.fn();
-		const encodeProposalDataMock = vi.fn();
-
 		const reqParams = {
 			proposalToAccept: proposal,
 			acceptor,
@@ -147,15 +131,12 @@ describe("Test accept proposals", () => {
 		await acceptProposals(
 			[reqParams],
 			{
-				proposalContract: {
-					acceptProposals: acceptProposalsMock,
-					encodeProposalData: encodeProposalDataMock,
-				},
+				proposalContract,
 			},
 			additionalToApprove,
 		);
 
-		expect(acceptProposalsMock).toHaveBeenCalledWith(
+		expect(proposalContract.acceptProposals).toHaveBeenCalledWith(
 			[
 				{
 					proposalToAccept: proposal,
@@ -165,25 +146,18 @@ describe("Test accept proposals", () => {
 				},
 			],
 			additionalToApprove,
+			[],
 		);
 	});
 
 	it("Should issue approval with no proposals and totalToApprove provided", async () => {
 		const mockToken = getMockToken();
 
-		const acceptProposalsMock = vi.fn();
-		const encodeProposalDataMock = vi.fn();
-
 		const spender = generateAddress();
 
 		await acceptProposals(
 			[],
-			{
-				proposalContract: {
-					acceptProposals: acceptProposalsMock,
-					encodeProposalData: encodeProposalDataMock,
-				},
-			},
+			{ proposalContract },
 			{
 				[getUniqueKey(mockToken)]: {
 					amount: BigInt(1e18),
@@ -193,12 +167,14 @@ describe("Test accept proposals", () => {
 			},
 		);
 
-		expect(acceptProposalsMock).toHaveBeenCalledWith([], {
+		expect(proposalContract.acceptProposals).toHaveBeenCalledWith([], {
 			[getUniqueKey(mockToken)]: {
 				amount: BigInt(1e18),
 				asset: mockToken,
 				spender,
 			},
-		});
+		},
+			[],
+		);
 	});
 });

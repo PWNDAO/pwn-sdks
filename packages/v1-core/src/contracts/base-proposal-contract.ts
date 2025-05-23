@@ -246,6 +246,10 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 				spender?: AddressString;
 			};
 		},
+		extraSendCalls: {
+			to: AddressString;
+			data: Hex;
+		}[],
 	): Promise<WaitForCallsStatusReturnType | { callsWithApprovals: { to: AddressString; data: Hex }[] }> {
 		const calls = await Promise.all(
 			proposals.map(
@@ -308,7 +312,7 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 
 		const chainId = proposals[0].proposalToAccept.chainId;
 
-		const callsWithApprovals = approvals.concat(calls);
+		const callsWithApprovals = approvals.concat(calls, extraSendCalls);
 
 		// currently only signle chain-context is supported
 		await switchChain(this.config, {
