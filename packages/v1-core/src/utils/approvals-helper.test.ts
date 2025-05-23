@@ -20,6 +20,8 @@ import { ProposalType } from "../models/proposals/proposal-base.js";
 import type { ProposalWithSignature } from "../models/strategies/types.js";
 import type { Proposal } from "../models/strategies/types.js";
 import { getApprovals } from "./approvals-helper.js";
+import { decodeFunctionData } from "viem";
+import { erc20Abi } from "viem";
 
 vi.mock("@wagmi/core", () => ({
 	readContracts: vi.fn(),
@@ -328,4 +330,66 @@ describe("Approvals Helper", () => {
 		expect(approvals).toHaveLength(4);
 	});
 
+	it("Should correctly summarize amount of pool and underlying tokens to approve", async () => {
+		const proposals = [createMockProposalRequest()];
+		const spender = generateAddress();
+		const token3Address = generateAddress();
+
+		const mockToken3 = getMockToken(
+			SupportedChain.Ethereum,
+			token3Address,
+			18,
+		);
+
+		const mockToken2 = getMockPoolToken(
+			mockToken3.address,
+			SupportedProtocol.AAVE,
+			chainId,
+			mockAddress1,
+		);
+
+		const totalToApprove = {
+			[getUniqueKey({
+				address: mockToken2.address,
+				chainId,
+			})]: {
+				amount: 5000n,
+				asset: mockToken2,
+				spender,
+			},
+			[getUniqueKey(mockToken3)]: {
+				amount: 5000n,
+				asset: mockToken3,
+				spender,
+			},
+		};
+
+		const contractWithType =
+			mockProposalContract as unknown as BaseProposalContract<Proposal>;
+		const approvals = await getApprovals([
+			{
+				...proposals[0],
+				proposalToAccept: {
+					...proposals[0].proposalToAccept,
+					creditAddress: mockToken2.address,
+				} as ProposalWithSignature,
+			},
+		], contractWithType, totalToApprove);
+
+		expect(approvals).toHaveLength(2);
+
+
+		const tx1Decoded = decodeFunctionData({
+			abi: erc20Abi,
+			data: approvals[0].data,
+		});
+
+		const tx2Decoded = decodeFunctionData({
+			abi: erc20Abi,
+			data: approvals[1].data,
+		});
+
+		expect(tx1Decoded.args[1]).toBe(5000n);
+		expect(tx2Decoded.args[1]).toBe(10000n);
+	});
 });

@@ -197,15 +197,38 @@ export const processCheckResults = (
 				);
 				if (tokenMatches) {
 					results.push(
-						createApprovalTransaction(asset.address, spender, amount),
+						createApprovalTransaction(asset.address, spender, amountToApprove),
 					);
-					results.push(
-						createApprovalTransaction(
-							asset.underlyingAddress,
-							getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain),
-							amount,
-						),
-					);
+
+					const underlyingAssetKey = getUniqueKey({
+						address: asset.underlyingAddress,
+						chainId: asset.chainId,
+					});
+
+					const underlyingAssetNeedsToBeApproved = totalToApprove[underlyingAssetKey]
+
+
+					if (underlyingAssetNeedsToBeApproved) {
+						results.push(
+							createApprovalTransaction(
+								asset.underlyingAddress,
+								getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain),
+								amountToApprove + underlyingAssetNeedsToBeApproved.amount,
+							),
+						);
+
+						// remove underlying asset from totalToApprove because it's already processed
+						delete totalToApprove[underlyingAssetKey];
+					} else {
+						results.push(
+							createApprovalTransaction(
+								asset.underlyingAddress,
+								getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain),
+								amountToApprove,
+							),
+						);
+					}
+
 				}
 			} else {
 				results.push(
@@ -248,13 +271,34 @@ export const processCheckResults = (
 
 				results.push(createApprovalTransaction(asset.address, spender, amount));
 
-				results.push(
-					createApprovalTransaction(
-						asset.underlyingAddress,
-						getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain),
-						amount,
-					),
-				);
+				const underlyingAssetKey = getUniqueKey({
+					address: asset.underlyingAddress,
+					chainId: asset.chainId,
+				});
+
+				const underlyingAssetNeedsToBeApproved = totalToApprove[underlyingAssetKey]
+				
+				if (underlyingAssetNeedsToBeApproved) {
+					results.push(
+						createApprovalTransaction(
+							asset.underlyingAddress,
+							getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain),
+							amount + underlyingAssetNeedsToBeApproved.amount,
+						),
+					);
+
+					// remove underlying asset from totalToApprove because it's already processed
+					delete totalToApprove[underlyingAssetKey];
+				} else {
+					results.push(
+						createApprovalTransaction(
+							asset.underlyingAddress,
+							getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain),
+							amount,
+						),
+					);
+				}
+
 			} else {
 				results.push(
 					createApprovalTransaction(

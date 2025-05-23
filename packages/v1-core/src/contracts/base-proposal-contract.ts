@@ -14,8 +14,8 @@ import {
 	sendCalls,
 	signTypedData,
 	switchChain,
-	watchContractEvent,
 	waitForCallsStatus,
+	watchContractEvent,
 } from "@wagmi/core";
 import type {
 	GetAccountReturnType,
@@ -250,15 +250,13 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 			to: AddressString;
 			data: Hex;
 		}[],
-	): Promise<WaitForCallsStatusReturnType | { callsWithApprovals: { to: AddressString; data: Hex }[] }> {
+	): Promise<
+		| WaitForCallsStatusReturnType
+		| { callsWithApprovals: { to: AddressString; data: Hex }[] }
+	> {
 		const calls = await Promise.all(
 			proposals.map(
-				async ({
-					proposalToAccept: proposal,
-					creditAmount,
-					acceptor
-				}) => {
-
+				async ({ proposalToAccept: proposal, creditAmount, acceptor }) => {
 					// if proposal is lending offer sourceOfFunds is already set. If not then it's lender address
 					const sourceOfFunds =
 						proposal.sourceOfFunds ||
@@ -310,7 +308,10 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 
 		const approvals = await this.getApprovalCalls(proposals, totalToApprove);
 
-		const chainId = proposals[0].proposalToAccept.chainId;
+		// one of these will be set, so we can use it to switch chain
+		const chainId =
+			proposals?.[0]?.proposalToAccept?.chainId ||
+			Object.values(totalToApprove)?.[0]?.asset?.chainId;
 
 		const callsWithApprovals = approvals.concat(calls, extraSendCalls);
 
@@ -324,11 +325,11 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 				calls: callsWithApprovals,
 			});
 
-			return await waitForCallsStatus(this.config, hash)
+			return await waitForCallsStatus(this.config, hash);
 		}
 
 		return {
 			callsWithApprovals,
-		}
+		};
 	}
 }
