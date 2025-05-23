@@ -1,6 +1,6 @@
 {
   "name": "@pwndao/sdk-v1-vue",
-  "version": "0.0.2-rc.7",
+  "version": "0.0.2-rc.8",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -18,8 +18,8 @@
     "!**/*.tsbuildinfo"
   ],
   "dependencies": {
-    "@pwndao/v1-core": "0.0.2-rc.7",
-    "@pwndao/sdk-core": "0.0.2-rc.7"
+    "@pwndao/v1-core": "0.0.2-rc.8",
+    "@pwndao/sdk-core": "0.0.2-rc.8"
   },
   "devDependencies": {
     "@tanstack/vue-query": "^5.59.1"
