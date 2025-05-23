@@ -1,7 +1,6 @@
 import type {
 	AddressString,
 	ERC20TokenLike,
-	Hex,
 	UniqueKey,
 } from "@pwndao/sdk-core";
 import invariant from "ts-invariant";
@@ -56,10 +55,6 @@ export const acceptProposals = async (
 			spender?: AddressString;
 		};
 	}> = {},
-	extraSendCalls: {
-		to: AddressString;
-		data: Hex;
-	}[] = [],
 ) => {
 	invariant(
 		proposals.length > 0 || Object.keys(totalToApprove).length > 0,
@@ -90,6 +85,5 @@ export const acceptProposals = async (
 				spender?: AddressString;
 			};
 		},
-		extraSendCalls,
 	);
 };

@@ -15,7 +15,6 @@ import {
 	getUniqueCreditCollateralKey,
 	isPoolToken,
 } from "@pwndao/sdk-core";
-import type { WaitForCallsStatusReturnType } from "@wagmi/core";
 import type { Config, ReadContractsParameters } from "@wagmi/core";
 import type { IProposalChainLinkContract } from "../contracts/chain-link-proposal-contract.js";
 import type { IProposalElasticContract } from "../contracts/elastic-proposal-contract.js";
@@ -80,13 +79,11 @@ export interface IProposalContract<TProposal extends Proposal> {
 				spender?: AddressString;
 			};
 		},
-		extraSendCalls: {
-			to: AddressString;
-			data: Hex;
-		}[],
 	): Promise<
-		| WaitForCallsStatusReturnType
-		| { callsWithApprovals: { to: AddressString; data: Hex }[] }
+	{
+		to: AddressString,
+		data: Hex,
+	}[]
 	>;
 
 	getReadCollateralAmount(

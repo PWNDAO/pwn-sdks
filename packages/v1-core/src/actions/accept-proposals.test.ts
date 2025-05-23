@@ -3,7 +3,6 @@ import {
 	type AddressString,
 	SupportedChain,
 	generateAddress,
-	getMockPoolToken,
 	getMockToken,
 	getUniqueKey,
 } from "@pwndao/sdk-core";
@@ -43,7 +42,6 @@ describe("Test accept proposals", () => {
 				},
 			],
 			{},
-			[]
 		);
 	});
 
@@ -146,7 +144,6 @@ describe("Test accept proposals", () => {
 				},
 			],
 			additionalToApprove,
-			[],
 		);
 	});
 
@@ -173,8 +170,6 @@ describe("Test accept proposals", () => {
 				asset: mockToken,
 				spender,
 			},
-		},
-			[],
-		);
+		});
 	});
 });

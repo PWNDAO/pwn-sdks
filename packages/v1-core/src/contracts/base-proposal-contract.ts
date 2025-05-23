@@ -11,16 +11,12 @@ import {
 	getAccount,
 	getPublicClient,
 	readContract,
-	sendCalls,
 	signTypedData,
-	switchChain,
-	waitForCallsStatus,
 	watchContractEvent,
 } from "@wagmi/core";
 import type {
 	GetAccountReturnType,
 	ReadContractsParameters,
-	WaitForCallsStatusReturnType,
 } from "@wagmi/core";
 import type { AcceptProposalRequest } from "src/actions/accept-proposals.js";
 import {
@@ -42,7 +38,7 @@ import type { ProposalWithSignature } from "../models/strategies/types.js";
 import { SafeService } from "../safe/safe-service.js";
 import type { SafeConfig } from "../safe/types.js";
 import { getApprovals } from "../utils/approvals-helper.js";
-import { getInclusionProof, mayUserSendCalls } from "./utilts.js";
+import { getInclusionProof } from "./utilts.js";
 
 const SAFE_ABI = [
 	{
@@ -246,13 +242,11 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 				spender?: AddressString;
 			};
 		},
-		extraSendCalls: {
-			to: AddressString;
-			data: Hex;
-		}[],
 	): Promise<
-		| WaitForCallsStatusReturnType
-		| { callsWithApprovals: { to: AddressString; data: Hex }[] }
+	{
+		to: AddressString,
+		data: Hex,
+	}[]
 	> {
 		const calls = await Promise.all(
 			proposals.map(
@@ -308,28 +302,8 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 
 		const approvals = await this.getApprovalCalls(proposals, totalToApprove);
 
-		// one of these will be set, so we can use it to switch chain
-		const chainId =
-			proposals?.[0]?.proposalToAccept?.chainId ||
-			Object.values(totalToApprove)?.[0]?.asset?.chainId;
+		const callsWithApprovals = approvals.concat(calls);
 
-		const callsWithApprovals = approvals.concat(calls, extraSendCalls);
-
-		// currently only signle chain-context is supported
-		await switchChain(this.config, {
-			chainId,
-		});
-
-		if (await mayUserSendCalls(this.config, chainId)) {
-			const hash = await sendCalls(this.config, {
-				calls: callsWithApprovals,
-			});
-
-			return await waitForCallsStatus(this.config, hash);
-		}
-
-		return {
-			callsWithApprovals,
-		};
+		return callsWithApprovals;
 	}
 }
