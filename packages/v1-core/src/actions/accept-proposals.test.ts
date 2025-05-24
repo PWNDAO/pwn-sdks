@@ -43,6 +43,7 @@ describe("Test accept proposals", () => {
 					creditAsset: mockToken,
 				},
 			],
+			userAddress,
 			{},
 		);
 	});
@@ -143,6 +144,7 @@ describe("Test accept proposals", () => {
 					creditAsset: mockToken,
 				},
 			],
+			userAddress,
 			additionalToApprove,
 		);
 	});
@@ -165,7 +167,7 @@ describe("Test accept proposals", () => {
 			},
 		);
 
-		expect(proposalContract.acceptProposals).toHaveBeenCalledWith([], {
+		expect(proposalContract.acceptProposals).toHaveBeenCalledWith([], userAddress, {
 			[getUniqueKey(mockToken)]: {
 				amount: BigInt(1e18),
 				asset: mockToken,

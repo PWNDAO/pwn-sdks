@@ -87,6 +87,7 @@ export const acceptProposals = async (
 
 	return await deps.proposalContract.acceptProposals(
 		proposals,
+		userAddress,
 		totalToApprove as {
 			[key in UniqueKey]: {
 				amount: bigint;
