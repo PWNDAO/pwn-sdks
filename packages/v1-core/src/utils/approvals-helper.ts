@@ -215,12 +215,14 @@ export const getApprovalsToVerify = (
 			chainId: Number(chainId),
 		});
 
+		const _spender = _isPoolToken ? acceptor : getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain);
+
 		addOrUpdateApproval(
 			baseAssetUniqueKey as UniqueKey,
 			assetAddress as AddressString,
 			Number(chainId),
 			amount,
-			acceptor,
+			_spender,
 			false,
 		);
 	}
@@ -260,17 +262,21 @@ export const getApprovalsToVerify = (
 			);
 		}
 
+
 		const baseAssetUniqueKey = getUniqueKey({
 			address: baseAssetAddress as AddressString,
 			chainId: asset.chainId,
 		});
 
+		const baseAmount = _isPoolToken ? amount + (totalToApprove[baseAssetUniqueKey as UniqueKey]?.amount ?? 0n) : amount;
+		const _spender = _isPoolToken ? spender : getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain);
+
 		addOrUpdateApproval(
 			baseAssetUniqueKey as UniqueKey,
 			asset.address as AddressString,
 			asset.chainId,
-			amount,
-			spender,
+			baseAmount,
+			_spender,
 			false,
 			false,
 		);
@@ -499,8 +505,10 @@ export const getApprovals = async (
 		totalToApprove,
 	);
 
+	const contractCalls = getApprovalReadCalls(approvalsToVerify);
+
 	const existingApprovalsAndBalances = await readContracts(contract.config, {
-		contracts: getApprovalReadCalls(approvalsToVerify),
+		contracts: contractCalls,
 	});
 
 	const results: ApprovalTransaction[] = [];

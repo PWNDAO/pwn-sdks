@@ -3,6 +3,7 @@ import {
 	generateAddress,
 	getMockPoolToken,
 	getMockToken,
+	getPwnSimpleLoanAddress,
 	getUniqueKey,
 } from "@pwndao/sdk-core";
 import { SupportedChain } from "@pwndao/sdk-core";
@@ -175,6 +176,7 @@ describe("Approvals Helper", () => {
 				const approvals = await getApprovals(
 					proposals,
 					contractWithType,
+					userAddress,
 					totalToApprove,
 				);
 				expect(approvals[0].to).toBe(mockAddress1);
@@ -183,11 +185,26 @@ describe("Approvals Helper", () => {
 			it("issues approval for proposal and additional approval for unrelated token", async () => {
 				const proposals = [createMockProposalRequest()];
 				const spender = generateAddress();
+
+				const token2Address = generateAddress();
+				const token3Address = generateAddress();
+
 				const mockToken2 = getMockPoolToken(
-					mockAddress1,
+					token2Address,
 					SupportedProtocol.AAVE,
 					chainId,
+					token3Address,
 				);
+
+				(
+					readContracts as unknown as ReturnType<typeof vi.fn>
+				).mockResolvedValueOnce([
+					{ result: 0n, status: "success" },
+					{ result: 0n, status: "success" },
+					{ result: 0n, status: "success" },
+				]);
+
+
 				const totalToApprove = {
 					[getUniqueKey(mockToken2)]: {
 						amount: 5000n,
@@ -206,7 +223,7 @@ describe("Approvals Helper", () => {
 				expect(approvals).toHaveLength(3);
 				expect(approvals[0].to).toBe(mockAddress1);
 				expect(approvals[1].to).toBe(mockToken2.address);
-				expect(approvals[2].to).toBe(mockToken2.underlyingAddress);
+				expect(approvals[2].to).toBe(token3Address);
 			});
 		});
 	});
@@ -279,6 +296,14 @@ describe("Approvals Helper", () => {
 			const proposals = [createMockProposalRequest()];
 			const spender = generateAddress();
 			const poolTokenUnderlyingAddress = generateAddress();
+
+			(readContracts as unknown as ReturnType<typeof vi.fn>).mockResolvedValue([
+				{ result: 0n, status: "success" },
+				{ result: 0n, status: "success" },
+				{ result: 0n, status: "success" },
+				{ result: 0n, status: "success" },
+			]);
+
 			const mockToken2 = getMockPoolToken(
 				mockAddress1,
 				SupportedProtocol.AAVE,
@@ -291,8 +316,9 @@ describe("Approvals Helper", () => {
 				chainId,
 				generateAddress(),
 			);
+
 			const totalToApprove = {
-				[getUniqueKey({ address: poolTokenUnderlyingAddress, chainId })]: {
+				[getUniqueKey(mockToken2)]: {
 					amount: 5000n,
 					asset: mockToken2,
 					spender,
@@ -319,6 +345,7 @@ describe("Approvals Helper", () => {
 				userAddress,
 				totalToApprove,
 			);
+
 			expect(approvals).toHaveLength(4);
 		});
 	});
@@ -483,9 +510,9 @@ describe("Approvals Helper", () => {
 
 
 	describe("createAllowanceAndBalanceCalls", () => {
+		const spender = getPwnSimpleLoanAddress(SupportedChain.Ethereum) as AddressString;
 
 		it("Creates allowance and balance calls for normal token", () => {
-			const spender = generateAddress();
 			const token3Address = generateAddress();
 
 			const mockToken3 = getMockToken(
@@ -501,17 +528,18 @@ describe("Approvals Helper", () => {
 
 			const calls = getApprovalsToVerify(items, userAddress, totalToApprove);
 
+			expect(Object.keys(calls).length).toBe(1);
+
 			for (const [key, value] of Object.entries(calls)) {
 				expect(key).toBe(getUniqueKey(mockToken3));
 				expect(value.address).toBe(mockToken3.address);
 				expect(value.amount).toBe(5000n);
 				expect(value.userAddress).toBe(userAddress as AddressString);
-				expect(value.spender).toBe(spender as AddressString);
+				expect(value.spender).toBe(spender);
 			}
 		});
 
 		it("Creates allowance and balance calls for pool token", () => {
-			const spender = generateAddress();
 			const token3Address = generateAddress();
 
 			const mockToken3 = getMockToken(
@@ -552,7 +580,6 @@ describe("Approvals Helper", () => {
 		});
 
 		it("Proposals are not provided only totalToApprove with credit token", () => {
-			const spender = generateAddress();
 			const token3Address = generateAddress();
 
 			const mockToken3 = getMockToken(
