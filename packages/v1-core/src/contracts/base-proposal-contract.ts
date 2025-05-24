@@ -218,6 +218,7 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 
 	async getApprovalCalls(
 		proposals: ProposalsToAccept[],
+		userAddress: AddressString,
 		totalToApprove: {
 			[key in UniqueKey]: {
 				amount: bigint;
@@ -226,7 +227,7 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 			};
 		},
 	): Promise<{ to: AddressString; data: Hex }[]> {
-		return getApprovals(proposals, this, totalToApprove);
+		return getApprovals(proposals, this, userAddress, totalToApprove);
 	}
 
 	abstract getReadCollateralAmount(
@@ -235,6 +236,7 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 
 	async acceptProposals(
 		proposals: [AcceptProposalRequest, ...AcceptProposalRequest[]],
+		userAddress: AddressString,
 		totalToApprove: {
 			[key in UniqueKey]: {
 				amount: bigint;
@@ -300,7 +302,7 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 			),
 		);
 
-		const approvals = await this.getApprovalCalls(proposals, totalToApprove);
+		const approvals = await this.getApprovalCalls(proposals, userAddress, totalToApprove);
 
 		const callsWithApprovals = approvals.concat(calls);
 

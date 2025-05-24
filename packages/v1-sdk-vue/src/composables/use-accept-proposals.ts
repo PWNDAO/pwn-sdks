@@ -28,7 +28,7 @@ export function useAcceptProposals(
 		}) => {
 			invariant(userAddress, "No wallet connected");
 
-			return acceptProposals(proposalsToAccept, contract, totalToApprove);
+			return acceptProposals(proposalsToAccept, userAddress, contract, totalToApprove);
 		},
 	});
 

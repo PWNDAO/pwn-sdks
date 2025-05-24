@@ -32,6 +32,14 @@ export interface AcceptProposalDeps {
  *   - acceptor: Address of the account accepting the proposal
  *   - creditAmount: Amount of credit being accepted
  *   - creditAsset: The ERC20 token being used for credit. In case of pool hook it's the pool token.
+ * @param userAddress - Address of the user accepting the proposals.
+ * @param totalToApprove - Object containing the total amount of tokens to approve for the loan contract.
+ *   - [assetAddress/chainId]: {
+ *     amount: bigint;
+ *     asset: ERC20TokenLike;
+ *     spender?: AddressString;
+ *   }
+ *
  * @param deps - Dependencies containing the proposal contract with acceptProposals method
  *
  * @throws {Error} If:
@@ -44,6 +52,7 @@ export interface AcceptProposalDeps {
  */
 export const acceptProposals = async (
 	proposals: AcceptProposalRequest[],
+	userAddress: AddressString,
 	deps: AcceptProposalDeps,
 	totalToApprove: Partial<{
 		[key in UniqueKey]: {
