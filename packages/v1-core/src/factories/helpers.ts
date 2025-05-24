@@ -72,6 +72,7 @@ export interface IProposalContract<TProposal extends Proposal> {
 			creditAmount: bigint;
 			creditAsset: ERC20TokenLike;
 		}[],
+		userAddress: AddressString,
 		totalToApprove: {
 			[key in UniqueKey]: {
 				amount: bigint;

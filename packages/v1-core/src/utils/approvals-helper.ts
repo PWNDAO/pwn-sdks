@@ -1,5 +1,6 @@
 import {
 	type AddressString,
+	ERC20Token,
 	type ERC20TokenLike,
 	type SupportedChain,
 	type UniqueKey,
@@ -7,8 +8,14 @@ import {
 	getUniqueKey,
 	isPoolToken,
 } from "@pwndao/sdk-core";
-import { type ReadContractsParameters, readContracts } from "@wagmi/core";
-import { type Hex, encodeFunctionData, erc20Abi, isAddressEqual } from "viem";
+import { ReadContractsParameters, readContracts } from "@wagmi/core";
+import {
+	type ContractFunctionParameters,
+	type Hex,
+	encodeFunctionData,
+	erc20Abi,
+	isAddressEqual,
+} from "viem";
 import type { ProposalsToAccept } from "../actions/types.js";
 import type { BaseProposalContract } from "../contracts/base-proposal-contract.js";
 import type { Proposal } from "../models/strategies/types.js";
@@ -26,12 +33,22 @@ type ApprovalItem = [
 	{ proposals: ProposalsToAccept[]; amount: bigint },
 ];
 
+type ApprovalToVerify = {
+	address: AddressString;
+	chainId: number;
+	amount: bigint;
+	userAddress: AddressString;
+	spender: AddressString;
+	isPoolToken: boolean;
+};
+
 export type GroupedAssets = Record<
 	UniqueKey,
 	{
 		amount: bigint;
 		proposals: ProposalsToAccept[];
 		acceptor: AddressString;
+		asset: ERC20TokenLike;
 	}
 >;
 export type ApprovalTransaction = {
@@ -65,6 +82,7 @@ export const getAmountsOfCreditAssets = async (
 				amount: BigInt(0),
 				proposals: [],
 				acceptor: acceptor,
+				asset: proposalToAccept.creditAsset,
 			};
 		}
 		amountGroupedByCreditAsset[uniqueKey].amount += creditAmount;
@@ -94,18 +112,23 @@ export const getAmountsOfCollateralAssets = async (
 
 	for (const [index, result] of amounts.entries()) {
 		const relatedProposal = proposals[index];
-		const key = getUniqueKey({
-			address: relatedProposal.proposalToAccept.collateralAddress,
-			chainId: relatedProposal.proposalToAccept.chainId,
-		});
+
+		const collateralAsset = new ERC20Token(
+			relatedProposal.proposalToAccept.chainId,
+			relatedProposal.proposalToAccept.collateralAddress,
+			0, // not used anywhere
+		);
+		const key = getUniqueKey(collateralAsset);
 
 		if (!groupedByCollateral[key]) {
 			groupedByCollateral[key] = {
 				amount: BigInt(0),
 				proposals: [],
 				acceptor: relatedProposal.acceptor,
+				asset: collateralAsset,
 			};
 		}
+
 		groupedByCollateral[key].amount += result.result as bigint;
 		groupedByCollateral[key].proposals.push(relatedProposal);
 	}
@@ -133,33 +156,127 @@ export const categorizeProposals = (
 	return { borrowingProposals, lendingProposals };
 };
 
-export const createAllowanceAndBalanceCalls = (
-	items: [
-		string,
-		{ proposals: ProposalsToAccept[]; acceptor: AddressString },
-	][],
-): ReadContractsParameters["contracts"][number][] => {
-	const calls: ReadContractsParameters["contracts"][number][] = [];
+export const getApprovalsToVerify = (
+	items: GroupedAssets,
+	userAddress: AddressString,
+	totalToApprove: TotalToApproveMap,
+): Record<UniqueKey, ApprovalToVerify> => {
+	const approvalToVerify: Record<UniqueKey, ApprovalToVerify> = {};
 
-	for (const [key, { proposals, acceptor }] of items) {
-		const [assetAddress] = key.split("/");
+	const addOrUpdateApproval = (
+		key: UniqueKey,
+		address: AddressString,
+		chainId: number,
+		amount: bigint,
+		spender: AddressString,
+		isPoolToken: boolean,
+		shouldAdd = true,
+	) => {
+		if (approvalToVerify[key]) {
+			if (shouldAdd) {
+				approvalToVerify[key].amount += amount;
+			} else if (approvalToVerify[key].amount < amount) {
+				approvalToVerify[key].amount = amount;
+			}
+		} else {
+			approvalToVerify[key] = {
+				address,
+				chainId,
+				amount,
+				userAddress,
+				spender,
+				isPoolToken,
+			};
+		}
+	};
 
-		calls.push({
-			abi: erc20Abi,
-			address: assetAddress as AddressString,
-			functionName: "allowance",
-			args: [acceptor, proposals[0].proposalToAccept.loanContract],
-		} as const);
+	// Process items
+	for (const [key, { acceptor, amount, asset }] of Object.entries(items)) {
+		const [assetAddress, chainId] = key.split("/");
+		const _isPoolToken = isPoolToken(asset);
+		const baseAssetAddress = _isPoolToken
+			? asset.underlyingAddress
+			: assetAddress;
 
-		calls.push({
-			abi: erc20Abi,
-			address: assetAddress as AddressString,
-			functionName: "balanceOf",
-			args: [acceptor],
-		} as const);
+		if (_isPoolToken) {
+			const poolTokenKey = getUniqueKey(asset);
+			addOrUpdateApproval(
+				poolTokenKey as UniqueKey,
+				assetAddress as AddressString,
+				Number(chainId),
+				amount,
+				acceptor,
+				true,
+			);
+		}
+
+		const baseAssetUniqueKey = getUniqueKey({
+			address: baseAssetAddress as AddressString,
+			chainId: Number(chainId),
+		});
+
+		addOrUpdateApproval(
+			baseAssetUniqueKey as UniqueKey,
+			assetAddress as AddressString,
+			Number(chainId),
+			amount,
+			acceptor,
+			false,
+		);
 	}
 
-	return calls;
+	// Process totalToApprove entries
+	const poolTokenEntries = Object.entries(totalToApprove).filter(
+		([_, { asset } = {}]) => asset && isPoolToken(asset),
+	);
+	const baseTokenEntries = Object.entries(totalToApprove).filter(
+		([_, { asset } = {}]) => asset && !isPoolToken(asset),
+	);
+
+	// Process base tokens first, then pool tokens
+	for (const [, { amount, asset, spender } = {}] of [
+		...baseTokenEntries,
+		...poolTokenEntries,
+	]) {
+		if (!amount || !asset || !spender) {
+			continue;
+		}
+
+		const _isPoolToken = isPoolToken(asset);
+		const baseAssetAddress = _isPoolToken
+			? asset.underlyingAddress
+			: asset.address;
+
+		if (_isPoolToken) {
+			const poolTokenKey = getUniqueKey(asset);
+			addOrUpdateApproval(
+				poolTokenKey as UniqueKey,
+				asset.address as AddressString,
+				asset.chainId,
+				amount,
+				spender,
+				true,
+				false,
+			);
+		}
+
+		const baseAssetUniqueKey = getUniqueKey({
+			address: baseAssetAddress as AddressString,
+			chainId: asset.chainId,
+		});
+
+		addOrUpdateApproval(
+			baseAssetUniqueKey as UniqueKey,
+			asset.address as AddressString,
+			asset.chainId,
+			amount,
+			spender,
+			false,
+			false,
+		);
+	}
+
+	return approvalToVerify;
 };
 
 export const createApprovalTransaction = (
@@ -294,44 +411,74 @@ export const processCheckResults = (
 		index += 2;
 	}
 
+	// First process pool tokens as pool tokens will also include underlying token approvals
+	const poolTokenKeys = Object.keys(totalToApprove).filter((key) =>
+		isPoolToken(totalToApprove[key as UniqueKey]?.asset as ERC20TokenLike),
+	);
+
+	for (const key of poolTokenKeys) {
+		const { amount, asset, spender } = totalToApprove[key as UniqueKey] || {};
+		if (!amount || !asset) {
+			delete totalToApprove[key as UniqueKey];
+			continue;
+		}
+		if (!spender) {
+			throw new Error("Spender is required for pool token");
+		}
+		results.push(
+			...createPoolTokenApprovalTransactions(
+				asset,
+				spender,
+				amount,
+				totalToApprove,
+			),
+		);
+		delete totalToApprove[key as UniqueKey];
+	}
+
+	// Then process remaining non-pool tokens
 	while (Object.keys(totalToApprove).length > 0) {
 		const [uniqueToApproveKey, approvalValues] =
 			Object.entries(totalToApprove)[0];
-		const { amount, asset, spender } = approvalValues || {};
+		const { amount, asset } = approvalValues || {};
 		if (!amount || !asset) {
 			delete totalToApprove[uniqueToApproveKey as UniqueKey];
 			continue;
 		}
-		if (isPoolToken(asset)) {
-			if (!spender) {
-				throw new Error("Spender is required for pool token");
-			}
-			results.push(
-				...createPoolTokenApprovalTransactions(
-					asset,
-					spender,
-					amount,
-					totalToApprove,
-				),
-			);
-		} else {
-			results.push(
-				createApprovalTransaction(
-					asset.address,
-					getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain),
-					amount,
-				),
-			);
-		}
+		results.push(
+			createApprovalTransaction(
+				asset.address,
+				getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain),
+				amount,
+			),
+		);
 		delete totalToApprove[getUniqueKey(asset) as UniqueKey];
 	}
 
 	return results;
 };
 
+export const getApprovalReadCalls = (
+	groupedApprovals: Record<UniqueKey, ApprovalToVerify>,
+) => {
+	const calls: ContractFunctionParameters[] = [];
+
+	for (const [, approval] of Object.entries(groupedApprovals)) {
+		calls.push({
+			abi: erc20Abi,
+			functionName: "allowance",
+			args: [approval.userAddress, approval.spender],
+			address: approval.address,
+		});
+	}
+
+	return calls;
+};
+
 export const getApprovals = async (
 	proposalsToAccept: ProposalsToAccept[],
 	contract: BaseProposalContract<Proposal>,
+	userAddress: AddressString,
 	totalToApprove: TotalToApproveMap = {},
 ): Promise<ApprovalTransaction[]> => {
 	const { borrowingProposals, lendingProposals } =
@@ -343,21 +490,38 @@ export const getApprovals = async (
 		contract,
 	);
 
-	const items = [
-		...Object.entries(borrowingAmounts),
-		...Object.entries(lendingAmounts),
-	];
-
-	const existingApprovalsAndBalancesCall =
-		createAllowanceAndBalanceCalls(items);
-
-	const existingApprovalsAndBalances = await readContracts(contract.config, {
-		contracts: existingApprovalsAndBalancesCall,
-	});
-
-	return processCheckResults(
-		items,
-		existingApprovalsAndBalances,
+	const approvalsToVerify = getApprovalsToVerify(
+		{
+			...borrowingAmounts,
+			...lendingAmounts,
+		},
+		userAddress,
 		totalToApprove,
 	);
+
+	const existingApprovalsAndBalances = await readContracts(contract.config, {
+		contracts: getApprovalReadCalls(approvalsToVerify),
+	});
+
+	const results: ApprovalTransaction[] = [];
+
+	let index = 0;
+
+	for (const [, approval] of Object.entries(approvalsToVerify)) {
+		const allowance = existingApprovalsAndBalances[index].result as bigint;
+
+		if (allowance < approval.amount) {
+			results.push(
+				createApprovalTransaction(
+					approval.address,
+					approval.spender,
+					approval.amount,
+				),
+			);
+		}
+
+		index += 1;
+	}
+
+	return results;
 };

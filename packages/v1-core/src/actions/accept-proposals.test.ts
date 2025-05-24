@@ -16,9 +16,11 @@ describe("Test accept proposals", () => {
 		encodeProposalData: vi.fn(),
 	};
 
+	const userAddress = generateAddress() as AddressString;
+
 	it("Should accept proposals", async () => {
 		const proposal = vi.fn() as unknown as ProposalWithSignature;
-		const acceptor = faker.finance.ethereumAddress() as AddressString;
+		const acceptor = generateAddress() as AddressString;
 		const creditAmount = BigInt(1e18);
 		const mockToken = getMockToken();
 
@@ -30,7 +32,7 @@ describe("Test accept proposals", () => {
 			creditAsset: mockToken,
 		};
 
-		await acceptProposals([reqParams], { proposalContract });
+		await acceptProposals([reqParams], userAddress, { proposalContract });
 
 		expect(proposalContract.acceptProposals).toHaveBeenCalledWith(
 			[
@@ -61,7 +63,7 @@ describe("Test accept proposals", () => {
 		const mockError = "Credit amount must be greater than zero";
 
 		await expect(
-			acceptProposals([reqParams], { proposalContract }),
+			acceptProposals([reqParams], userAddress, { proposalContract }),
 		).rejects.toThrow(mockError);
 	});
 
@@ -98,9 +100,8 @@ describe("Test accept proposals", () => {
 						} as ProposalWithSignature,
 					},
 				],
-				{
-					proposalContract,
-				},
+				userAddress,
+				{ proposalContract },
 			),
 		).rejects.toThrow(mockError);
 	});
@@ -128,9 +129,8 @@ describe("Test accept proposals", () => {
 
 		await acceptProposals(
 			[reqParams],
-			{
-				proposalContract,
-			},
+			userAddress,
+			{ proposalContract },
 			additionalToApprove,
 		);
 
@@ -154,6 +154,7 @@ describe("Test accept proposals", () => {
 
 		await acceptProposals(
 			[],
+			userAddress,
 			{ proposalContract },
 			{
 				[getUniqueKey(mockToken)]: {
