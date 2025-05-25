@@ -223,7 +223,7 @@ describe("Approvals Helper", () => {
 				expect(approvals).toHaveLength(3);
 				expect(approvals[0].to).toBe(mockAddress1);
 				expect(approvals[1].to).toBe(mockToken2.address);
-				expect(approvals[2].to).toBe(token3Address);
+				expect(approvals[2].to).toBe(mockToken2.underlyingAddress);
 			});
 		});
 	});
@@ -572,7 +572,7 @@ describe("Approvals Helper", () => {
 			expect(firstApproval.userAddress).toBe(userAddress as AddressString);
 			expect(firstApproval.spender).toBe(spender as AddressString);
 
-			expect(secondApproval.address).toBe(mockAddress1);
+			expect(secondApproval.address).toBe(mockToken2.underlyingAddress);
 			expect(secondApproval.amount).toBe(5000n);
 			expect(secondApproval.userAddress).toBe(userAddress as AddressString);
 			expect(secondApproval.spender).toBe(spender as AddressString);
@@ -609,6 +609,46 @@ describe("Approvals Helper", () => {
 			expect(firstApproval.spender).toBe(spender as AddressString);
 		});
 
+		it("Proposals are not provided only totalToApprove with pool token", () => {
+			const token3Address = generateAddress();
+			const mockToken3 = getMockToken(
+				SupportedChain.Ethereum,
+				token3Address,
+				18,
+			);
+
+			const mockToken2 = getMockPoolToken(
+				mockToken3.address,
+				SupportedProtocol.AAVE,
+				chainId,
+				mockAddress1,
+			);
+
+			const totalToApprove = {
+				[getUniqueKey(mockToken2)]: {
+					amount: 5000n,
+					asset: mockToken2,
+					spender,
+				},
+			};
+
+			const calls = getApprovalsToVerify({}, userAddress, totalToApprove);
+
+			const firstApproval = calls[Object.keys(calls)[0] as UniqueKey];
+			const secondApproval = calls[Object.keys(calls)[1] as UniqueKey];
+
+			expect(Object.keys(calls).length).toBe(2);
+
+			expect(firstApproval.address).toBe(mockToken2.address);
+			expect(firstApproval.amount).toBe(5000n);
+			expect(firstApproval.userAddress).toBe(userAddress as AddressString);
+			expect(firstApproval.spender).toBe(spender as AddressString);
+
+			expect(secondApproval.address).toBe(mockToken2.underlyingAddress);
+			expect(secondApproval.amount).toBe(5000n);
+			expect(secondApproval.userAddress).toBe(userAddress as AddressString);
+			expect(secondApproval.spender).toBe(spender as AddressString);
+		});
 	});
 
 });

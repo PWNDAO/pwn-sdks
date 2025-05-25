@@ -221,7 +221,7 @@ export const getApprovalsToVerify = (
 
 		addOrUpdateApproval(
 			baseAssetUniqueKey as UniqueKey,
-			assetAddress as AddressString,
+			baseAssetAddress as AddressString,
 			Number(chainId),
 			amount,
 			_spender,
@@ -278,7 +278,7 @@ export const getApprovalsToVerify = (
 
 		addOrUpdateApproval(
 			baseAssetUniqueKey as UniqueKey,
-			asset.address as AddressString,
+			baseAssetAddress as AddressString,
 			asset.chainId,
 			baseAmount,
 			_spender,
