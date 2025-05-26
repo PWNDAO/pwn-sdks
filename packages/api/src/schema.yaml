@@ -197,6 +197,8 @@ paths:
           type: string
           enum:
           - ALCHEMY
+          - CELOSCAN
+          - INKONCHAIN_EXPLORER
           - MORALIS
       - in: query
         name: page
@@ -483,6 +485,38 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserProfileResponse'
           description: ''
+  /api/v1/web3auth/user_profile/stats/{walletAddress}/:
+    get:
+      operationId: web3authUserProfileStatsRetrieve
+      parameters:
+      - in: query
+        name: chain_id
+        schema:
+          type: array
+          items:
+            type: integer
+      - in: query
+        name: refresh
+        schema:
+          type: boolean
+      - in: path
+        name: walletAddress
+        schema:
+          type: string
+          pattern: ^0x[0-9A-Fa-f]{40}|0x[0-9A-Fa-f]{64}$
+        required: true
+      tags:
+      - include-sdk
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletStats'
+          description: ''
   /api/v1/web3auth/wallets/{walletAddress}/:
     get:
       operationId: web3authWalletsRetrieve
@@ -712,8 +746,11 @@ paths:
             - 137
             - 25
             - 42161
+            - 42220
             - 480
             - 56
+            - 57073
+            - 59144
             - 8453
         description: |-
           * `1` - Mainnet
@@ -730,6 +767,9 @@ paths:
           * `112211` - Sn Main
           * `11155112` - Sn Sepolia
           * `480` - World
+          * `57073` - Ink
+          * `59144` - Linea
+          * `42220` - Celo
         explode: true
         style: form
       - in: query
@@ -1055,8 +1095,11 @@ paths:
             - 137
             - 25
             - 42161
+            - 42220
             - 480
             - 56
+            - 57073
+            - 59144
             - 8453
         description: |-
           * `1` - Mainnet
@@ -1073,6 +1116,9 @@ paths:
           * `112211` - Sn Main
           * `11155112` - Sn Sepolia
           * `480` - World
+          * `57073` - Ink
+          * `59144` - Linea
+          * `42220` - Celo
         explode: true
         style: form
       - in: query
@@ -1811,6 +1857,12 @@ components:
           - type: boolean
           - type: 'null'
           title: Iskycrequired
+        underlyingTokenAddress:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Underlyingtokenaddress
       required:
       - id
       - category
@@ -1870,6 +1922,12 @@ components:
           - type: boolean
           - type: 'null'
           title: Is Kyc Required
+        underlyingTokenAddress:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Underlyingtokenaddress
       required:
       - id
       - category
@@ -2583,6 +2641,9 @@ components:
       - 112211
       - 11155112
       - 480
+      - 57073
+      - 59144
+      - 42220
       title: ChainIdEnum
       type: integer
     CollateralAssetInThesisSchemaWorkaround:
@@ -2630,6 +2691,12 @@ components:
           - type: boolean
           - type: 'null'
           title: Is Kyc Required
+        underlyingTokenAddress:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Underlyingtokenaddress
         allocationPercentage:
           title: Allocationpercentage
           type: integer
@@ -3571,6 +3638,8 @@ components:
       - COINMARKETCAP
       - SIMPLE_HASH
       - DEXSCREENER
+      - INKONCHAIN_EXPLORER
+      - CELOSCAN
       - CL_ORACLE
       - VENO_FINANCE
       - KYBER_SWAP
@@ -3605,6 +3674,8 @@ components:
       - TOKEN_LIST_BNB_SMART_CHAIN
       - TOKEN_LIST_STARKNET
       - TOKEN_LIST_COWSWAP
+      - TOKEN_LIST_CONSENSYS_LINEA
+      - TOKEN_LIST_CELO_ORG
       type: string
       description: |-
         * `PWN_OVERWRITE` - Manually updated metadata by PWN. always highest metadata source quality.
@@ -3622,6 +3693,8 @@ components:
         * `COINMARKETCAP` - CoinMarketCap
         * `SIMPLE_HASH` - Simple Hash
         * `DEXSCREENER` - DexScreener
+        * `INKONCHAIN_EXPLORER` - Inkonchain Explorer
+        * `CELOSCAN` - CeloScan
         * `CL_ORACLE` - ChainLink Oracle
         * `VENO_FINANCE` - Veno Finance
         * `KYBER_SWAP` - KyberSwap
@@ -3656,6 +3729,8 @@ components:
         * `TOKEN_LIST_BNB_SMART_CHAIN` - Binance Smart Chain Token List
         * `TOKEN_LIST_STARKNET` - StarkNet Token List
         * `TOKEN_LIST_COWSWAP` - CowSwap Token List
+        * `TOKEN_LIST_CONSENSYS_LINEA` - Consensys Linea Token List
+        * `TOKEN_LIST_CELO_ORG` - Celo Token List
     DisplayTypeEnum:
       enum:
       - NUMBER
@@ -4985,6 +5060,8 @@ components:
       - COINMARKETCAP
       - SIMPLE_HASH
       - DEXSCREENER
+      - INKONCHAIN_EXPLORER
+      - CELOSCAN
       - CL_ORACLE
       - VENO_FINANCE
       - KYBER_SWAP
@@ -5019,6 +5096,8 @@ components:
       - TOKEN_LIST_BNB_SMART_CHAIN
       - TOKEN_LIST_STARKNET
       - TOKEN_LIST_COWSWAP
+      - TOKEN_LIST_CONSENSYS_LINEA
+      - TOKEN_LIST_CELO_ORG
       title: MetadataSource
       type: string
     NFTAssetCollectionDetailSchema:
@@ -7496,6 +7575,8 @@ components:
       - COINMARKETCAP
       - SIMPLE_HASH
       - DEXSCREENER
+      - INKONCHAIN_EXPLORER
+      - CELOSCAN
       - CL_ORACLE
       - VENO_FINANCE
       - KYBER_SWAP
@@ -7530,6 +7611,8 @@ components:
       - TOKEN_LIST_BNB_SMART_CHAIN
       - TOKEN_LIST_STARKNET
       - TOKEN_LIST_COWSWAP
+      - TOKEN_LIST_CONSENSYS_LINEA
+      - TOKEN_LIST_CELO_ORG
       type: string
       description: |-
         * `PWN_OVERWRITE` - PWN_OVERWRITE
@@ -7547,6 +7630,8 @@ components:
         * `COINMARKETCAP` - COINMARKETCAP
         * `SIMPLE_HASH` - SIMPLE_HASH
         * `DEXSCREENER` - DEXSCREENER
+        * `INKONCHAIN_EXPLORER` - INKONCHAIN_EXPLORER
+        * `CELOSCAN` - CELOSCAN
         * `CL_ORACLE` - CL_ORACLE
         * `VENO_FINANCE` - VENO_FINANCE
         * `KYBER_SWAP` - KYBER_SWAP
@@ -7581,6 +7666,8 @@ components:
         * `TOKEN_LIST_BNB_SMART_CHAIN` - TOKEN_LIST_BNB_SMART_CHAIN
         * `TOKEN_LIST_STARKNET` - TOKEN_LIST_STARKNET
         * `TOKEN_LIST_COWSWAP` - TOKEN_LIST_COWSWAP
+        * `TOKEN_LIST_CONSENSYS_LINEA` - TOKEN_LIST_CONSENSYS_LINEA
+        * `TOKEN_LIST_CELO_ORG` - TOKEN_LIST_CELO_ORG
     ProposalAdmin:
       type: object
       properties:
@@ -7827,10 +7914,7 @@ components:
           default: null
           title: Createdfromproposalid
         proposalSpecificData:
-          anyOf:
-          - $ref: '#/components/schemas/ProposalSpecificData'
-          - type: 'null'
-          default: null
+          $ref: '#/components/schemas/ProposalSpecificDataSchemaWorkaround'
       required:
       - id
       - duration
@@ -7844,6 +7928,7 @@ components:
       - proposer
       - isOffer
       - type
+      - proposalSpecificData
       title: ProposalAndLoanListSchemaWorkaround
       type: object
     ProposalDetailSchema:
@@ -7999,6 +8084,110 @@ components:
           default: null
           title: Loan To Value
       title: ProposalSpecificData
+      type: object
+    ProposalSpecificDataSchemaWorkaround:
+      properties:
+        allowedAcceptor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Allowedacceptor
+        checkCollateralStateFingerprint:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          default: null
+          title: Checkcollateralstatefingerprint
+        collateralStateFingerprint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Collateralstatefingerprint
+        hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Hash
+        isOnChain:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          default: null
+          title: Isonchain
+        maxAvailableCreditAmount:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Maxavailablecreditamount
+        multiproposalMerkleRoot:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Multiproposalmerkleroot
+        nonce:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Nonce
+        nonceSpace:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Noncespace
+        proposerSpecHash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Proposerspechash
+        refinancingLoanId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          default: null
+          title: Refinancingloanid
+        signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Signature
+        utilizedCreditId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: null
+          title: Utilizedcreditid
+        feedIntermediaryDenominations:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          default: null
+          title: Feedintermediarydenominations
+        feedInvertFlags:
+          anyOf:
+          - items:
+              type: boolean
+            type: array
+          - type: 'null'
+          default: null
+          title: Feedinvertflags
+        loanToValue:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          default: null
+          title: Loantovalue
+      title: ProposalSpecificDataSchemaWorkaround
       type: object
     ProposalStatus:
       enum:
@@ -9272,6 +9461,9 @@ components:
         totalCommittedAmount:
           title: Totalcommittedamount
           type: string
+        totalAskedAmount:
+          title: Totalaskedamount
+          type: string
         totalUtilizedAmount:
           title: Totalutilizedamount
           type: string
@@ -9314,8 +9506,15 @@ components:
           - type: 'null'
           default: null
           title: Activeborrowedamount
+        isPoolHook:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          default: null
+          title: Ispoolhook
       required:
       - totalCommittedAmount
+      - totalAskedAmount
       - totalUtilizedAmount
       - totalAvailableAmount
       - aprs
@@ -9522,6 +9721,14 @@ components:
           - type: 'null'
           default: null
           title: Proposalnonces
+        borrowingProposalNonces:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          default: null
+          title: Borrowingproposalnonces
         proposalsNonceSpace:
           anyOf:
           - type: string
@@ -9536,6 +9743,14 @@ components:
           - type: 'null'
           default: null
           title: Proposalids
+        borrowingProposalIds:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          default: null
+          title: Borrowingproposalids
         loans:
           anyOf:
           - items:
@@ -12443,6 +12658,15 @@ components:
       - durationOrDate
       - utilizedCreditId
       title: V1_3_SimpleLoanSimpleProposalDetailSchemaWorkaround
+      type: object
+    VerifyGithubCodeResponse:
+      properties:
+        hasStarredRepo:
+          title: Hasstarredrepo
+          type: boolean
+      required:
+      - hasStarredRepo
+      title: VerifyGithubCodeResponse
       type: object
     WaitList:
       type: object

@@ -17,14 +17,14 @@ type ContractAddresses = {
 	tokenBundlerContract: AddressString;
 };
 
-type V1_3_Contracts = ContractAddresses & {
+export type V1_3_Contracts = ContractAddresses & {
 	pwnSimpleLoanElasticProposal: AddressString;
 	pwnSimpleLoanElasticChainlinkProposal: AddressString;
 	utilizedCredit: AddressString;
 };
 
 // starknet has no tokenBundlerContract by now
-type V1_2_StarknetContracts = Omit<
+export type V1_2_StarknetContracts = Omit<
 	ContractAddresses,
 	"tokenBundlerContract"
 > & {
@@ -132,21 +132,14 @@ const CRONOS_CONTRACTS: V1_3_Contracts = {
 
 const UNICHAIN_CONSTANTS: V1_3_Contracts = {
 	...PWN_V1_3_CONTRACTS,
-	utilizedCredit: "0x585C2D4d5D84b296921BF96598961Eec6Ae5C09C",
-	pwnSimpleLoan: "0x322e86E6c813d77a904C5B4aa808a13E0AD4412f",
-	pwnSimpleLoanSimpleProposal: "0xCAec7F837930dC9fB36B0E584FEf498714B2a951",
-	pwnSimpleLoanListProposal: "0x2ECd36747A4a18Dc578798A79c87035D610EDE9F",
-	pwnSimpleLoanElasticProposal: "0x2Bf2dC42eF08FA2C5BD15f6aDca402bf2Be75A1A",
-	pwnSimpleLoanElasticChainlinkProposal: ZERO_ADDRESS, // not deployed
-	pwnSimpleLoanDutchAuctionProposal:
-		"0x469B2C01FBb8D2073562F4Fe28aaA67D59c05Dc2",
 	tokenBundlerContract: "0x354869495Fd916ADAFc0626C3d60115240dc06f1",
+	pwnSimpleLoanElasticChainlinkProposal: ZERO_ADDRESS, // not deployed
 };
 
 // Sepolia contracts
 const SEPOLIA_CONTRACTS: V1_3_Contracts = {
 	...PWN_V1_3_CONTRACTS,
-	tokenBundlerContract: "0x448E3D0a4BAa0A0FE511a03E7B27177AeDE6d9636",
+	tokenBundlerContract: "0x448E3D0a4BAa00FE511a03E7B27177AeDE6d9636",
 	pwnSimpleLoanElasticChainlinkProposal: "0xC46170F43b97faE1A8B507d6fdDaFfBb7527D61B",
 };
 
@@ -155,6 +148,27 @@ const UNICHAIN_SEPOLIA_CONTRACTS: V1_3_Contracts = {
 	...PWN_V1_3_CONTRACTS,
 	tokenBundlerContract: "0x1381F509f56f2aaA0faBD3012455901eA53F0BbD",
 	pwnSimpleLoanElasticChainlinkProposal: ZERO_ADDRESS, // not deployed
+};
+
+// Ink contracts
+const INK_CONTRACTS: V1_3_Contracts = {
+	...PWN_V1_3_CONTRACTS,
+	tokenBundlerContract: "0x490040E1A2df842Cab527146a20534e23DcC46FF",
+	pwnSimpleLoanElasticChainlinkProposal: ZERO_ADDRESS, // not deployed
+};
+
+// Linea contracts
+const LINEA_CONTRACTS: V1_3_Contracts = {
+	...PWN_V1_3_CONTRACTS,
+	tokenBundlerContract: "0xbe13866797bbdE2646FFBb58F102FcA91EFC88F1",
+	pwnSimpleLoanElasticChainlinkProposal: "0x8E9955B34606f601491c14d5cc8247F5E0477ff1",
+};
+
+// Celo contracts
+const CELO_CONTRACTS: V1_3_Contracts = {
+	...PWN_V1_3_CONTRACTS,
+	tokenBundlerContract: "0xf2e389cEbA01db96e9bd63B5a9Fa47422dAeEb40",
+	pwnSimpleLoanElasticChainlinkProposal: "0x53fb85416cAeEE7f4d142F88685e2094f6E9E985",
 };
 
 const STARKNET_CONTRACTS: V1_2_StarknetContracts = {
@@ -183,6 +197,9 @@ export const V1_3_CHAIN_TO_ADDRESSES_MAP: Record<
 	[SupportedChain.World]: WORLDCHAIN_CONTRACTS,
 	[SupportedChain.Bsc]: BSC_CONTRACTS,
 	[SupportedChain.Cronos]: CRONOS_CONTRACTS,
+	[SupportedChain.Celo]: CELO_CONTRACTS,
+	[SupportedChain.Linea]: LINEA_CONTRACTS,
+	[SupportedChain.Ink]: INK_CONTRACTS,
 
 	[SupportedChain.Sepolia]: SEPOLIA_CONTRACTS,
 	[SupportedChain.UnichainSepolia]: UNICHAIN_SEPOLIA_CONTRACTS,

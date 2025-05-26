@@ -31,7 +31,7 @@ const nextConfig = {
 	webpack: (config) => {
 		config.externals.push("pino-pretty", "lokijs", "encoding");
 		return config;
-	  },
+	},
 
 	// backend expects trailing slashes
 	trailingSlash: true,
@@ -42,7 +42,7 @@ const nextConfig = {
 			// Handle URLs without trailing slash
 			{
 				source: "/api/v1/:path*",
-				destination: "http://api-staging.pwn.xyz/api/v1/:path*",
+				destination: "https://api-staging.pwn.xyz/api/v1/:path*",
 			},
 			// Handle URLs that already have a trailing slash
 			{

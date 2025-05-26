@@ -1,11 +1,18 @@
+import type { UserWithNonceManager } from "@pwndao/sdk-core";
 import type { ProposalWithSignature } from "src/models/strategies/types.js";
 import invariant from "ts-invariant";
 import { createChainLinkElasticProposal } from "../factories/create-chain-link-proposal.js";
 import { createElasticProposal } from "../factories/create-elastic-proposal.js";
 import { ProposalType } from "../models/proposals/proposal-base.js";
-import type { UserWithNonceManager } from "@pwndao/sdk-core";
 
-const proposalTypes = {
+type ProposalTypeMap = {
+    [ProposalType.Elastic]: typeof createElasticProposal;
+    [ProposalType.ChainLink]: typeof createChainLinkElasticProposal;
+    [ProposalType.DutchAuction]: () => void;
+    [ProposalType.Simple]: () => void;
+};
+
+const proposalTypes: ProposalTypeMap = {
 	[ProposalType.Elastic]: createElasticProposal,
 	[ProposalType.ChainLink]: createChainLinkElasticProposal,
 	[ProposalType.DutchAuction]: () => {
@@ -16,11 +23,11 @@ const proposalTypes = {
 	},
 };
 
-export const makeProposal = async <T extends ProposalType>(
+export const makeProposal = async <T extends keyof ProposalTypeMap>(
 	user: UserWithNonceManager | undefined,
 	proposalType: T,
-	proposalParams: Parameters<(typeof proposalTypes)[T]>[0],
-	deps: Parameters<(typeof proposalTypes)[T]>[1],
+	proposalParams: Parameters<ProposalTypeMap[T]>[0],
+	deps: Parameters<ProposalTypeMap[T]>[1],
 ) => {
 	invariant(
 		proposalTypes[proposalType],
@@ -44,10 +51,17 @@ export const makeProposal = async <T extends ProposalType>(
 				typeof createElasticProposal
 			>[0];
 			const elasticDeps = deps as Parameters<typeof createElasticProposal>[1];
-			const proposal = await createElasticProposal(elasticParams, elasticDeps, user);
-			proposalWithSignature = await elasticDeps.contract.createProposal(proposal, {
-				persistProposal: elasticDeps.api.persistProposal,
-			});
+			const proposal = await createElasticProposal(
+				elasticParams,
+				elasticDeps,
+				user,
+			);
+			proposalWithSignature = await elasticDeps.contract.createProposal(
+				proposal,
+				{
+					persistProposal: elasticDeps.api.persistProposal,
+				},
+			);
 			break;
 		}
 		case ProposalType.ChainLink: {
@@ -62,9 +76,12 @@ export const makeProposal = async <T extends ProposalType>(
 				chainLinkDeps,
 				user,
 			);
-			proposalWithSignature = await chainLinkDeps.contract.createProposal(proposal, {
-				persistProposal: chainLinkDeps.api.persistProposal,
-			});
+			proposalWithSignature = await chainLinkDeps.contract.createProposal(
+				proposal,
+				{
+					persistProposal: chainLinkDeps.api.persistProposal,
+				},
+			);
 			break;
 		}
 		case ProposalType.DutchAuction:

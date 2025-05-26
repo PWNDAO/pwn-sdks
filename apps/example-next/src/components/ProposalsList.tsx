@@ -1,6 +1,15 @@
 "use client";
+
 import { useStrategyProposals } from "@pwndao/sdk-v1-react";
+import type { ProposalWithSignature } from "@pwndao/v1-core";
+import type { ERC20TokenLike } from "@pwndao/sdk-core";
+
+import { useState } from "react";
+import { useAccount } from "wagmi";
+
+import { ProposalCard } from "./ProposalCard";
 import { RevokeProposals } from "./RevokeProposals";
+import { AcceptProposals } from "./AcceptProposals";
 
 export default function ProposalsList({
 	strategyId,
@@ -8,6 +17,29 @@ export default function ProposalsList({
 	strategyId: string;
 }) {
 	const { data: proposals, isLoading } = useStrategyProposals(strategyId);
+	const { address } = useAccount();
+
+	const [selectedProposals, setSelectedProposals] = useState<
+		(ProposalWithSignature & { creditAsset: ERC20TokenLike })[]
+	>([]);
+
+	const handleSelectProposal = (
+		proposal: ProposalWithSignature,
+		creditAsset: ERC20TokenLike
+	) => {
+		setSelectedProposals((prev) => {
+			if (prev.some((p) => p.hash === proposal.hash)) {
+				return prev.filter((p) => p.hash !== proposal.hash);
+			}
+			Object.assign(proposal, { creditAsset });
+
+			return [...prev, proposal as ProposalWithSignature & { creditAsset: ERC20TokenLike }];
+		});
+	};
+
+	const isSelected = (proposal: ProposalWithSignature) => {
+		return selectedProposals.some((p) => p.hash === proposal.hash);
+	};
 
 	return (
 		<div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
@@ -15,7 +47,14 @@ export default function ProposalsList({
 				Proposals List
 			</h1>
 
-			<RevokeProposals proposalsWithSignatures={proposals ?? []} />
+			<div className="flex justify-end mb-4">
+				<AcceptProposals
+					proposals={selectedProposals}
+					proposer={address}
+				/>
+
+				<RevokeProposals proposalsWithSignatures={proposals ?? []} />
+			</div>
 
 			{isLoading ? (
 				<div className="flex justify-center py-8">
@@ -26,17 +65,13 @@ export default function ProposalsList({
 			) : proposals?.length ? (
 				<div className="space-y-4">
 					{proposals.map((proposal) => (
-						<div
+						<ProposalCard
 							key={proposal.hash}
-							className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow duration-200 bg-gray-50"
-						>
-							<h2 className="text-lg font-semibold text-gray-700 truncate">
-								{proposal.hash}
-							</h2>
-							<p className="mt-2 text-sm text-gray-600 bg-gray-100 inline-block px-2 py-1 rounded">
-								{proposal.type}
-							</p>
-						</div>
+							proposal={proposal}
+							address={address}
+							isSelected={isSelected(proposal)}
+							onSelect={handleSelectProposal}
+						/>
 					))}
 				</div>
 			) : (

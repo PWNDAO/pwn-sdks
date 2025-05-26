@@ -10,7 +10,7 @@ import {
 } from "@wagmi/core";
 import invariant from "ts-invariant";
 import type { Address, Hex, Log, PublicClient } from "viem";
-import { hashMessage, hashTypedData } from "viem";
+import { hashMessage, hashTypedData, parseAbi } from "viem";
 import {
 	DEFAULT_SAFE_CONFIG,
 	SAFE_ERROR_CODES,
@@ -58,10 +58,15 @@ export class SafeService {
 
 	async isSafeAddress(address: Address): Promise<boolean> {
 		try {
-			const code = await getBytecode(this._config, {
+			const readThreshold = await readContract(this._config, {
 				address: address as Address,
+				abi: parseAbi([
+					"function getThreshold() external view returns (uint256)",
+				]),
+				functionName: "getThreshold",
 			});
-			return code !== undefined && code !== "0x";
+
+			return readThreshold >= 1;
 		} catch (error) {
 			console.error("Error checking Safe address:", error);
 			return false;
@@ -118,7 +123,7 @@ export class SafeService {
 		domain: Record<string, unknown>,
 		types: Record<string, Array<{ name: string; type: string }>>,
 		message: Record<string, unknown>,
-		primaryType = "Multiproposal",
+		primaryType: string,
 	): Promise<Hex> {
 		try {
 			const hash = hashTypedData({

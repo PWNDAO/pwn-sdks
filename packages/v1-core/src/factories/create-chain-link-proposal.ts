@@ -38,7 +38,6 @@ import {
 	calculateDurationInSeconds,
 	calculateExpirationTimestamp,
 	calculateMinCreditAmount,
-	formatLtvForContract,
 	getLtvValue,
 } from "../utils/proposal-calculations.js";
 import { createUtilizedCreditId } from "../utils/shared-credit.js";
@@ -67,13 +66,10 @@ export class ChainLinkProposalStrategy
 		contract: IProposalChainLinkContract,
 		user: UserWithNonceManager,
 	): Promise<ChainLinkProposal | undefined> {
-		// Calculate expiration timestamp
 		const expiration = calculateExpirationTimestamp(params.expirationDays);
 
-		// Get duration in seconds or timestamp
 		const durationOrDate = calculateDurationInSeconds(params.duration);
 
-		// Get LTV value for the credit-collateral pair
 		const ltv = getLtvValue(
 			params.ltv,
 			params.credit,
@@ -83,13 +79,15 @@ export class ChainLinkProposalStrategy
 
 		invariant(ltv, "LTV is undefined");
 
-		// Get feed data for ChainLink proposal
+		const creditAddress =
+			"underlyingAddress" in params.credit && params.credit.underlyingAddress
+				? params.credit.underlyingAddress
+				: params.credit.address;
+
 		const feedData = getFeedData(
 			params.collateral.chainId as ChainsWithChainLinkFeedSupport,
 			params.collateral.address,
-			"underlyingAddress" in params.credit && params.credit.underlyingAddress
-				? params.credit.underlyingAddress
-				: params.credit.address,
+			creditAddress,
 		);
 		invariant(
 			feedData,
@@ -107,7 +105,6 @@ export class ChainLinkProposalStrategy
 					: undefined;
 		invariant(minCreditAmount, "Min credit amount is undefined");
 
-		// Get common proposal fields
 		const commonFields = await getLendingCommonProposalFields(
 			{
 				nonce: user.getNextNonce(params.collateral.chainId),
@@ -123,6 +120,7 @@ export class ChainLinkProposalStrategy
 				loanContract: getLoanContractAddress(params.collateral.chainId),
 				relatedStrategyId: this.term.relatedStrategyId,
 				sourceOfFunds: params.sourceOfFunds,
+				isOffer: params.isOffer,
 			},
 			{
 				contract: contract,
@@ -130,13 +128,12 @@ export class ChainLinkProposalStrategy
 			},
 		);
 
-		// Create and return the ChainLink proposal with formatted LTV for contract
 		return new ChainLinkProposal(
 			{
 				...commonFields,
 				feedIntermediaryDenominations: feedData.feedIntermediaryDenominations,
 				feedInvertFlags: feedData.feedInvertFlags,
-				loanToValue: formatLtvForContract(ltv),
+				loanToValue: BigInt(ltv),
 				minCreditAmount,
 				chainId: params.collateral.chainId,
 				isOffer: params.isOffer,
@@ -155,16 +152,13 @@ export class ChainLinkProposalStrategy
 		const result: CreateChainLinkElasticProposalParams[] = [];
 
 		for (const credit of this.term.creditAssets) {
-			console.log(minCreditAmount, this.term.minCreditAmountPercentage);
-
-			if (
-				(!minCreditAmount && !this.term.minCreditAmountPercentage) ||
-				(minCreditAmount && this.term.minCreditAmountPercentage)
-			) {
-				throw new Error(
-					"Either minCreditAmountPercentage or minCreditAmount must be provided for this proposal type",
-				);
-			}
+			invariant(
+				!(
+					(!minCreditAmount && !this.term.minCreditAmountPercentage) ||
+					(minCreditAmount && this.term.minCreditAmountPercentage)
+				),
+				"Either minCreditAmountPercentage or minCreditAmount must be provided for this proposal type",
+			);
 
 			for (const collateral of this.term.collateralAssets) {
 				result.push({
@@ -204,14 +198,13 @@ export class ChainLinkProposalStrategy
 			utilizedCreditId,
 			isOffer,
 			sourceOfFunds,
-			minCreditAmount
+			minCreditAmount,
 		);
 		const result: ChainLinkProposal[] = [];
 
 		const proposals = await Promise.allSettled(
 			paramsArray.map(async (params) => {
 				try {
-					// Use the shared implementation directly
 					return await this.implementChainLinkProposal(
 						params,
 						this.contract,
@@ -234,8 +227,6 @@ export class ChainLinkProposalStrategy
 	}
 }
 
-// TODO create some base interface that contains all the necessary
-//  API deps for e.g. makeProposal / makeProposals functions (and some other shared functions?)?
 export interface IProposalChainLinkAPIDeps {
 	persistProposal: IServerAPI["post"]["persistProposal"];
 	persistProposals: IServerAPI["post"]["persistProposals"];
@@ -253,7 +244,6 @@ export const createChainLinkElasticProposal = async (
 	deps: ChainLinkElasticProposalDeps,
 	user: UserWithNonceManager,
 ): Promise<ChainLinkProposal> => {
-	// Create a dummy StrategyTerm with just enough data for the strategy to work
 	const dummyTerm: StrategyTerm = {
 		creditAssets: [params.credit],
 		collateralAssets: [params.collateral],
@@ -291,7 +281,6 @@ export const createChainLinkProposals = (
 	strategy: Strategy,
 	address: AddressString,
 	creditAmount: string,
-	minCreditAmount: string,
 	config: Config,
 	isOffer = true,
 ) => {
@@ -328,7 +317,6 @@ export const createChainLinkProposals = (
 					utilizedCreditId: utilizedCreditId,
 					minCreditAmountPercentage:
 						strategy.terms.minCreditAmountPercentage || 0,
-					minCreditAmount: BigInt(minCreditAmount),
 					relatedStrategyId: strategy.id,
 					collateral: collateralAsset,
 					credit: creditAsset,
@@ -340,4 +328,6 @@ export const createChainLinkProposals = (
 			});
 		}
 	}
+
+	return proposals;
 };

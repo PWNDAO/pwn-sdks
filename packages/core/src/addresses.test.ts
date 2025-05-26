@@ -32,6 +32,13 @@ describe("Addresses", () => {
 		[SupportedChain.World, "0xc0aCA216Aa936511b24Ff238F610B02bE54e10AD"],
 		[SupportedChain.Bsc, "0x4A75a527E97d853109aA6998a2B9E45a87A31e9f"],
 		[SupportedChain.Cronos, "0x973E09e96E64E4bf17e383a8A497Fb566284c707"],
+		[SupportedChain.Ink, "0x490040E1A2df842Cab527146a20534e23DcC46FF"],
+		[SupportedChain.Linea, "0xbe13866797bbdE2646FFBb58F102FcA91EFC88F1"],
+		[SupportedChain.Celo, "0xf2e389cEbA01db96e9bd63B5a9Fa47422dAeEb40"],
+		[SupportedChain.Sepolia, "0x448E3D0a4BAa00FE511a03E7B27177AeDE6d9636"],
+		[SupportedChain.Unichain, "0x354869495Fd916ADAFc0626C3d60115240dc06f1"],
+		[SupportedChain.UnichainSepolia, "0x1381F509f56f2aaA0faBD3012455901eA53F0BbD"],
+		// note: no starknet version of tokenBundlerContract
 	])("should resolve correct bundler address for %s", (chain, expected) => {
 		expect(
 			CHAIN_TO_ADDRESSES_MAP[chain as V1_3_SUPPORTED_CHAINS]

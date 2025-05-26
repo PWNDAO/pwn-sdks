@@ -1,16 +1,21 @@
 import type {
 	AddressString,
+	ERC20TokenLike,
 	Hex,
-	SupportedChain,
 	Token,
+	UniqueKey,
 	UserWithNonceManager,
 } from "@pwndao/sdk-core";
+
+import type { SupportedChain } from "@pwndao/sdk-core";
+
 import {
 	ZERO_ADDRESS,
 	ZERO_FINGERPRINT,
 	getUniqueCreditCollateralKey,
 	isPoolToken,
 } from "@pwndao/sdk-core";
+import type { Config, ReadContractsParameters } from "@wagmi/core";
 import type { IProposalChainLinkContract } from "../contracts/chain-link-proposal-contract.js";
 import type { IProposalElasticContract } from "../contracts/elastic-proposal-contract.js";
 import type { IServerAPI } from "../factories/types.js";
@@ -18,7 +23,10 @@ import type {
 	ICommonProposalFields,
 	IProposalMisc,
 } from "../models/proposals/proposal-base.js";
-import type { ProposalWithHash, ProposalWithSignature } from "../models/strategies/types.js";
+import type {
+	ProposalWithHash,
+	ProposalWithSignature,
+} from "../models/strategies/types.js";
 import type { Proposal } from "../models/strategies/types.js";
 import type { ILenderSpec } from "../models/terms.js";
 
@@ -42,13 +50,51 @@ export interface ILoanContract {
 }
 
 export interface IProposalContract<TProposal extends Proposal> {
+	config: Config;
+
 	createProposal(
 		params: TProposal,
 		deps: { persistProposal: IServerAPI["post"]["persistProposal"] },
 	): Promise<ProposalWithSignature>;
+
 	createOnChainProposal(params: TProposal): Promise<ProposalWithSignature>;
+
 	getProposalHash(proposal: TProposal): Promise<Hex>;
-	createMultiProposal(proposals: ProposalWithHash[]): Promise<ProposalWithSignature[]>;
+
+	createMultiProposal(
+		proposals: ProposalWithHash[],
+	): Promise<ProposalWithSignature[]>;
+
+	acceptProposals(
+		proposals: {
+			proposalToAccept: ProposalWithSignature;
+			acceptor: AddressString;
+			creditAmount: bigint;
+			creditAsset: ERC20TokenLike;
+		}[],
+		userAddress: AddressString,
+		totalToApprove: {
+			[key in UniqueKey]: {
+				amount: bigint;
+				asset: ERC20TokenLike;
+				spender?: AddressString;
+			};
+		},
+	): Promise<
+	{
+		to: AddressString,
+		data: Hex,
+	}[]
+	>;
+
+	getReadCollateralAmount(
+		proposal: TProposal,
+	): ReadContractsParameters["contracts"][number];
+
+	encodeProposalData(
+		proposal: ProposalWithSignature,
+		creditAmount: bigint,
+	): Promise<Hex>;
 }
 
 export type ProposalContract =
@@ -76,16 +122,17 @@ export const getLendingCommonProposalFields = async (
 		loanContract,
 		relatedStrategyId,
 		sourceOfFunds,
+		isOffer,
 	} = params;
 
-	console.log('sourceOfFunds', sourceOfFunds);
-
-	const proposerSpecHash = await deps.loanContract.getLenderSpecHash(
-		{
-			sourceOfFunds: isPoolToken(credit) ? credit.address : user.address,
-		},
-		params.collateral.chainId,
-	);
+	const proposerSpecHash = isOffer
+		? await deps.loanContract.getLenderSpecHash(
+				{
+					sourceOfFunds: sourceOfFunds ?? user.address,
+				},
+				params.collateral.chainId,
+			)
+		: ZERO_FINGERPRINT;
 
 	const creditAddress = isPoolToken(credit)
 		? credit.underlyingAddress

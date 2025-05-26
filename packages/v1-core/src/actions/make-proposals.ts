@@ -9,7 +9,11 @@ import {
 	createElasticProposal,
 } from "../factories/create-elastic-proposal.js";
 import { ProposalType } from "../models/proposals/proposal-base.js";
-import type { ImplementedProposalTypes, ProposalParamWithDeps } from "./types.js";
+import { makeProposal } from "./make-proposal.js";
+import type {
+	ImplementedProposalTypes,
+	ProposalParamWithDeps,
+} from "./types.js";
 
 export const makeProposals = async <T extends ImplementedProposalTypes>(
 	config: Config,
@@ -18,6 +22,17 @@ export const makeProposals = async <T extends ImplementedProposalTypes>(
 ) => {
 	invariant(config, "Config is required");
 	invariant(proposalParams?.length > 0, "Proposal params are required");
+
+	// Fallback to makeProposal for single proposals
+	if (proposalParams.length === 1) {
+		const singleProposal = proposalParams[0];
+		return [await makeProposal(
+			user,
+			singleProposal.type,
+			singleProposal.params,
+			singleProposal.deps,
+		)];
+	}
 
 	const proposals: ProposalWithHash[] = [];
 
@@ -38,7 +53,8 @@ export const makeProposals = async <T extends ImplementedProposalTypes>(
 				break;
 			}
 			case ProposalType.ChainLink: {
-				const chainLinkDeps = proposalParam.deps as ChainLinkElasticProposalDeps;
+				const chainLinkDeps =
+					proposalParam.deps as ChainLinkElasticProposalDeps;
 				const filledProposal = await createChainLinkElasticProposal(
 					proposalParam.params,
 					chainLinkDeps,
@@ -52,25 +68,24 @@ export const makeProposals = async <T extends ImplementedProposalTypes>(
 				break;
 			}
 			default: {
-				throw new Error(`Not implemented for proposal type ${proposalParam.type}`);
+				throw new Error(
+					`Not implemented for proposal type ${proposalParam.type}`,
+				);
 			}
 		}
 	}
 
 	const deps = proposalParams[0].deps;
 
-	const proposalsWithSignature = await deps.contract.createMultiProposal(proposals);
+	const proposalsWithSignature =
+		await deps.contract.createMultiProposal(proposals);
 
 	const usedNonces = user.getUsedNonces();
 	for (const chain in usedNonces) {
 		const _chain = Number(chain) as SupportedChain;
 		if (!usedNonces[_chain]) continue;
 
-		await deps.api.updateNonces(
-			user.address,
-			_chain,
-			usedNonces[_chain],
-		);
+		await deps.api.updateNonces(user.address, _chain, usedNonces[_chain]);
 	}
 
 	await deps.api.persistProposals(proposalsWithSignature);

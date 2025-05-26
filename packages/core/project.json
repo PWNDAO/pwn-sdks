@@ -7,6 +7,16 @@
     "sdk-core"
   ],
   "targets": {
+    "type-check": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "main": "packages/core/src/index.ts",
+        "tsConfig": "packages/core/tsconfig.lib.json",
+        "outputPath": "packages/core/dist",
+        "clean": true,
+        "noEmit": true
+      }
+    },
     "biome-lint": {
       "executor": "@gitopslovers/nx-biome:biome-lint",
       "outputs": [

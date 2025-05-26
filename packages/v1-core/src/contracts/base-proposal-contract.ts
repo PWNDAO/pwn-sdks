@@ -1,5 +1,12 @@
 import { SimpleMerkleTree } from "@openzeppelin/merkle-tree";
 import {
+	type AddressString,
+	type ERC20TokenLike,
+	type Hex,
+	type UniqueKey,
+	getLoanContractAddress,
+} from "@pwndao/sdk-core";
+import {
 	type Config,
 	getAccount,
 	getPublicClient,
@@ -7,17 +14,31 @@ import {
 	signTypedData,
 	watchContractEvent,
 } from "@wagmi/core";
-import type { GetAccountReturnType } from "@wagmi/core";
 import type {
-	IProposalContract,
-	IServerAPI,
-	Proposal,
-	ProposalWithHash,
-} from "src/index.js";
-import type { ProposalWithSignature } from "src/models/strategies/types.js";
-import type { Address, Chain, Hex, Log, PublicClient } from "viem";
+	GetAccountReturnType,
+	ReadContractsParameters,
+} from "@wagmi/core";
+import type { AcceptProposalRequest } from "src/actions/accept-proposals.js";
+import {
+	type Address,
+	type Chain,
+	type Log,
+	type PublicClient,
+	encodeFunctionData,
+} from "viem";
+import {
+	type IProposalContract,
+	type IServerAPI,
+	type Proposal,
+	type ProposalWithHash,
+	type ProposalsToAccept,
+	pwnSimpleLoanAbi,
+} from "../index.js";
+import type { ProposalWithSignature } from "../models/strategies/types.js";
 import { SafeService } from "../safe/safe-service.js";
 import type { SafeConfig } from "../safe/types.js";
+import { getApprovals } from "../utils/approvals-helper.js";
+import { getInclusionProof } from "./utilts.js";
 
 const SAFE_ABI = [
 	{
@@ -47,31 +68,61 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 	protected readonly safeService: SafeService;
 
 	constructor(
-		protected readonly config: Config,
+		readonly config: Config,
 		safeConfig?: Partial<SafeConfig>,
 	) {
 		const publicClient = getPublicClient(config) as PublicClient;
 		this.safeService = new SafeService(publicClient, config, safeConfig);
 	}
 
+	abstract encodeProposalData(
+		proposal: ProposalWithSignature,
+		creditAmount: bigint,
+	): Promise<Hex>;
+
 	abstract getProposalHash(proposal: TProposal): Promise<Hex>;
+
 	abstract createProposal(
 		params: TProposal,
 		deps: { persistProposal: IServerAPI["post"]["persistProposal"] },
 	): Promise<ProposalWithSignature>;
+
 	abstract createOnChainProposal(
 		params: TProposal,
 	): Promise<ProposalWithSignature>;
-	abstract createMultiProposal(
+
+	async createMultiProposal(
 		proposals: ProposalWithHash[],
-	): Promise<ProposalWithSignature[]>;
+	): Promise<ProposalWithSignature[]> {
+		const structToSign = this.getMerkleTreeForSigning(proposals);
+
+		const signature = await this.signWithSafeWalletSupport(
+			structToSign.domain,
+			structToSign.types,
+			structToSign.primaryType,
+			structToSign.message,
+		);
+
+		const merkleRoot = structToSign.message.multiproposalMerkleRoot;
+
+		return proposals.map(
+			(proposal) =>
+				({
+					...proposal,
+					signature,
+					hash: proposal.hash,
+					isOnChain: false,
+					multiproposalMerkleRoot: merkleRoot,
+				}) as ProposalWithSignature,
+		);
+	}
 
 	protected async signWithSafeWalletSupport(
 		domain: {
 			name: string;
 			version?: string;
-			chainId: number;
-			verifyingContract: Address;
+			chainId?: number;
+			verifyingContract?: Address;
 		},
 		types: Record<string, Array<{ name: string; type: string }>>,
 		primaryType: string,
@@ -100,12 +151,12 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 			});
 		}
 
-		// Handle Safe signature
 		return await this.safeService.signTypedData(
 			account.address as Address,
 			domain,
 			types,
 			message,
+			primaryType,
 		);
 	}
 
@@ -163,5 +214,98 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 			primaryType: "Multiproposal",
 			message: { multiproposalMerkleRoot },
 		} as const;
+	}
+
+	async getApprovalCalls(
+		proposals: ProposalsToAccept[],
+		userAddress: AddressString,
+		totalToApprove: {
+			[key in UniqueKey]: {
+				amount: bigint;
+				asset: ERC20TokenLike;
+				spender?: AddressString;
+			};
+		},
+	): Promise<{ to: AddressString; data: Hex }[]> {
+		return getApprovals(proposals, this, userAddress, totalToApprove);
+	}
+
+	abstract getReadCollateralAmount(
+		proposal: TProposal,
+	): ReadContractsParameters["contracts"][number];
+
+	async acceptProposals(
+		proposals: [AcceptProposalRequest, ...AcceptProposalRequest[]],
+		userAddress: AddressString,
+		totalToApprove: {
+			[key in UniqueKey]: {
+				amount: bigint;
+				asset: ERC20TokenLike;
+				spender?: AddressString;
+			};
+		},
+	): Promise<
+	{
+		to: AddressString,
+		data: Hex,
+	}[]
+	> {
+		const calls = await Promise.all(
+			proposals.map(
+				async ({ proposalToAccept: proposal, creditAmount, acceptor }) => {
+					// if proposal is lending offer sourceOfFunds is already set. If not then it's lender address
+					const sourceOfFunds =
+						proposal.sourceOfFunds ||
+						(proposal.isOffer && !proposal.sourceOfFunds
+							? proposal.proposer
+							: acceptor);
+
+					Object.assign(proposal, {
+						sourceOfFunds,
+					});
+
+					const encodedProposalData = await this.encodeProposalData(
+						proposal,
+						creditAmount,
+					);
+
+					const proposalInclusionProof = await getInclusionProof(proposal);
+
+					const proposalSpec = {
+						proposalContract: proposal.proposalContract,
+						proposalData: encodedProposalData,
+						proposalInclusionProof,
+						signature: proposal.signature as Hex,
+					};
+
+					const lenderSpec = {
+						sourceOfFunds,
+					};
+
+					const callerSpec = {
+						refinancingLoanId: 0n,
+						revokeNonce: false,
+						nonce: 0n,
+					};
+
+					const extra = "0x";
+
+					return {
+						to: getLoanContractAddress(proposal.chainId),
+						data: encodeFunctionData({
+							abi: pwnSimpleLoanAbi,
+							functionName: "createLOAN",
+							args: [proposalSpec, lenderSpec, callerSpec, extra],
+						}),
+					};
+				},
+			),
+		);
+
+		const approvals = await this.getApprovalCalls(proposals, userAddress, totalToApprove);
+
+		const callsWithApprovals = approvals.concat(calls);
+
+		return callsWithApprovals;
 	}
 }
