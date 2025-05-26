@@ -113,7 +113,11 @@ describe("Approvals Helper", () => {
 				]);
 				const contractWithType =
 					mockProposalContract as unknown as BaseProposalContract<Proposal>;
-				const approvals = await getApprovals(proposals, contractWithType, userAddress);
+				const approvals = await getApprovals(
+					proposals,
+					contractWithType,
+					userAddress,
+				);
 				expect(approvals).toHaveLength(1);
 				expect(approvals[0].to).toBe(mockAddress1);
 				expect(typeof approvals[0].data).toBe("string");
@@ -129,7 +133,11 @@ describe("Approvals Helper", () => {
 				const proposals = [createMockProposalRequest()];
 				const contractWithType =
 					mockProposalContract as unknown as BaseProposalContract<Proposal>;
-				const approvals = await getApprovals(proposals, contractWithType, userAddress);
+				const approvals = await getApprovals(
+					proposals,
+					contractWithType,
+					userAddress,
+				);
 				expect(approvals).toHaveLength(0);
 			});
 		});
@@ -147,7 +155,11 @@ describe("Approvals Helper", () => {
 					]);
 				const contractWithType =
 					mockProposalContract as unknown as BaseProposalContract<Proposal>;
-				const result = await getApprovals(proposals, contractWithType, userAddress);
+				const result = await getApprovals(
+					proposals,
+					contractWithType,
+					userAddress,
+				);
 				expect(mockProposalContract.getReadCollateralAmount).toHaveBeenCalled();
 				expect(result).toHaveLength(1);
 				expect(result[0].to).toBe(mockAddress2);
@@ -203,7 +215,6 @@ describe("Approvals Helper", () => {
 					{ result: 0n, status: "success" },
 					{ result: 0n, status: "success" },
 				]);
-
 
 				const totalToApprove = {
 					[getUniqueKey(mockToken2)]: {
@@ -508,9 +519,10 @@ describe("Approvals Helper", () => {
 		});
 	});
 
-
 	describe("createAllowanceAndBalanceCalls", () => {
-		const spender = getPwnSimpleLoanAddress(SupportedChain.Ethereum) as AddressString;
+		const spender = getPwnSimpleLoanAddress(
+			SupportedChain.Ethereum,
+		) as AddressString;
 
 		it("Creates allowance and balance calls for normal token", () => {
 			const token3Address = generateAddress();
@@ -522,7 +534,12 @@ describe("Approvals Helper", () => {
 			);
 
 			const items = {
-				[getUniqueKey(mockToken3)]: { proposals: [], acceptor: spender, amount: 5000n, asset: mockToken3 },
+				[getUniqueKey(mockToken3)]: {
+					proposals: [],
+					acceptor: spender,
+					amount: 5000n,
+					asset: mockToken3,
+				},
 			};
 			const totalToApprove = {};
 
@@ -540,6 +557,8 @@ describe("Approvals Helper", () => {
 		});
 
 		it("Creates allowance and balance calls for pool token", () => {
+			// pool token spender is the acceptor
+			const spender = generateAddress();
 			const token3Address = generateAddress();
 
 			const mockToken3 = getMockToken(
@@ -556,7 +575,12 @@ describe("Approvals Helper", () => {
 			);
 
 			const items = {
-				[getUniqueKey(mockToken2)]: { proposals: [], acceptor: spender, amount: 5000n, asset: mockToken2 },
+				[getUniqueKey(mockToken2)]: {
+					proposals: [],
+					acceptor: spender,
+					amount: 5000n,
+					asset: mockToken2,
+				},
 			};
 			const totalToApprove = {};
 
@@ -575,8 +599,9 @@ describe("Approvals Helper", () => {
 			expect(secondApproval.address).toBe(mockToken2.underlyingAddress);
 			expect(secondApproval.amount).toBe(5000n);
 			expect(secondApproval.userAddress).toBe(userAddress as AddressString);
-			expect(secondApproval.spender).toBe(spender as AddressString);
-
+			expect(secondApproval.spender).toBe(
+				getPwnSimpleLoanAddress(chainId) as AddressString,
+			);
 		});
 
 		it("Proposals are not provided only totalToApprove with credit token", () => {
@@ -588,9 +613,7 @@ describe("Approvals Helper", () => {
 				18,
 			);
 
-			const items = {
-				[getUniqueKey(mockToken3)]: { proposals: [], acceptor: spender, amount: 2000n, asset: mockToken3 },
-			};
+			const items = {};
 			const totalToApprove = {
 				[getUniqueKey(mockToken3)]: {
 					amount: 5000n,
@@ -650,5 +673,4 @@ describe("Approvals Helper", () => {
 			expect(secondApproval.spender).toBe(spender as AddressString);
 		});
 	});
-
 });

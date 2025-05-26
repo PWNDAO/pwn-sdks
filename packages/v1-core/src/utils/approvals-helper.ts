@@ -215,9 +215,7 @@ export const getApprovalsToVerify = (
 			chainId: Number(chainId),
 		});
 
-		const _spender = _isPoolToken
-			? acceptor
-			: getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain);
+		const _spender = getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain);
 
 		addOrUpdateApproval(
 			baseAssetUniqueKey as UniqueKey,
@@ -272,9 +270,7 @@ export const getApprovalsToVerify = (
 		const baseAmount = _isPoolToken
 			? amount + (totalToApprove[baseAssetUniqueKey as UniqueKey]?.amount ?? 0n)
 			: amount;
-		const _spender = _isPoolToken
-			? spender
-			: getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain);
+		const _spender = getPwnSimpleLoanAddress(Number(asset.chainId) as SupportedChain);
 
 		addOrUpdateApproval(
 			baseAssetUniqueKey as UniqueKey,
