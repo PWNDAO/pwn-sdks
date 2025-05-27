@@ -1,0 +1,28 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  # Simple Loan Contract
+  - kind: ethereum/contract
+    name: PWN_SimpleLoan
+    network: {{network}}
+    source:
+      address: "{{SimpleLoanAddress}}"
+      abi: SimpleLoan
+      startBlock: {{SimpleLoanStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: [ Loan, Account ]
+      abis:
+        - name: SimpleLoan
+          file: ./abis/SimpleLoan.json
+      eventHandlers:
+        - event: LOANCreated(indexed uint256,indexed bytes32,indexed address,uint256,(address,address,uint32,(uint8,address,uint256,uint256),(uint8,address,uint256,uint256),uint256,uint24,bytes32,bytes32),(address),bytes)
+          handler: handleLOANCreated
+        - event: LOANPaidBack(indexed uint256)
+          handler: handleLOANPaidBack
+        - event: LOANClaimed(indexed uint256,indexed bool)
+          handler: handleLOANClaimed
+      file: ./src/loan-mapping.ts

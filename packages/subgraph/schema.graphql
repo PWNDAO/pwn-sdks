@@ -1,0 +1,52 @@
+type Account @entity(immutable: true) {
+	id: Bytes! # Ethereum address
+	loansAsBorrower: [Loan!]! @derivedFrom(field: "borrower")
+	loansAsLender: [Loan!]! @derivedFrom(field: "lender")
+}
+
+type Asset @entity(immutable: true) {
+	id: String! # Combination of chainId and loanId from contract
+
+	category: Int!
+	assetAddress: Bytes!
+	assetId: BigInt!
+	amount: BigDecimal!
+}
+
+type Loan @entity(immutable: false) {
+	# Combination of chainId and loanId from contract
+	id: String!
+
+	# Loan ID from contract event
+	loanId: BigInt!
+  
+  # Proposal contract address
+  proposalContract: Bytes!
+
+  # Loan contract address
+	contractAddress: Bytes!
+
+  # Hash of accepted proposal
+	proposalHash: Bytes!
+
+  borrower: Account!
+  lender: Account!
+
+  createdAt: BigInt!
+
+  # Terms
+
+  # Duration
+  duration: BigInt!
+
+  # Collateral
+  collateral: Asset!
+
+  # Credit
+  credit: Asset!
+
+  # Status might be ACTIVE, REPAID, DEFAULTED, CLAIMED
+  status: String!
+
+	extra: Bytes!
+}
