@@ -5,11 +5,11 @@ dataSources:
   # Simple Loan Contract
   - kind: ethereum/contract
     name: PWN_SimpleLoan
-    network: sepolia
+    network: {{network}}
     source:
-      address: "0x719A69d0dc67bd3Aa7648D4694081B3c87952797"
+      address: "{{SimpleLoanAddress}}"
       abi: SimpleLoan
-      startBlock: 7298850
+      startBlock: {{SimpleLoanStartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
