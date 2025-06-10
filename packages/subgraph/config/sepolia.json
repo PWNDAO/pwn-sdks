@@ -39,5 +39,13 @@
   "MultiTokenCategoryRegistry": {
     "address": "0xbB2168d5546A94AE2DA9254e63D88F7f137B2534",
     "startBlock": 5953672    
+  },
+  "SimpleLoanUniswapV3LPIndividualProposal": {
+    "address": "0xF966696BE0623447679AC830FC5bB7bDB15FEAB4",
+    "startBlock": 8518575
+  },
+  "SimpleLoanUniswapV3LPSetProposal": {
+    "address": "0x7b48798CE8e95f1412078cF2e1a176CA12839AfA",
+    "startBlock": 8518575
   }
 }

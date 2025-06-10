@@ -12,10 +12,11 @@ import {
   LOANExtended,
   Loan,
 } from "../generated/schema"
-import { getOrCreateAccount, getOrCreateAsset } from "./loan-mapping"
+import { getOrCreateAccount } from "./helpers"
+import { getOrCreateAsset } from "./utils"
 
 export function getLoanId(loanContractAddress: Address, loanId: BigInt): Bytes {
-  return loanContractAddress.concat(Bytes.fromBigInt(loanId))
+  return loanContractAddress.concat(Bytes.fromByteArray(Bytes.fromBigInt(loanId)))
 }
 
 export function handleLOANCreated(event: LOANCreatedEvent): void {
@@ -33,9 +34,9 @@ export function handleLOANCreated(event: LOANCreatedEvent): void {
 
   loan.createdAt = event.block.timestamp
 
-  loan.collateral = getOrCreateAsset(event.params.terms.collateral).id
+  loan.collateral = getOrCreateAsset(event.params.terms.collateral.assetAddress, event.params.terms.collateral.id, event.params.terms.collateral.category).id
   loan.collateralAmount = event.params.terms.collateral.amount
-  loan.credit = getOrCreateAsset(event.params.terms.credit).id
+  loan.credit = getOrCreateAsset(event.params.terms.credit.assetAddress, event.params.terms.credit.id, event.params.terms.credit.category).id
   loan.creditAmount = event.params.terms.credit.amount
 
   loan.status = "Active"
@@ -52,7 +53,7 @@ export function handleLOANCreated(event: LOANCreatedEvent): void {
 
   loan.extra = event.params.extra
 
-  const simpleLoanContract = SimpleLoan.bind(loan.contractAddress)
+  const simpleLoanContract = SimpleLoan.bind(Address.fromBytes(loan.contractAddress))
   loan.loanTokenAddress = simpleLoanContract.loanToken()
 
   loan.save()
@@ -96,6 +97,9 @@ export function handleLOANExtended(event: LOANExtendedEvent): void {
     // TODO what to do in this case?
     return
   }
+
+	const extensionDuration = event.params.extendedDefaultTimestamp.minus(loan.defaultDate);
+  loan.duration = loan.duration.plus(extensionDuration);
 
   loan.defaultDate = event.params.extendedDefaultTimestamp
   loan.save()

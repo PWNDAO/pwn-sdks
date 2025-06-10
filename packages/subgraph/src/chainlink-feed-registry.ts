@@ -12,7 +12,7 @@ function getChainlinkFeedId(event: FeedConfirmedEvent): Bytes {
 
 export function handleFeedConfirmed(event: FeedConfirmedEvent): void {
   const chainlinkFeedId = getChainlinkFeedId(event)
-  const chainlinkFeed = ChainlinkFeed.load(chainlinkFeedId)
+  let chainlinkFeed = ChainlinkFeed.load(chainlinkFeedId)
   if (chainlinkFeed == null) {
     chainlinkFeed = new ChainlinkFeed(chainlinkFeedId)
   }

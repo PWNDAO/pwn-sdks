@@ -41,6 +41,8 @@ type Loan @entity(immutable: false) {
 
 	# Loan ID from contract event
 	loanId: BigInt!
+
+  proposal: Proposal
   
   # Proposal contract address
   proposalContract: Bytes!
@@ -92,64 +94,277 @@ type Loan @entity(immutable: false) {
   # TODO also add Loan contract version?
 }
 
+enum ProposalStatus {
+  # TODO can we even handle statuses aother than Active?
+  Active
+  Revoked
+  Expired
+  Accepted
+}
+
+enum ProposalType {
+  Simple
+  List
+  Elastic
+  ElasticChainlink
+  UniswapV3LPIndividual
+  UniswapV3LPSet
+}
+
+# TODO do interface for common proposal base fields???
+
+# TODO how can we mark this proposal as revoked when a nonce is revoked?
+type Proposal @entity(immutable: true) {
+  id: Bytes!  # proposal hash
+  proposer: Bytes! # address
+  createdAt: BigInt!
+  
+  # Proposal type discriminator
+  proposalType: ProposalType!
+
+  # Common fields for all proposal types
+  credit: Asset!
+  fixedInterestAmount: BigInt!
+  accruingInterestAPR: Int!
+  availableCreditLimit: BigInt!
+  utilizedCreditId: Bytes!
+  durationOrDate: BigInt!
+  expiration: BigInt!
+  proposerSpecHash: Bytes!
+  isOffer: Boolean!
+  refinancingLoanId: BigInt!
+  nonceSpace: BigInt!
+  nonce: BigInt!
+  loanContract: Bytes!
+  status: ProposalStatus!
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+  loans: [Loan!]! @derivedFrom(field: "proposal")
+
+  # Simple proposal specific fields (ProposalType.Simple)
+  # - collateral: Asset (active)
+  # - collateralAmount: BigInt (active)
+  # - creditAmount: BigInt (active)
+  # - allowedAcceptor: Bytes (active)
+  # - checkCollateralStateFingerprint: Boolean (active)
+  # - collateralStateFingerprint: Bytes (active)
+  collateral: Asset
+  collateralAmount: BigInt
+  creditAmount: BigInt
+  allowedAcceptor: Bytes
+  checkCollateralStateFingerprint: Boolean
+  collateralStateFingerprint: Bytes
+
+  # List proposal specific fields (ProposalType.List)
+  # - collateral: Asset (shared with Simple)
+  # - collateralAmount: BigInt (shared with Simple)
+  # - creditAmount: BigInt (shared with Simple)
+  # - allowedAcceptor: Bytes (shared with Simple)
+  # - checkCollateralStateFingerprint: Boolean (shared with Simple)
+  # - collateralStateFingerprint: Bytes (shared with Simple)
+  # - collateralIdsWhitelistMerkleRoot: Bytes (active)
+  collateralIdsWhitelistMerkleRoot: Bytes
+
+  # Elastic proposal specific fields (ProposalType.Elastic)
+  # - collateral: Asset (shared, but uses collateralId instead of full Asset)
+  # - checkCollateralStateFingerprint: Boolean (shared)
+  # - collateralStateFingerprint: Bytes (shared)
+  # - creditPerCollateralUnit: BigInt (active)
+  # - minCreditAmount: BigInt (active)
+  # - allowedAcceptor: Bytes (shared)
+  creditPerCollateralUnit: BigInt
+  minCreditAmount: BigInt
+
+  # Elastic Chainlink proposal specific fields (ProposalType.ElasticChainlink)
+  # - collateral: Asset (shared, but uses collateralId)
+  # - checkCollateralStateFingerprint: Boolean (shared)
+  # - collateralStateFingerprint: Bytes (shared)
+  # - feedIntermediaryDenominations: [Bytes!] (active)
+  # - feedInvertFlags: [Boolean!] (active)
+  # - loanToValue: BigInt (active)
+  # - minCreditAmount: BigInt (shared with Elastic)
+  # - allowedAcceptor: Bytes (shared)
+  feedIntermediaryDenominations: [Bytes!]
+  feedInvertFlags: [Boolean!]
+  loanToValue: BigInt
+
+  # Uniswap V3 LP Individual proposal specific fields (ProposalType.UniswapV3LPIndividual)
+  # - collateralId: BigInt (active)
+  # - token0Denominator: Boolean (active)
+  # - feedIntermediaryDenominations: [Bytes!] (shared with ElasticChainlink)
+  # - feedInvertFlags: [Boolean!] (shared with ElasticChainlink)
+  # - loanToValue: BigInt (shared with ElasticChainlink)
+  # - minCreditAmount: BigInt (shared)
+  # - acceptorController: Bytes (active)
+  # - acceptorControllerData: Bytes (active)
+  collateralId: BigInt
+  token0Denominator: Boolean
+  acceptorController: Bytes
+  acceptorControllerData: Bytes
+
+  # Uniswap V3 LP Set proposal specific fields (ProposalType.UniswapV3LPSet)
+  # - tokenAAllowlist: [Bytes!] (active)
+  # - tokenBAllowlist: [Bytes!] (active)
+  # - feedIntermediaryDenominations: [Bytes!] (shared with ElasticChainlink)
+  # - feedInvertFlags: [Boolean!] (shared with ElasticChainlink)
+  # - loanToValue: BigInt (shared with ElasticChainlink)
+  # - minCreditAmount: BigInt (shared)
+  # - acceptorController: Bytes (shared with UniswapV3LPIndividual)
+  # - acceptorControllerData: Bytes (shared with UniswapV3LPIndividual)
+  tokenAAllowlist: [Bytes!]
+  tokenBAllowlist: [Bytes!]
+
+  # Direct reference to the raw event entity for easy function calls
+  rawEventSimple: SimpleLoanSimpleProposalMade
+  rawEventList: SimpleLoanListProposalProposalMade
+  rawEventElastic: SimpleLoanElasticProposalProposalMade
+  rawEventElasticChainlink: SimpleLoanElasticChainlinkProposalProposalMade
+  rawEventUniswapV3LPIndividual: SimpleLoanUniswapV3LPIndividualProposalProposalMade
+  rawEventUniswapV3LPSet: SimpleLoanUniswapV3LPSetProposalProposalMade
+}
+
 # TODO add version
 
-type ProposalMade @entity(immutable: true) {
+type SimpleLoanSimpleProposalMade @entity(immutable: true) {
   id: Bytes!
   proposalHash: Bytes! # bytes32
   proposer: Bytes! # address
-  proposal_collateralCategory: Int! # uint8
-  proposal_collateralAddress: Bytes! # address
-  proposal_collateralId: BigInt! # uint256
-  proposal_collateralAmount: BigInt! # uint256
-  proposal_checkCollateralStateFingerprint: Boolean! # bool
-  proposal_collateralStateFingerprint: Bytes! # bytes32
-  proposal_creditAddress: Bytes! # address
-  proposal_creditAmount: BigInt! # uint256
-  proposal_availableCreditLimit: BigInt! # uint256
-  proposal_utilizedCreditId: Bytes! # bytes32
-  proposal_fixedInterestAmount: BigInt! # uint256
-  proposal_accruingInterestAPR: Int! # uint24
-  proposal_durationOrDate: BigInt! # uint32
-  proposal_expiration: BigInt! # uint40
-  proposal_allowedAcceptor: Bytes! # address
-  proposal_proposer: Bytes! # address
-  proposal_proposerSpecHash: Bytes! # bytes32
-  proposal_isOffer: Boolean! # bool
-  proposal_refinancingLoanId: BigInt! # uint256
-  proposal_nonceSpace: BigInt! # uint256
-  proposal_nonce: BigInt! # uint256
-  proposal_loanContract: Bytes! # address
+  
+  # Reference to the unified Proposal entity
+  proposal: Proposal!
+  
+  # Raw proposal parameters (for easy extraction to function calls)
+  collateralCategory: Int! # uint8
+  collateralAddress: Bytes! # address
+  collateralId: BigInt! # uint256
+  collateralAmount: BigInt! # uint256
+  checkCollateralStateFingerprint: Boolean! # bool
+  collateralStateFingerprint: Bytes! # bytes32
+  creditAddress: Bytes! # address
+  creditAmount: BigInt! # uint256
+  availableCreditLimit: BigInt! # uint256
+  utilizedCreditId: Bytes! # bytes32
+  fixedInterestAmount: BigInt! # uint256
+  accruingInterestAPR: Int! # uint24
+  durationOrDate: BigInt! # uint32
+  expiration: BigInt! # uint40
+  allowedAcceptor: Bytes! # address
+  proposerAddress: Bytes! # address (renamed to avoid conflict with proposer field)
+  proposerSpecHash: Bytes! # bytes32
+  isOffer: Boolean! # bool
+  refinancingLoanId: BigInt! # uint256
+  nonceSpace: BigInt! # uint256
+  nonce: BigInt! # uint256
+  loanContract: Bytes! # address
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
+
+type SimpleLoanUniswapV3LPIndividualProposalProposalMade
+  @entity(immutable: true) {
+  id: Bytes!
+  proposalHash: Bytes! # bytes32
+  proposer: Bytes! # address
+  
+  # Reference to the unified Proposal entity
+  proposal: Proposal!
+  
+  # Raw proposal parameters (for easy extraction to function calls)
+  collateralId: BigInt! # uint256
+  token0Denominator: Boolean! # bool
+  creditAddress: Bytes! # address
+  feedIntermediaryDenominations: [Bytes!]! # address[]
+  feedInvertFlags: [Boolean!]! # bool[]
+  loanToValue: BigInt! # uint256
+  minCreditAmount: BigInt! # uint256
+  availableCreditLimit: BigInt! # uint256
+  utilizedCreditId: Bytes! # bytes32
+  fixedInterestAmount: BigInt! # uint256
+  accruingInterestAPR: Int! # uint24
+  durationOrDate: BigInt! # uint32
+  expiration: BigInt! # uint40
+  acceptorController: Bytes! # address
+  acceptorControllerData: Bytes! # bytes
+  proposerAddress: Bytes! # address (renamed to avoid conflict with proposer field)
+  proposerSpecHash: Bytes! # bytes32
+  isOffer: Boolean! # bool
+  refinancingLoanId: BigInt! # uint256
+  nonceSpace: BigInt! # uint256
+  nonce: BigInt! # uint256
+  loanContract: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SimpleLoanUniswapV3LPSetProposalProposalMade @entity(immutable: true) {
+  id: Bytes!
+  proposalHash: Bytes! # bytes32
+  proposer: Bytes! # address
+  
+  # Reference to the unified Proposal entity
+  proposal: Proposal!
+  
+  # Raw proposal parameters (for easy extraction to function calls)
+  tokenAAllowlist: [Bytes!]! # address[]
+  tokenBAllowlist: [Bytes!]! # address[]
+  creditAddress: Bytes! # address
+  feedIntermediaryDenominations: [Bytes!]! # address[]
+  feedInvertFlags: [Boolean!]! # bool[]
+  loanToValue: BigInt! # uint256
+  minCreditAmount: BigInt! # uint256
+  availableCreditLimit: BigInt! # uint256
+  utilizedCreditId: Bytes! # bytes32
+  fixedInterestAmount: BigInt! # uint256
+  accruingInterestAPR: Int! # uint24
+  durationOrDate: BigInt! # uint32
+  expiration: BigInt! # uint40
+  acceptorController: Bytes! # address
+  acceptorControllerData: Bytes! # bytes
+  proposerAddress: Bytes! # address (renamed to avoid conflict with proposer field)
+  proposerSpecHash: Bytes! # bytes32
+  isOffer: Boolean! # bool
+  refinancingLoanId: BigInt! # uint256
+  nonceSpace: BigInt! # uint256
+  nonce: BigInt! # uint256
+  loanContract: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
 type SimpleLoanListProposalProposalMade @entity(immutable: true) {
   id: Bytes!
   proposalHash: Bytes! # bytes32
   proposer: Bytes! # address
-  proposal_collateralCategory: Int! # uint8
-  proposal_collateralAddress: Bytes! # address
-  proposal_collateralIdsWhitelistMerkleRoot: Bytes! # bytes32
-  proposal_collateralAmount: BigInt! # uint256
-  proposal_checkCollateralStateFingerprint: Boolean! # bool
-  proposal_collateralStateFingerprint: Bytes! # bytes32
-  proposal_creditAddress: Bytes! # address
-  proposal_creditAmount: BigInt! # uint256
-  proposal_availableCreditLimit: BigInt! # uint256
-  proposal_utilizedCreditId: Bytes! # bytes32
-  proposal_fixedInterestAmount: BigInt! # uint256
-  proposal_accruingInterestAPR: Int! # uint24
-  proposal_durationOrDate: BigInt! # uint32
-  proposal_expiration: BigInt! # uint40
-  proposal_allowedAcceptor: Bytes! # address
-  proposal_proposer: Bytes! # address
-  proposal_proposerSpecHash: Bytes! # bytes32
-  proposal_isOffer: Boolean! # bool
-  proposal_refinancingLoanId: BigInt! # uint256
-  proposal_nonceSpace: BigInt! # uint256
-  proposal_nonce: BigInt! # uint256
-  proposal_loanContract: Bytes! # address
+  
+  # Reference to the unified Proposal entity
+  proposal: Proposal!
+  
+  # Raw proposal parameters (for easy extraction to function calls)
+  collateralCategory: Int! # uint8
+  collateralAddress: Bytes! # address
+  collateralIdsWhitelistMerkleRoot: Bytes! # bytes32
+  collateralAmount: BigInt! # uint256
+  checkCollateralStateFingerprint: Boolean! # bool
+  collateralStateFingerprint: Bytes! # bytes32
+  creditAddress: Bytes! # address
+  creditAmount: BigInt! # uint256
+  availableCreditLimit: BigInt! # uint256
+  utilizedCreditId: Bytes! # bytes32
+  fixedInterestAmount: BigInt! # uint256
+  accruingInterestAPR: Int! # uint24
+  durationOrDate: BigInt! # uint32
+  expiration: BigInt! # uint40
+  allowedAcceptor: Bytes! # address
+  proposerAddress: Bytes! # address (renamed to avoid conflict with proposer field)
+  proposerSpecHash: Bytes! # bytes32
+  isOffer: Boolean! # bool
+  refinancingLoanId: BigInt! # uint256
+  nonceSpace: BigInt! # uint256
+  nonce: BigInt! # uint256
+  loanContract: Bytes! # address
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -158,28 +373,33 @@ type SimpleLoanElasticProposalProposalMade @entity(immutable: true) {
   id: Bytes!
   proposalHash: Bytes! # bytes32
   proposer: Bytes! # address
-  proposal_collateralCategory: Int! # uint8
-  proposal_collateralAddress: Bytes! # address
-  proposal_collateralId: BigInt! # uint256
-  proposal_checkCollateralStateFingerprint: Boolean! # bool
-  proposal_collateralStateFingerprint: Bytes! # bytes32
-  proposal_creditAddress: Bytes! # address
-  proposal_creditPerCollateralUnit: BigInt! # uint256
-  proposal_minCreditAmount: BigInt! # uint256
-  proposal_availableCreditLimit: BigInt! # uint256
-  proposal_utilizedCreditId: Bytes! # bytes32
-  proposal_fixedInterestAmount: BigInt! # uint256
-  proposal_accruingInterestAPR: Int! # uint24
-  proposal_durationOrDate: BigInt! # uint32
-  proposal_expiration: BigInt! # uint40
-  proposal_allowedAcceptor: Bytes! # address
-  proposal_proposer: Bytes! # address
-  proposal_proposerSpecHash: Bytes! # bytes32
-  proposal_isOffer: Boolean! # bool
-  proposal_refinancingLoanId: BigInt! # uint256
-  proposal_nonceSpace: BigInt! # uint256
-  proposal_nonce: BigInt! # uint256
-  proposal_loanContract: Bytes! # address
+  
+  # Reference to the unified Proposal entity
+  proposal: Proposal!
+  
+  # Raw proposal parameters (for easy extraction to function calls)
+  collateralCategory: Int! # uint8
+  collateralAddress: Bytes! # address
+  collateralId: BigInt! # uint256
+  checkCollateralStateFingerprint: Boolean! # bool
+  collateralStateFingerprint: Bytes! # bytes32
+  creditAddress: Bytes! # address
+  creditPerCollateralUnit: BigInt! # uint256
+  minCreditAmount: BigInt! # uint256
+  availableCreditLimit: BigInt! # uint256
+  utilizedCreditId: Bytes! # bytes32
+  fixedInterestAmount: BigInt! # uint256
+  accruingInterestAPR: Int! # uint24
+  durationOrDate: BigInt! # uint32
+  expiration: BigInt! # uint40
+  allowedAcceptor: Bytes! # address
+  proposerAddress: Bytes! # address (renamed to avoid conflict with proposer field)
+  proposerSpecHash: Bytes! # bytes32
+  isOffer: Boolean! # bool
+  refinancingLoanId: BigInt! # uint256
+  nonceSpace: BigInt! # uint256
+  nonce: BigInt! # uint256
+  loanContract: Bytes! # address
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -188,30 +408,35 @@ type SimpleLoanElasticChainlinkProposalProposalMade @entity(immutable: true) {
   id: Bytes!
   proposalHash: Bytes! # bytes32
   proposer: Bytes! # address
-  proposal_collateralCategory: Int! # uint8
-  proposal_collateralAddress: Bytes! # address
-  proposal_collateralId: BigInt! # uint256
-  proposal_checkCollateralStateFingerprint: Boolean! # bool
-  proposal_collateralStateFingerprint: Bytes! # bytes32
-  proposal_creditAddress: Bytes! # address
-  proposal_feedIntermediaryDenominations: [Bytes!]! # address[]
-  proposal_feedInvertFlags: [Boolean!]! # bool[]
-  proposal_loanToValue: BigInt! # uint256
-  proposal_minCreditAmount: BigInt! # uint256
-  proposal_availableCreditLimit: BigInt! # uint256
-  proposal_utilizedCreditId: Bytes! # bytes32
-  proposal_fixedInterestAmount: BigInt! # uint256
-  proposal_accruingInterestAPR: Int! # uint24
-  proposal_durationOrDate: BigInt! # uint32
-  proposal_expiration: BigInt! # uint40
-  proposal_allowedAcceptor: Bytes! # address
-  proposal_proposer: Bytes! # address
-  proposal_proposerSpecHash: Bytes! # bytes32
-  proposal_isOffer: Boolean! # bool
-  proposal_refinancingLoanId: BigInt! # uint256
-  proposal_nonceSpace: BigInt! # uint256
-  proposal_nonce: BigInt! # uint256
-  proposal_loanContract: Bytes! # address
+  
+  # Reference to the unified Proposal entity
+  proposal: Proposal!
+  
+  # Raw proposal parameters (for easy extraction to function calls)
+  collateralCategory: Int! # uint8
+  collateralAddress: Bytes! # address
+  collateralId: BigInt! # uint256
+  checkCollateralStateFingerprint: Boolean! # bool
+  collateralStateFingerprint: Bytes! # bytes32
+  creditAddress: Bytes! # address
+  feedIntermediaryDenominations: [Bytes!]! # address[]
+  feedInvertFlags: [Boolean!]! # bool[]
+  loanToValue: BigInt! # uint256
+  minCreditAmount: BigInt! # uint256
+  availableCreditLimit: BigInt! # uint256
+  utilizedCreditId: Bytes! # bytes32
+  fixedInterestAmount: BigInt! # uint256
+  accruingInterestAPR: Int! # uint24
+  durationOrDate: BigInt! # uint32
+  expiration: BigInt! # uint40
+  allowedAcceptor: Bytes! # address
+  proposerAddress: Bytes! # address (renamed to avoid conflict with proposer field)
+  proposerSpecHash: Bytes! # bytes32
+  isOffer: Boolean! # bool
+  refinancingLoanId: BigInt! # uint256
+  nonceSpace: BigInt! # uint256
+  nonce: BigInt! # uint256
+  loanContract: Bytes! # address
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -234,6 +459,55 @@ type ExtensionProposal @entity(immutable: true) {
   nonceSpace: BigInt!
 
   createdAt: BigInt!
+}
+
+type ChainlinkFeed @entity(immutable: true) {
+  id: Bytes!
+  asset: Bytes! # address
+  denomination: Bytes! # address
+  aggregator: Bytes! # feed address
+}
+
+type LOANExtended @entity(immutable: true) {
+  id: Bytes!
+  loanId: BigInt! # uint256
+  originalDefaultTimestamp: BigInt! # uint40
+  extendedDefaultTimestamp: BigInt! # uint40
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type LoanTokenTransfer @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes! # address
+  to: Bytes! # address
+  tokenId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TagSet @entity(immutable: true) {
+  id: Bytes!
+  _address: Bytes! # address
+  tag: Bytes! # bytes32
+  hasTag: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+# ==============================
+# TO REMOVE???
+# ==============================
+
+type LOANPaidBack @entity(immutable: true) {
+  id: Bytes!
+  loanId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
 }
 
 type LOANClaimed @entity(immutable: true) {
@@ -273,90 +547,44 @@ type LOANCreated @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type LOANExtended @entity(immutable: true) {
-  id: Bytes!
-  loanId: BigInt! # uint256
-  originalDefaultTimestamp: BigInt! # uint40
-  extendedDefaultTimestamp: BigInt! # uint40
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type LOANPaidBack @entity(immutable: true) {
-  id: Bytes!
-  loanId: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type LoanTokenTransfer @entity(immutable: true) {
-  id: Bytes!
-  from: Bytes! # address
-  to: Bytes! # address
-  tokenId: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type TagSet @entity(immutable: true) {
-  id: Bytes!
-  _address: Bytes! # address
-  tag: Bytes! # bytes32
-  hasTag: Boolean! # bool
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type DefaultLOANMetadataUriUpdated @entity(immutable: true) {
-  id: Bytes!
-  newUri: String! # string
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type FeeCollectorUpdated @entity(immutable: true) {
-  id: Bytes!
-  oldFeeCollector: Bytes! # address
-  newFeeCollector: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type FeeUpdated @entity(immutable: true) {
-  id: Bytes!
-  oldFee: Int! # uint16
-  newFee: Int! # uint16
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type LOANMetadataUriUpdated @entity(immutable: true) {
-  id: Bytes!
-  loanContract: Bytes! # address
-  newUri: String! # string
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type ChainlinkFeed @entity(immutable: true) {
-  id: Bytes!
-  asset: Bytes! # address
-  denomination: Bytes! # address
-  aggregator: Bytes! # feed address
-}
-
 # ===============================
 # UNUSED ENTITIES
 # ===============================
 
+# type DefaultLOANMetadataUriUpdated @entity(immutable: true) {
+#   id: Bytes!
+#   newUri: String! # string
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type FeeCollectorUpdated @entity(immutable: true) {
+#   id: Bytes!
+#   oldFeeCollector: Bytes! # address
+#   newFeeCollector: Bytes! # address
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type FeeUpdated @entity(immutable: true) {
+#   id: Bytes!
+#   oldFee: Int! # uint16
+#   newFee: Int! # uint16
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type LOANMetadataUriUpdated @entity(immutable: true) {
+#   id: Bytes!
+#   loanContract: Bytes! # address
+#   newUri: String! # string
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
 # type LOANBurned @entity(immutable: true) {
 #   id: Bytes!
 #   loanId: BigInt! # uint256

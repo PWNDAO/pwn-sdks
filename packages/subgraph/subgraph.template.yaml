@@ -318,4 +318,45 @@ dataSources:
         #- event: OwnershipTransferred(indexed address,indexed address)
        #   handler: handleOwnershipTransferred
       file: ./src/multi-token-category-registry.ts
-
+  - kind: ethereum
+    name: SimpleLoanUniswapV3LPIndividualProposal
+    network: {{network}}
+    source:
+      address: "{{SimpleLoanUniswapV3LPIndividualProposal.address}}"
+      abi: SimpleLoanUniswapV3LPIndividualProposal
+      startBlock: {{SimpleLoanUniswapV3LPIndividualProposal.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - SimpleLoanUniswapV3LPIndividualProposalProposalMade
+      abis:
+        - name: SimpleLoanUniswapV3LPIndividualProposal
+          file: ./abis/SimpleLoanUniswapV3LPIndividualProposal.json
+      eventHandlers:
+        - event: ProposalMade(indexed bytes32,indexed
+            address,(uint256,bool,address,address[],bool[],uint256,uint256,uint256,bytes32,uint256,uint24,uint32,uint40,address,bytes,address,bytes32,bool,uint256,uint256,uint256,address))
+          handler: handleProposalMade
+      file: ./src/simple-loan-uniswap-v-3-lp-individual-proposal.ts
+  - kind: ethereum
+    name: SimpleLoanUniswapV3LPSetProposal
+    network: {{network}}
+    source:
+      address: "{{SimpleLoanUniswapV3LPSetProposal.address}}"
+      abi: SimpleLoanUniswapV3LPSetProposal
+      startBlock: {{SimpleLoanUniswapV3LPSetProposal.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - SimpleLoanUniswapV3LPSetProposalProposalMade
+      abis:
+        - name: SimpleLoanUniswapV3LPSetProposal
+          file: ./abis/SimpleLoanUniswapV3LPSetProposal.json
+      eventHandlers:
+        - event: ProposalMade(indexed bytes32,indexed
+            address,(address[],address[],address,address[],bool[],uint256,uint256,uint256,bytes32,uint256,uint24,uint32,uint40,address,bytes,address,bytes32,bool,uint256,uint256,uint256,address))
+          handler: handleProposalMade
+      file: ./src/simple-loan-uniswap-v-3-lp-set-proposal.ts

@@ -1,26 +1,29 @@
-import { ProposalMade as ProposalMadeEvent } from "../generated/SimpleLoanListProposal/SimpleLoanListProposal"
-import { SimpleLoanListProposalProposalMade, Proposal } from "../generated/schema"
+import { ProposalMade as ProposalMadeEvent } from "../generated/SimpleLoanUniswapV3LPSetProposal/SimpleLoanUniswapV3LPSetProposal"
+import { SimpleLoanUniswapV3LPSetProposalProposalMade, Proposal } from "../generated/schema"
 import { getOrCreateAsset } from "./utils"
+import { Bytes } from "@graphprotocol/graph-ts"
 import { BigInt } from "@graphprotocol/graph-ts"
 
 export function handleProposalMade(event: ProposalMadeEvent): void {
   // Create the specific event entity
-  const eventEntity = new SimpleLoanListProposalProposalMade(
+  const eventEntity = new SimpleLoanUniswapV3LPSetProposalProposalMade(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   eventEntity.proposalHash = event.params.proposalHash
   eventEntity.proposer = event.params.proposer
-  eventEntity.collateralCategory = event.params.proposal.collateralCategory
-  eventEntity.collateralAddress = event.params.proposal.collateralAddress
-  eventEntity.collateralIdsWhitelistMerkleRoot =
-    event.params.proposal.collateralIdsWhitelistMerkleRoot
-  eventEntity.collateralAmount = event.params.proposal.collateralAmount
-  eventEntity.checkCollateralStateFingerprint =
-    event.params.proposal.checkCollateralStateFingerprint
-  eventEntity.collateralStateFingerprint =
-    event.params.proposal.collateralStateFingerprint
+  eventEntity.tokenAAllowlist = changetype<Bytes[]>(
+    event.params.proposal.tokenAAllowlist,
+  )
+  eventEntity.tokenBAllowlist = changetype<Bytes[]>(
+    event.params.proposal.tokenBAllowlist,
+  )
   eventEntity.creditAddress = event.params.proposal.creditAddress
-  eventEntity.creditAmount = event.params.proposal.creditAmount
+  eventEntity.feedIntermediaryDenominations = changetype<Bytes[]>(
+    event.params.proposal.feedIntermediaryDenominations,
+  )
+  eventEntity.feedInvertFlags = event.params.proposal.feedInvertFlags
+  eventEntity.loanToValue = event.params.proposal.loanToValue
+  eventEntity.minCreditAmount = event.params.proposal.minCreditAmount
   eventEntity.availableCreditLimit =
     event.params.proposal.availableCreditLimit
   eventEntity.utilizedCreditId = event.params.proposal.utilizedCreditId
@@ -30,8 +33,10 @@ export function handleProposalMade(event: ProposalMadeEvent): void {
     event.params.proposal.accruingInterestAPR
   eventEntity.durationOrDate = event.params.proposal.durationOrDate
   eventEntity.expiration = event.params.proposal.expiration
-  eventEntity.allowedAcceptor = event.params.proposal.allowedAcceptor
-  eventEntity.proposerAddress = event.params.proposal.proposer
+  eventEntity.acceptorController = event.params.proposal.acceptorController
+  eventEntity.acceptorControllerData =
+    event.params.proposal.acceptorControllerData
+  eventEntity.proposer = event.params.proposal.proposer
   eventEntity.proposerSpecHash = event.params.proposal.proposerSpecHash
   eventEntity.isOffer = event.params.proposal.isOffer
   eventEntity.refinancingLoanId = event.params.proposal.refinancingLoanId
@@ -49,7 +54,7 @@ export function handleProposalMade(event: ProposalMadeEvent): void {
     proposal = new Proposal(event.params.proposalHash)
     
     // Set proposal type
-    proposal.proposalType = "List"
+    proposal.proposalType = "UniswapV3LPSet"
     
     // Set common fields
     proposal.proposer = event.params.proposer
@@ -58,7 +63,7 @@ export function handleProposalMade(event: ProposalMadeEvent): void {
     // Create Asset entities
     const collateralAsset = getOrCreateAsset(
       event.params.proposal.collateralAddress,
-      BigInt.fromI32(0), // List proposals don't have specific token ID, using 0
+      BigInt.fromI32(0), // UniswapV3 LP Set doesn't have specific token ID
       event.params.proposal.collateralCategory
     )
     const creditAsset = getOrCreateAsset(
@@ -84,17 +89,19 @@ export function handleProposalMade(event: ProposalMadeEvent): void {
     proposal.blockNumber = event.block.number
     proposal.transactionHash = event.transaction.hash
     
-    // Set List-specific fields
+    // Set UniswapV3LPSet-specific fields
     proposal.collateral = collateralAsset.id
-    proposal.collateralAmount = event.params.proposal.collateralAmount
-    proposal.creditAmount = event.params.proposal.creditAmount
-    proposal.allowedAcceptor = event.params.proposal.allowedAcceptor
-    proposal.checkCollateralStateFingerprint = event.params.proposal.checkCollateralStateFingerprint
-    proposal.collateralStateFingerprint = event.params.proposal.collateralStateFingerprint
-    proposal.collateralIdsWhitelistMerkleRoot = event.params.proposal.collateralIdsWhitelistMerkleRoot
+    proposal.tokenAAllowlist = changetype<Bytes[]>(event.params.proposal.tokenAAllowlist)
+    proposal.tokenBAllowlist = changetype<Bytes[]>(event.params.proposal.tokenBAllowlist)
+    proposal.feedIntermediaryDenominations = changetype<Bytes[]>(event.params.proposal.feedIntermediaryDenominations)
+    proposal.feedInvertFlags = event.params.proposal.feedInvertFlags
+    proposal.loanToValue = event.params.proposal.loanToValue
+    proposal.minCreditAmount = event.params.proposal.minCreditAmount
+    proposal.acceptorController = event.params.proposal.acceptorController
+    proposal.acceptorControllerData = event.params.proposal.acceptorControllerData
     
     // Link to raw event entity
-    proposal.rawEventList = eventEntity.id
+    proposal.rawEventUniswapV3LPSet = eventEntity.id
     
     proposal.save()
   }

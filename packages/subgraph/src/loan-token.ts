@@ -6,7 +6,7 @@ import {
   Loan,
   LoanTokenTransfer,
 } from "../generated/schema"
-import { getOrCreateAccount } from "./loan-mapping"
+import { getOrCreateAccount } from "./helpers"
 import { getLoanId } from "./simple-loan"
 
 export function handleTransfer(event: TransferEvent): void {

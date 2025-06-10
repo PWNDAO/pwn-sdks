@@ -3,11 +3,11 @@ import {
   CategoryUnregistered as CategoryUnregisteredEvent,
 } from "../generated/MultiTokenCategoryRegistry/MultiTokenCategoryRegistry"
 import {
-  AssetInCategory,
+  AssetContract,
   Category,
 } from "../generated/schema"
 import { store } from '@graphprotocol/graph-ts'
-import { Bytes } from "@graphprotocol/graph-ts"
+import { Bytes, Address } from "@graphprotocol/graph-ts"
 
 export function handleCategoryRegistered(event: CategoryRegisteredEvent): void {
   const categoryId = Bytes.fromI32(event.params.category)
@@ -16,13 +16,13 @@ export function handleCategoryRegistered(event: CategoryRegisteredEvent): void {
     category = new Category(categoryId)
     category.save()
   }
-  let assetCategory = AssetInCategory.load(event.params.assetAddress)
-  if (assetCategory == null) {
-    assetCategory = new AssetInCategory(event.params.assetAddress)
+  let assetContract = AssetContract.load(event.params.assetAddress)
+  if (assetContract == null) {
+    assetContract = new AssetContract(event.params.assetAddress)
   }
 
-  assetCategory.category = event.params.category
-  assetCategory.save()
+  assetContract.category = category.id
+  assetContract.save()
  
   // TODO shall we save also the raw event?
   // const entity = new CategoryRegistered(
@@ -41,12 +41,13 @@ export function handleCategoryRegistered(event: CategoryRegisteredEvent): void {
 export function handleCategoryUnregistered(
   event: CategoryUnregisteredEvent,
 ): void {
-  const assetInCategory = AssetInCategory.load(event.params.assetAddress)
+  // TODO this does not amek sense probably
+  const assetInCategory = AssetContract.load(event.params.assetAddress)
   if (assetInCategory == null) {
     // no need to do anything here
     return
   }
-  store.remove("AssetInCategory", event.params.assetAddress)
+  store.remove("AssetContract", event.params.assetAddress.toString())
 
   // TODO shall we save also the raw event?
   // const entity = new CategoryUnregistered(

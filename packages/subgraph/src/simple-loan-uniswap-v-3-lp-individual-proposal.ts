@@ -1,26 +1,24 @@
-import { ProposalMade as ProposalMadeEvent } from "../generated/SimpleLoanListProposal/SimpleLoanListProposal"
-import { SimpleLoanListProposalProposalMade, Proposal } from "../generated/schema"
+import { ProposalMade as ProposalMadeEvent } from "../generated/SimpleLoanUniswapV3LPIndividualProposal/SimpleLoanUniswapV3LPIndividualProposal"
+import { SimpleLoanUniswapV3LPIndividualProposalProposalMade, Proposal } from "../generated/schema"
 import { getOrCreateAsset } from "./utils"
-import { BigInt } from "@graphprotocol/graph-ts"
+import { Bytes, BigInt } from "@graphprotocol/graph-ts"
 
 export function handleProposalMade(event: ProposalMadeEvent): void {
   // Create the specific event entity
-  const eventEntity = new SimpleLoanListProposalProposalMade(
+  const eventEntity = new SimpleLoanUniswapV3LPIndividualProposalProposalMade(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   eventEntity.proposalHash = event.params.proposalHash
   eventEntity.proposer = event.params.proposer
-  eventEntity.collateralCategory = event.params.proposal.collateralCategory
-  eventEntity.collateralAddress = event.params.proposal.collateralAddress
-  eventEntity.collateralIdsWhitelistMerkleRoot =
-    event.params.proposal.collateralIdsWhitelistMerkleRoot
-  eventEntity.collateralAmount = event.params.proposal.collateralAmount
-  eventEntity.checkCollateralStateFingerprint =
-    event.params.proposal.checkCollateralStateFingerprint
-  eventEntity.collateralStateFingerprint =
-    event.params.proposal.collateralStateFingerprint
+  eventEntity.collateralId = event.params.proposal.collateralId
+  eventEntity.token0Denominator = event.params.proposal.token0Denominator
   eventEntity.creditAddress = event.params.proposal.creditAddress
-  eventEntity.creditAmount = event.params.proposal.creditAmount
+  eventEntity.feedIntermediaryDenominations = changetype<Bytes[]>(
+    event.params.proposal.feedIntermediaryDenominations,
+  )
+  eventEntity.feedInvertFlags = event.params.proposal.feedInvertFlags
+  eventEntity.loanToValue = event.params.proposal.loanToValue
+  eventEntity.minCreditAmount = event.params.proposal.minCreditAmount
   eventEntity.availableCreditLimit =
     event.params.proposal.availableCreditLimit
   eventEntity.utilizedCreditId = event.params.proposal.utilizedCreditId
@@ -30,8 +28,10 @@ export function handleProposalMade(event: ProposalMadeEvent): void {
     event.params.proposal.accruingInterestAPR
   eventEntity.durationOrDate = event.params.proposal.durationOrDate
   eventEntity.expiration = event.params.proposal.expiration
-  eventEntity.allowedAcceptor = event.params.proposal.allowedAcceptor
-  eventEntity.proposerAddress = event.params.proposal.proposer
+  eventEntity.acceptorController = event.params.proposal.acceptorController
+  eventEntity.acceptorControllerData =
+    event.params.proposal.acceptorControllerData
+  eventEntity.proposer = event.params.proposal.proposer
   eventEntity.proposerSpecHash = event.params.proposal.proposerSpecHash
   eventEntity.isOffer = event.params.proposal.isOffer
   eventEntity.refinancingLoanId = event.params.proposal.refinancingLoanId
@@ -49,7 +49,7 @@ export function handleProposalMade(event: ProposalMadeEvent): void {
     proposal = new Proposal(event.params.proposalHash)
     
     // Set proposal type
-    proposal.proposalType = "List"
+    proposal.proposalType = "UniswapV3LPIndividual"
     
     // Set common fields
     proposal.proposer = event.params.proposer
@@ -57,9 +57,10 @@ export function handleProposalMade(event: ProposalMadeEvent): void {
     
     // Create Asset entities
     const collateralAsset = getOrCreateAsset(
-      event.params.proposal.collateralAddress,
-      BigInt.fromI32(0), // List proposals don't have specific token ID, using 0
-      event.params.proposal.collateralCategory
+      // TODO will this differ on chains? this one is uniswap v3 positions manager nft contract for sepolia 
+      Bytes.fromHexString("0x1238536071E1c677A632429e3655c799b22cDA52"),
+      event.params.proposal.collateralId,
+      1 // ERC721
     )
     const creditAsset = getOrCreateAsset(
       event.params.proposal.creditAddress,
@@ -84,17 +85,19 @@ export function handleProposalMade(event: ProposalMadeEvent): void {
     proposal.blockNumber = event.block.number
     proposal.transactionHash = event.transaction.hash
     
-    // Set List-specific fields
+    // Set UniswapV3LPIndividual-specific fields
     proposal.collateral = collateralAsset.id
-    proposal.collateralAmount = event.params.proposal.collateralAmount
-    proposal.creditAmount = event.params.proposal.creditAmount
-    proposal.allowedAcceptor = event.params.proposal.allowedAcceptor
-    proposal.checkCollateralStateFingerprint = event.params.proposal.checkCollateralStateFingerprint
-    proposal.collateralStateFingerprint = event.params.proposal.collateralStateFingerprint
-    proposal.collateralIdsWhitelistMerkleRoot = event.params.proposal.collateralIdsWhitelistMerkleRoot
+    proposal.collateralId = event.params.proposal.collateralId
+    proposal.token0Denominator = event.params.proposal.token0Denominator
+    proposal.feedIntermediaryDenominations = changetype<Bytes[]>(event.params.proposal.feedIntermediaryDenominations)
+    proposal.feedInvertFlags = event.params.proposal.feedInvertFlags
+    proposal.loanToValue = event.params.proposal.loanToValue
+    proposal.minCreditAmount = event.params.proposal.minCreditAmount
+    proposal.acceptorController = event.params.proposal.acceptorController
+    proposal.acceptorControllerData = event.params.proposal.acceptorControllerData
     
     // Link to raw event entity
-    proposal.rawEventList = eventEntity.id
+    proposal.rawEventUniswapV3LPIndividual = eventEntity.id
     
     proposal.save()
   }

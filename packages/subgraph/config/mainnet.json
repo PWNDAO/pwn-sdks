@@ -39,5 +39,10 @@
   "MultiTokenCategoryRegistry": {
     "address": "0xbB2168d5546A94AE2DA9254e63D88F7f137B2534",
     "startBlock": 20047106
+  },
+  "sepolia": {
+    "SimpleLoanUniswapV3LPSetProposal": {
+      "address": "0x7b48798CE8e95f1412078cF2e1a176CA12839AfA"
+    }
   }
 }
