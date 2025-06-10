@@ -60,12 +60,6 @@ export function handleProposalMade(event: ProposalMadeEvent): void {
     proposal.proposer = event.params.proposer
     proposal.createdAt = event.block.timestamp
     
-    // Create Asset entities
-    const collateralAsset = getOrCreateAsset(
-      event.params.proposal.collateralAddress,
-      BigInt.fromI32(0), // UniswapV3 LP Set doesn't have specific token ID
-      event.params.proposal.collateralCategory
-    )
     const creditAsset = getOrCreateAsset(
       event.params.proposal.creditAddress,
       BigInt.fromI32(0), // ERC20 tokens use 0 as token ID
@@ -90,7 +84,6 @@ export function handleProposalMade(event: ProposalMadeEvent): void {
     proposal.transactionHash = event.transaction.hash
     
     // Set UniswapV3LPSet-specific fields
-    proposal.collateral = collateralAsset.id
     proposal.tokenAAllowlist = changetype<Bytes[]>(event.params.proposal.tokenAAllowlist)
     proposal.tokenBAllowlist = changetype<Bytes[]>(event.params.proposal.tokenBAllowlist)
     proposal.feedIntermediaryDenominations = changetype<Bytes[]>(event.params.proposal.feedIntermediaryDenominations)

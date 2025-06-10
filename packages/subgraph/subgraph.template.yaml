@@ -180,53 +180,53 @@ dataSources:
       file: ./src/loan-token.ts
   # TODO update Config abi
   # TODO should we also have proxy upgrade events in the config address?
-  - kind: ethereum
-    name: Config
-    network: {{network}}
-    source:
-      address: "{{Config.address}}"
-      abi: Config
-      startBlock: {{Config.startBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.9
-      language: wasm/assemblyscript
-      entities:
-        #- AdminChanged
-        #- BeaconUpgraded
-        #- Upgraded
-        - DefaultLOANMetadataUriUpdated
-        - FeeCollectorUpdated
-        - FeeUpdated
-        #- Initialized
-        - LOANMetadataUriUpdated
-        #- ConfigOwnershipTransferStarted
-        #- ConfigOwnershipTransferred
-      abis:
-        - name: Config
-          file: ./abis/Config.json
-      eventHandlers:
-        #- event: AdminChanged(address,address)
-        #  handler: handleAdminChanged
-        #- event: BeaconUpgraded(indexed address)
-        #  handler: handleBeaconUpgraded
-        #- event: Upgraded(indexed address)
-        #  handler: handleUpgraded
-        - event: DefaultLOANMetadataUriUpdated(string)
-          handler: handleDefaultLOANMetadataUriUpdated
-        - event: FeeCollectorUpdated(address,address)
-          handler: handleFeeCollectorUpdated
-        - event: FeeUpdated(uint16,uint16)
-          handler: handleFeeUpdated
-        #- event: Initialized(uint8)
-        #  handler: handleInitialized
-        - event: LOANMetadataUriUpdated(indexed address,string)
-          handler: handleLOANMetadataUriUpdated
-        #- event: OwnershipTransferStarted(indexed address,indexed address)
-        #  handler: handleOwnershipTransferStarted
-        #- event: OwnershipTransferred(indexed address,indexed address)
-        #  handler: handleOwnershipTransferred
-      file: ./src/config.ts
+  # - kind: ethereum
+  #   name: Config
+  #   network: {{network}}
+  #   source:
+  #     address: "{{Config.address}}"
+  #     abi: Config
+  #     startBlock: {{Config.startBlock}}
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.9
+  #     language: wasm/assemblyscript
+  #     entities:
+  #       #- AdminChanged
+  #       #- BeaconUpgraded
+  #       #- Upgraded
+  #       - DefaultLOANMetadataUriUpdated
+  #       - FeeCollectorUpdated
+  #       - FeeUpdated
+  #       #- Initialized
+  #       - LOANMetadataUriUpdated
+  #       #- ConfigOwnershipTransferStarted
+  #       #- ConfigOwnershipTransferred
+  #     abis:
+  #       - name: Config
+  #         file: ./abis/Config.json
+  #     eventHandlers:
+  #       #- event: AdminChanged(address,address)
+  #       #  handler: handleAdminChanged
+  #       #- event: BeaconUpgraded(indexed address)
+  #       #  handler: handleBeaconUpgraded
+  #       #- event: Upgraded(indexed address)
+  #       #  handler: handleUpgraded
+  #       - event: DefaultLOANMetadataUriUpdated(string)
+  #         handler: handleDefaultLOANMetadataUriUpdated
+  #       - event: FeeCollectorUpdated(address,address)
+  #         handler: handleFeeCollectorUpdated
+  #       - event: FeeUpdated(uint16,uint16)
+  #         handler: handleFeeUpdated
+  #       #- event: Initialized(uint8)
+  #       #  handler: handleInitialized
+  #       - event: LOANMetadataUriUpdated(indexed address,string)
+  #         handler: handleLOANMetadataUriUpdated
+  #       #- event: OwnershipTransferStarted(indexed address,indexed address)
+  #       #  handler: handleOwnershipTransferStarted
+  #       #- event: OwnershipTransferred(indexed address,indexed address)
+  #       #  handler: handleOwnershipTransferred
+  #     file: ./src/config.ts
   - kind: ethereum
     name: Hub
     network: {{network}}

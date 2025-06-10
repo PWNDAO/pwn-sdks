@@ -21,7 +21,7 @@ dataSources:
       apiVersion: 0.0.9
       language: wasm/assemblyscript
       entities:
-        - SimpleLoanSimpleProposalMade
+        - ProposalMade
       abis:
         - name: SimpleLoanSimpleProposal
           file: ./abis/SimpleLoanSimpleProposal.json
@@ -318,7 +318,6 @@ dataSources:
         #- event: OwnershipTransferred(indexed address,indexed address)
        #   handler: handleOwnershipTransferred
       file: ./src/multi-token-category-registry.ts
-  # TODO add uniswap lp proposals contract address categories to mainnet
   - kind: ethereum
     name: SimpleLoanUniswapV3LPIndividualProposal
     network: sepolia
@@ -340,7 +339,6 @@ dataSources:
             address,(uint256,bool,address,address[],bool[],uint256,uint256,uint256,bytes32,uint256,uint24,uint32,uint40,address,bytes,address,bytes32,bool,uint256,uint256,uint256,address))
           handler: handleProposalMade
       file: ./src/simple-loan-uniswap-v-3-lp-individual-proposal.ts
-  # TODO add uniswap lp proposals contract address categories to mainnet
   - kind: ethereum
     name: SimpleLoanUniswapV3LPSetProposal
     network: sepolia
