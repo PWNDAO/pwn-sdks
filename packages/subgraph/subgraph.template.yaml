@@ -110,11 +110,11 @@ dataSources:
         - LOANCreated
         - LOANExtended
         - LOANPaidBack
-        - PoolSupply
-        - PoolWithdraw
-        - VaultPull
-        - VaultPush
-        - VaultPushFrom
+        #- PoolSupply
+        #- PoolWithdraw
+        #- VaultPull
+        #- VaultPush
+        #- VaultPushFrom
       abis:
         - name: SimpleLoan
           file: ./abis/SimpleLoan.json
@@ -131,18 +131,18 @@ dataSources:
           handler: handleLOANExtended
         - event: LOANPaidBack(indexed uint256)
           handler: handleLOANPaidBack
-        - event: PoolSupply((uint8,address,uint256,uint256),indexed address,indexed address,indexed
-            address)
-          handler: handlePoolSupply
-        - event: PoolWithdraw((uint8,address,uint256,uint256),indexed address,indexed
-            address,indexed address)
-          handler: handlePoolWithdraw
-        - event: VaultPull((uint8,address,uint256,uint256),indexed address)
-          handler: handleVaultPull
-        - event: VaultPush((uint8,address,uint256,uint256),indexed address)
-          handler: handleVaultPush
-        - event: VaultPushFrom((uint8,address,uint256,uint256),indexed address,indexed address)
-          handler: handleVaultPushFrom
+        #- event: PoolSupply((uint8,address,uint256,uint256),indexed address,indexed address,indexed
+        #    address)
+        #  handler: handlePoolSupply
+        #- event: PoolWithdraw((uint8,address,uint256,uint256),indexed address,indexed
+        #    address,indexed address)
+        #  handler: handlePoolWithdraw
+        #- event: VaultPull((uint8,address,uint256,uint256),indexed address)
+        #  handler: handleVaultPull
+        #- event: VaultPush((uint8,address,uint256,uint256),indexed address)
+        #  handler: handleVaultPush
+        #- event: VaultPushFrom((uint8,address,uint256,uint256),indexed address,indexed address)
+        # handler: handleVaultPushFrom
       file: ./src/simple-loan.ts
   - kind: ethereum
     name: LoanToken
@@ -156,23 +156,25 @@ dataSources:
       apiVersion: 0.0.9
       language: wasm/assemblyscript
       entities:
-        - Approval
-        - ApprovalForAll
-        - LOANBurned
-        - LOANMinted
+        # - Approval
+        # - ApprovalForAll
+        #- LOANBurned
+        #- LOANMinted
         - Transfer
       abis:
         - name: LoanToken
           file: ./abis/LoanToken.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,indexed uint256)
-          handler: handleApproval
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
-        - event: LOANBurned(indexed uint256)
-          handler: handleLOANBurned
-        - event: LOANMinted(indexed uint256,indexed address,indexed address)
-          handler: handleLOANMinted
+        # - event: Approval(indexed address,indexed address,indexed uint256)
+        #   handler: handleApproval
+        # - event: ApprovalForAll(indexed address,indexed address,bool)
+        #   handler: handleApprovalForAll
+        # note: no need to track LOANBurned and LOANMinted as they happen always
+        #  together with LOANCreated and LOANClaimed
+        #- event: LOANBurned(indexed uint256)
+        #  handler: handleLOANBurned
+        #- event: LOANMinted(indexed uint256,indexed address,indexed address)
+        #  handler: handleLOANMinted
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: ./src/loan-token.ts
@@ -190,40 +192,40 @@ dataSources:
       apiVersion: 0.0.9
       language: wasm/assemblyscript
       entities:
-        - AdminChanged
-        - BeaconUpgraded
-        - Upgraded
+        #- AdminChanged
+        #- BeaconUpgraded
+        #- Upgraded
         - DefaultLOANMetadataUriUpdated
         - FeeCollectorUpdated
         - FeeUpdated
-        - Initialized
+        #- Initialized
         - LOANMetadataUriUpdated
-        - ConfigOwnershipTransferStarted
-        - ConfigOwnershipTransferred
+        #- ConfigOwnershipTransferStarted
+        #- ConfigOwnershipTransferred
       abis:
         - name: Config
           file: ./abis/Config.json
       eventHandlers:
-        - event: AdminChanged(address,address)
-          handler: handleAdminChanged
-        - event: BeaconUpgraded(indexed address)
-          handler: handleBeaconUpgraded
-        - event: Upgraded(indexed address)
-          handler: handleUpgraded
+        #- event: AdminChanged(address,address)
+        #  handler: handleAdminChanged
+        #- event: BeaconUpgraded(indexed address)
+        #  handler: handleBeaconUpgraded
+        #- event: Upgraded(indexed address)
+        #  handler: handleUpgraded
         - event: DefaultLOANMetadataUriUpdated(string)
           handler: handleDefaultLOANMetadataUriUpdated
         - event: FeeCollectorUpdated(address,address)
           handler: handleFeeCollectorUpdated
         - event: FeeUpdated(uint16,uint16)
           handler: handleFeeUpdated
-        - event: Initialized(uint8)
-          handler: handleInitialized
+        #- event: Initialized(uint8)
+        #  handler: handleInitialized
         - event: LOANMetadataUriUpdated(indexed address,string)
           handler: handleLOANMetadataUriUpdated
-        - event: OwnershipTransferStarted(indexed address,indexed address)
-          handler: handleOwnershipTransferStarted
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
+        #- event: OwnershipTransferStarted(indexed address,indexed address)
+        #  handler: handleOwnershipTransferStarted
+        #- event: OwnershipTransferred(indexed address,indexed address)
+        #  handler: handleOwnershipTransferred
       file: ./src/config.ts
   - kind: ethereum
     name: Hub
@@ -237,17 +239,17 @@ dataSources:
       apiVersion: 0.0.9
       language: wasm/assemblyscript
       entities:
-        - OwnershipTransferStarted
-        - OwnershipTransferred
+        #- OwnershipTransferStarted
+        #- OwnershipTransferred
         - TagSet
       abis:
         - name: Hub
           file: ./abis/Hub.json
       eventHandlers:
-        - event: OwnershipTransferStarted(indexed address,indexed address)
-          handler: handleOwnershipTransferStarted
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
+        #- event: OwnershipTransferStarted(indexed address,indexed address)
+        #  handler: handleOwnershipTransferStarted
+        #- event: OwnershipTransferred(indexed address,indexed address)
+        #  handler: handleOwnershipTransferred
         - event: TagSet(indexed address,indexed bytes32,bool)
           handler: handleTagSet
       file: ./src/hub.ts
@@ -263,26 +265,27 @@ dataSources:
       apiVersion: 0.0.9
       language: wasm/assemblyscript
       entities:
-        - AccessControllerSet
-        - FeedConfirmed
-        - FeedProposed
-        - OwnershipTransferRequested
-        - ChainlinkFeedRegistryOwnershipTransferred
+        #- AccessControllerSet
+        - ChainlinkFeed
+        #- FeedConfirmed
+        #- FeedProposed
+        #- OwnershipTransferRequested
+        #- ChainlinkFeedRegistryOwnershipTransferred
       abis:
         - name: ChainlinkFeedRegistry
           file: ./abis/ChainlinkFeedRegistry.json
       eventHandlers:
-        - event: AccessControllerSet(indexed address,indexed address)
-          handler: handleAccessControllerSet
+        #- event: AccessControllerSet(indexed address,indexed address)
+        #  handler: handleAccessControllerSet
         - event: FeedConfirmed(indexed address,indexed address,indexed
             address,address,uint16,address)
           handler: handleFeedConfirmed
-        - event: FeedProposed(indexed address,indexed address,indexed address,address,address)
-          handler: handleFeedProposed
-        - event: OwnershipTransferRequested(indexed address,indexed address)
-          handler: handleOwnershipTransferRequested
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
+        #- event: FeedProposed(indexed address,indexed address,indexed address,address,address)
+        #  handler: handleFeedProposed
+        #- event: OwnershipTransferRequested(indexed address,indexed address)
+        #  handler: handleOwnershipTransferRequested
+        #- event: OwnershipTransferred(indexed address,indexed address)
+        #  handler: handleOwnershipTransferred
       file: ./src/chainlink-feed-registry.ts
   - kind: ethereum
     name: MultiTokenCategoryRegistry
@@ -296,10 +299,12 @@ dataSources:
       apiVersion: 0.0.9
       language: wasm/assemblyscript
       entities:
-        - CategoryRegistered
-        - CategoryUnregistered
-        - MultiTokenCategoryRegistryOwnershipTransferStarted
-        - MultiTokenCategoryRegistryOwnershipTransferred
+        - AssetInCategory
+        - Category
+        #- CategoryRegistered
+        #- CategoryUnregistered
+        #- MultiTokenCategoryRegistryOwnershipTransferStarted
+        #- MultiTokenCategoryRegistryOwnershipTransferred
       abis:
         - name: MultiTokenCategoryRegistry
           file: ./abis/MultiTokenCategoryRegistry.json
@@ -308,9 +313,9 @@ dataSources:
           handler: handleCategoryRegistered
         - event: CategoryUnregistered(indexed address)
           handler: handleCategoryUnregistered
-        - event: OwnershipTransferStarted(indexed address,indexed address)
-          handler: handleOwnershipTransferStarted
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
+        #- event: OwnershipTransferStarted(indexed address,indexed address)
+        #  handler: handleOwnershipTransferStarted
+        #- event: OwnershipTransferred(indexed address,indexed address)
+       #   handler: handleOwnershipTransferred
       file: ./src/multi-token-category-registry.ts
 

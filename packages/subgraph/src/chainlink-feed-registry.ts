@@ -1,97 +1,58 @@
 import {
-  AccessControllerSet as AccessControllerSetEvent,
   FeedConfirmed as FeedConfirmedEvent,
-  FeedProposed as FeedProposedEvent,
-  OwnershipTransferRequested as OwnershipTransferRequestedEvent,
-  OwnershipTransferred as OwnershipTransferredEvent,
 } from "../generated/ChainlinkFeedRegistry/ChainlinkFeedRegistry"
 import {
-  AccessControllerSet,
-  FeedConfirmed,
-  FeedProposed,
-  OwnershipTransferRequested,
-  OwnershipTransferred,
+  ChainlinkFeed,
 } from "../generated/schema"
+import { Bytes } from "@graphprotocol/graph-ts"
 
-export function handleAccessControllerSet(
-  event: AccessControllerSetEvent,
-): void {
-  const entity = new AccessControllerSet(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.accessController = event.params.accessController
-  entity.sender = event.params.sender
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+function getChainlinkFeedId(event: FeedConfirmedEvent): Bytes {
+  return event.params.asset.concatI32(event.params.denomination.toI32())
 }
 
 export function handleFeedConfirmed(event: FeedConfirmedEvent): void {
-  const entity = new FeedConfirmed(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.asset = event.params.asset
-  entity.denomination = event.params.denomination
-  entity.latestAggregator = event.params.latestAggregator
-  entity.previousAggregator = event.params.previousAggregator
-  entity.nextPhaseId = event.params.nextPhaseId
-  entity.sender = event.params.sender
+  const chainlinkFeedId = getChainlinkFeedId(event)
+  const chainlinkFeed = ChainlinkFeed.load(chainlinkFeedId)
+  if (chainlinkFeed == null) {
+    chainlinkFeed = new ChainlinkFeed(chainlinkFeedId)
+  }
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  chainlinkFeed.asset = event.params.asset
+  chainlinkFeed.denomination = event.params.denomination
+  chainlinkFeed.aggregator = event.params.latestAggregator
+  chainlinkFeed.save()
 
-  entity.save()
+  // const entity = new FeedConfirmed(
+  //   event.transaction.hash.concatI32(event.logIndex.toI32()),
+  // )
+  // entity.asset = event.params.asset
+  // entity.denomination = event.params.denomination
+  // entity.latestAggregator = event.params.latestAggregator
+  // entity.previousAggregator = event.params.previousAggregator
+  // entity.nextPhaseId = event.params.nextPhaseId
+  // entity.sender = event.params.sender
+
+  // entity.blockNumber = event.block.number
+  // entity.blockTimestamp = event.block.timestamp
+  // entity.transactionHash = event.transaction.hash
+
+  // entity.save()
 }
 
-export function handleFeedProposed(event: FeedProposedEvent): void {
-  const entity = new FeedProposed(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.asset = event.params.asset
-  entity.denomination = event.params.denomination
-  entity.proposedAggregator = event.params.proposedAggregator
-  entity.currentAggregator = event.params.currentAggregator
-  entity.sender = event.params.sender
+// export function handleFeedProposed(event: FeedProposedEvent): void {
+//   const entity = new FeedProposed(
+//     event.transaction.hash.concatI32(event.logIndex.toI32()),
+//   )
+//   entity.asset = event.params.asset
+//   entity.denomination = event.params.denomination
+//   entity.proposedAggregator = event.params.proposedAggregator
+//   entity.currentAggregator = event.params.currentAggregator
+//   entity.sender = event.params.sender
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+//   entity.blockNumber = event.block.number
+//   entity.blockTimestamp = event.block.timestamp
+//   entity.transactionHash = event.transaction.hash
 
-  entity.save()
-}
+//   entity.save()
+// }
 
-export function handleOwnershipTransferRequested(
-  event: OwnershipTransferRequestedEvent,
-): void {
-  const entity = new OwnershipTransferRequested(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.from = event.params.from
-  entity.to = event.params.to
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleOwnershipTransferred(
-  event: OwnershipTransferredEvent,
-): void {
-  const entity = new OwnershipTransferred(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.from = event.params.from
-  entity.to = event.params.to
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}

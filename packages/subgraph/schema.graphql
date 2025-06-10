@@ -1,28 +1,43 @@
 type Account @entity(immutable: true) {
 	id: Bytes! # Ethereum address
 	loansAsBorrower: [Loan!]! @derivedFrom(field: "borrower")
-	loansAsLender: [Loan!]! @derivedFrom(field: "lender")
+	loansAsLender: [Loan!]! @derivedFrom(field: "originalLender")
+  loansAsLoanOwner: [Loan!]! @derivedFrom(field: "loanOwner")
+}
+
+type Category @entity(immutable: true) {
+  id: Bytes!  # category id
+  assets: [AssetContract!]! @derivedFrom(field: "category")
+}
+
+type AssetContract @entity(immutable: true) {
+  id: Bytes!  # asset address
+  category: Category!
+  # TODO add also metadata like name / symbol / decimals?
 }
 
 type Asset @entity(immutable: true) {
-	id: String! # Combination of chainId and loanId from contract
+	id: Bytes! # {contract.assetAddress}{assetId}
 
-	category: Int!
-	assetAddress: Bytes!
-	assetId: BigInt!
-	amount: BigDecimal!
+  contract: AssetContract!
+  # TODO allow null in case of ERC20s?
+	tokenId: BigInt!
+  # TODO use BigInt?
+	#amount: BigDecimal!
+  # TODO add also metadata like name / symbol / decimals?
 }
 
 enum LoanStatus {
   Active
   Repaid
+  # TODO this state will probably never be reached right?
   Defaulted
   Claimed
 }
 
 type Loan @entity(immutable: false) {
 	# Combination of chainId and loanId from contract
-	id: String!
+	id: Bytes!  # {loanTokenAddress}{loanId}
 
 	# Loan ID from contract event
 	loanId: BigInt!
@@ -30,34 +45,49 @@ type Loan @entity(immutable: false) {
   # Proposal contract address
   proposalContract: Bytes!
 
+  loanTokenAddress: Bytes!
+
+  repaidAt: BigInt
+  claimedAt: BigInt
+
   # Loan contract address
 	contractAddress: Bytes!
+
+  refinancingLoanId: BigInt!
 
   # Hash of accepted proposal
 	proposalHash: Bytes!
 
   borrower: Account!
-  lender: Account!
+  originalLender: Account!
+
+  loanOwner: Account!
 
   createdAt: BigInt!
 
-  # Terms
-
-  # Duration
   duration: BigInt!
 
-  # Default deadline timestamp (createdAt + duration)
-  defaultDeadline: BigInt!
+  defaultDate: BigInt!
 
-  # Collateral
   collateral: Asset!
+  collateralAmount: BigInt!
 
-  # Credit
   credit: Asset!
+  creditAmount: BigInt!
 
   status: LoanStatus!
 
+  fixedInterestAmount: BigInt!
+  accruingInterestAPR: Int!
+
+  lenderSpecHash: Bytes!
+  borrowerSpecHash: Bytes!
+
+  sourceOfFunds: Bytes!
+
 	extra: Bytes!
+
+  hasDefaulted: Boolean!
 
   # TODO also add Loan contract version?
 }
@@ -186,21 +216,24 @@ type SimpleLoanElasticChainlinkProposalProposalMade @entity(immutable: true) {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
-type ExtensionProposalMade @entity(immutable: true) {
-  id: Bytes!
-  extensionHash: Bytes! # bytes32
+
+type ExtensionProposal @entity(immutable: true) {
+  id: Bytes!  # extensionHash
   proposer: Bytes! # address
-  proposal_loanId: BigInt! # uint256
-  proposal_compensationAddress: Bytes! # address
-  proposal_compensationAmount: BigInt! # uint256
-  proposal_duration: BigInt! # uint40
-  proposal_expiration: BigInt! # uint40
-  proposal_proposer: Bytes! # address
-  proposal_nonceSpace: BigInt! # uint256
-  proposal_nonce: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  # TODO shall we allow null values here?
+  loan: Loan!
+
+  compensationAssetAddress: Bytes!
+  # compensationAsset: AssetContract!
+  compensationAmount: BigInt
+
+  durationToExtend: BigInt
+  proposalExpiration: BigInt
+
+  nonce: BigInt!
+  nonceSpace: BigInt!
+
+  createdAt: BigInt!
 }
 
 type LOANClaimed @entity(immutable: true) {
@@ -258,154 +291,11 @@ type LOANPaidBack @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type PoolSupply @entity(immutable: true) {
-  id: Bytes!
-  asset_category: Int! # uint8
-  asset_assetAddress: Bytes! # address
-  asset_id: BigInt! # uint256
-  asset_amount: BigInt! # uint256
-  poolAdapter: Bytes! # address
-  pool: Bytes! # address
-  owner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type PoolWithdraw @entity(immutable: true) {
-  id: Bytes!
-  asset_category: Int! # uint8
-  asset_assetAddress: Bytes! # address
-  asset_id: BigInt! # uint256
-  asset_amount: BigInt! # uint256
-  poolAdapter: Bytes! # address
-  pool: Bytes! # address
-  owner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type VaultPull @entity(immutable: true) {
-  id: Bytes!
-  asset_category: Int! # uint8
-  asset_assetAddress: Bytes! # address
-  asset_id: BigInt! # uint256
-  asset_amount: BigInt! # uint256
-  origin: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type VaultPush @entity(immutable: true) {
-  id: Bytes!
-  asset_category: Int! # uint8
-  asset_assetAddress: Bytes! # address
-  asset_id: BigInt! # uint256
-  asset_amount: BigInt! # uint256
-  beneficiary: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type VaultPushFrom @entity(immutable: true) {
-  id: Bytes!
-  asset_category: Int! # uint8
-  asset_assetAddress: Bytes! # address
-  asset_id: BigInt! # uint256
-  asset_amount: BigInt! # uint256
-  origin: Bytes! # address
-  beneficiary: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-type Approval @entity(immutable: true) {
-  id: Bytes!
-  owner: Bytes! # address
-  approved: Bytes! # address
-  tokenId: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type ApprovalForAll @entity(immutable: true) {
-  id: Bytes!
-  owner: Bytes! # address
-  operator: Bytes! # address
-  approved: Boolean! # bool
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type LOANBurned @entity(immutable: true) {
-  id: Bytes!
-  loanId: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type LOANMinted @entity(immutable: true) {
-  id: Bytes!
-  loanId: BigInt! # uint256
-  loanContract: Bytes! # address
-  owner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Transfer @entity(immutable: true) {
+type LoanTokenTransfer @entity(immutable: true) {
   id: Bytes!
   from: Bytes! # address
   to: Bytes! # address
   tokenId: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-type AdminChanged @entity(immutable: true) {
-  id: Bytes!
-  previousAdmin: Bytes! # address
-  newAdmin: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type BeaconUpgraded @entity(immutable: true) {
-  id: Bytes!
-  beacon: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Upgraded @entity(immutable: true) {
-  id: Bytes!
-  implementation: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-type OwnershipTransferStarted @entity(immutable: true) {
-  id: Bytes!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type OwnershipTransferred @entity(immutable: true) {
-  id: Bytes!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -447,14 +337,6 @@ type FeeUpdated @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type Initialized @entity(immutable: true) {
-  id: Bytes!
-  version: Int! # uint8
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
 type LOANMetadataUriUpdated @entity(immutable: true) {
   id: Bytes!
   loanContract: Bytes! # address
@@ -464,83 +346,230 @@ type LOANMetadataUriUpdated @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type ConfigOwnershipTransferStarted @entity(immutable: true) {
-  id: Bytes!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type ConfigOwnershipTransferred @entity(immutable: true) {
-  id: Bytes!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type AccessControllerSet @entity(immutable: true) {
-  id: Bytes!
-  accessController: Bytes! # address
-  sender: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type FeedConfirmed @entity(immutable: true) {
+type ChainlinkFeed @entity(immutable: true) {
   id: Bytes!
   asset: Bytes! # address
   denomination: Bytes! # address
-  latestAggregator: Bytes! # address
-  previousAggregator: Bytes! # address
-  nextPhaseId: Int! # uint16
-  sender: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  aggregator: Bytes! # feed address
 }
 
-type FeedProposed @entity(immutable: true) {
-  id: Bytes!
-  asset: Bytes! # address
-  denomination: Bytes! # address
-  proposedAggregator: Bytes! # address
-  currentAggregator: Bytes! # address
-  sender: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
+# ===============================
+# UNUSED ENTITIES
+# ===============================
 
-type Category @entity(immutable: true) {
-  # TODO can we make this Bytes?
-  id: Int!  # category id
-  # TODO have here relation to Assset or AssetInCategory?
-  assets: [AssetInCategory!]! @derivedFrom(field: "category")
-}
+# type LOANBurned @entity(immutable: true) {
+#   id: Bytes!
+#   loanId: BigInt! # uint256
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
 
-type AssetInCategory @entity(immutable: true) {
-  id: Bytes!  # asset address
-  category: Category!
-}
+# type LOANMinted @entity(immutable: true) {
+#   id: Bytes!
+#   loanId: BigInt! # uint256
+#   loanContract: Bytes! # address
+#   owner: Bytes! # address
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
 
-type CategoryRegistered @entity(immutable: true) {
-  id: Bytes!
-  assetAddress: Bytes! # address
-  category: Int! # uint8
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
 
-type CategoryUnregistered @entity(immutable: true) {
-  id: Bytes!
-  assetAddress: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
+# type AdminChanged @entity(immutable: true) {
+#   id: Bytes!
+#   previousAdmin: Bytes! # address
+#   newAdmin: Bytes! # address
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type BeaconUpgraded @entity(immutable: true) {
+#   id: Bytes!
+#   beacon: Bytes! # address
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type Upgraded @entity(immutable: true) {
+#   id: Bytes!
+#   implementation: Bytes! # address
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type Initialized @entity(immutable: true) {
+#   id: Bytes!
+#   version: Int! # uint8
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+
+# type Approval @entity(immutable: true) {
+#   id: Bytes!
+#   owner: Bytes! # address
+#   approved: Bytes! # address
+#   tokenId: BigInt! # uint256
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type ApprovalForAll @entity(immutable: true) {
+#   id: Bytes!
+#   owner: Bytes! # address
+#   operator: Bytes! # address
+#   approved: Boolean! # bool
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type ConfigOwnershipTransferStarted @entity(immutable: true) {
+#   id: Bytes!
+#   previousOwner: Bytes! # address
+#   newOwner: Bytes! # address
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type ConfigOwnershipTransferred @entity(immutable: true) {
+#   id: Bytes!
+#   previousOwner: Bytes! # address
+#   newOwner: Bytes! # address
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type OwnershipTransferStarted @entity(immutable: true) {
+#   id: Bytes!
+#   previousOwner: Bytes! # address
+#   newOwner: Bytes! # address
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type OwnershipTransferred @entity(immutable: true) {
+#   id: Bytes!
+#   previousOwner: Bytes! # address
+#   newOwner: Bytes! # address
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+
+# type FeedConfirmed @entity(immutable: true) {
+#   id: Bytes!
+#   asset: Bytes! # address
+#   denomination: Bytes! # address
+#   latestAggregator: Bytes! # address
+#   previousAggregator: Bytes! # address
+#   nextPhaseId: Int! # uint16
+#   sender: Bytes! # address
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type FeedProposed @entity(immutable: true) {
+#   id: Bytes!
+#   asset: Bytes! # address
+#   denomination: Bytes! # address
+#   proposedAggregator: Bytes! # address
+#   currentAggregator: Bytes! # address
+#   sender: Bytes! # address
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type CategoryRegistered @entity(immutable: true) {
+#   id: Bytes!
+#   assetAddress: Bytes! # address
+#   category: Int! # uint8
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type CategoryUnregistered @entity(immutable: true) {
+#   id: Bytes!
+#   assetAddress: Bytes! # address
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type PoolSupply @entity(immutable: true) {
+#   id: Bytes!
+#   asset_category: Int! # uint8
+#   asset_assetAddress: Bytes! # address
+#   asset_id: BigInt! # uint256
+#   asset_amount: BigInt! # uint256
+#   poolAdapter: Bytes! # address
+#   pool: Bytes! # address
+#   owner: Bytes! # address
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type PoolWithdraw @entity(immutable: true) {
+#   id: Bytes!
+#   asset_category: Int! # uint8
+#   asset_assetAddress: Bytes! # address
+#   asset_id: BigInt! # uint256
+#   asset_amount: BigInt! # uint256
+#   poolAdapter: Bytes! # address
+#   pool: Bytes! # address
+#   owner: Bytes! # address
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type VaultPull @entity(immutable: true) {
+#   id: Bytes!
+#   asset_category: Int! # uint8
+#   asset_assetAddress: Bytes! # address
+#   asset_id: BigInt! # uint256
+#   asset_amount: BigInt! # uint256
+#   origin: Bytes! # address
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type VaultPush @entity(immutable: true) {
+#   id: Bytes!
+#   asset_category: Int! # uint8
+#   asset_assetAddress: Bytes! # address
+#   asset_id: BigInt! # uint256
+#   asset_amount: BigInt! # uint256
+#   beneficiary: Bytes! # address
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
+
+# type VaultPushFrom @entity(immutable: true) {
+#   id: Bytes!
+#   asset_category: Int! # uint8
+#   asset_assetAddress: Bytes! # address
+#   asset_id: BigInt! # uint256
+#   asset_amount: BigInt! # uint256
+#   origin: Bytes! # address
+#   beneficiary: Bytes! # address
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }

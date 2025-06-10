@@ -1,83 +1,62 @@
 import {
   CategoryRegistered as CategoryRegisteredEvent,
   CategoryUnregistered as CategoryUnregisteredEvent,
-  OwnershipTransferStarted as OwnershipTransferStartedEvent,
-  OwnershipTransferred as OwnershipTransferredEvent,
 } from "../generated/MultiTokenCategoryRegistry/MultiTokenCategoryRegistry"
 import {
-  CategoryRegistered,
-  CategoryUnregistered,
-  OwnershipTransferStarted,
-  OwnershipTransferred,
+  AssetInCategory,
   Category,
-  AssetCategory,
 } from "../generated/schema"
 import { store } from '@graphprotocol/graph-ts'
+import { Bytes } from "@graphprotocol/graph-ts"
 
 export function handleCategoryRegistered(event: CategoryRegisteredEvent): void {
-  let category = Category.load(event.params.category)
+  const categoryId = Bytes.fromI32(event.params.category)
+  let category = Category.load(categoryId)
   if (category == null) {
-    category = new Category(event.params.category)
+    category = new Category(categoryId)
     category.save()
   }
-  let assetCategory = Category.load()
-  
-  const entity = new CategoryRegistered(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.assetAddress = event.params.assetAddress
-  entity.category = event.params.category
+  let assetCategory = AssetInCategory.load(event.params.assetAddress)
+  if (assetCategory == null) {
+    assetCategory = new AssetInCategory(event.params.assetAddress)
+  }
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  assetCategory.category = event.params.category
+  assetCategory.save()
+ 
+  // TODO shall we save also the raw event?
+  // const entity = new CategoryRegistered(
+  //   event.transaction.hash.concatI32(event.logIndex.toI32()),
+  // )
+  // entity.assetAddress = event.params.assetAddress
+  // entity.category = event.params.category
 
-  entity.save()
+  // entity.blockNumber = event.block.number
+  // entity.blockTimestamp = event.block.timestamp
+  // entity.transactionHash = event.transaction.hash
+
+  // entity.save()
 }
 
 export function handleCategoryUnregistered(
   event: CategoryUnregisteredEvent,
 ): void {
-  const entity = new CategoryUnregistered(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.assetAddress = event.params.assetAddress
+  const assetInCategory = AssetInCategory.load(event.params.assetAddress)
+  if (assetInCategory == null) {
+    // no need to do anything here
+    return
+  }
+  store.remove("AssetInCategory", event.params.assetAddress)
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  // TODO shall we save also the raw event?
+  // const entity = new CategoryUnregistered(
+  //   event.transaction.hash.concatI32(event.logIndex.toI32()),
+  // )
+  // entity.assetAddress = event.params.assetAddress
 
-  entity.save()
-}
+  // entity.blockNumber = event.block.number
+  // entity.blockTimestamp = event.block.timestamp
+  // entity.transactionHash = event.transaction.hash
 
-export function handleOwnershipTransferStarted(
-  event: OwnershipTransferStartedEvent,
-): void {
-  const entity = new OwnershipTransferStarted(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.previousOwner = event.params.previousOwner
-  entity.newOwner = event.params.newOwner
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleOwnershipTransferred(
-  event: OwnershipTransferredEvent,
-): void {
-  const entity = new OwnershipTransferred(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.previousOwner = event.params.previousOwner
-  entity.newOwner = event.params.newOwner
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  // entity.save()
 }
