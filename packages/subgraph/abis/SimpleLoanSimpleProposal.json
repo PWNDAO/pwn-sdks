@@ -1,0 +1,882 @@
+[
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_hub", "type": "address" },
+      { "internalType": "address", "name": "_revokedNonce", "type": "address" },
+      { "internalType": "address", "name": "_config", "type": "address" },
+      {
+        "internalType": "address",
+        "name": "_utilizedCredit",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "addr", "type": "address" }
+    ],
+    "name": "AcceptorIsProposer",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "addr", "type": "address" },
+      { "internalType": "bytes32", "name": "tag", "type": "bytes32" }
+    ],
+    "name": "AddressMissingHubTag",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "addr", "type": "address" }
+    ],
+    "name": "CallerIsNotStatedProposer",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "current", "type": "address" },
+      { "internalType": "address", "name": "allowed", "type": "address" }
+    ],
+    "name": "CallerNotAllowedAcceptor",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "caller", "type": "address" },
+      { "internalType": "address", "name": "loanContract", "type": "address" }
+    ],
+    "name": "CallerNotLoanContract",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint32", "name": "defaultDate", "type": "uint32" },
+      { "internalType": "uint32", "name": "current", "type": "uint32" }
+    ],
+    "name": "DefaultDateInPast",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "current", "type": "uint256" },
+      { "internalType": "uint256", "name": "expiration", "type": "uint256" }
+    ],
+    "name": "Expired",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "current", "type": "bytes32" },
+      { "internalType": "bytes32", "name": "proposed", "type": "bytes32" }
+    ],
+    "name": "InvalidCollateralStateFingerprint",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "refinancingLoanId",
+        "type": "uint256"
+      }
+    ],
+    "name": "InvalidRefinancingLoanId",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "signer", "type": "address" },
+      { "internalType": "bytes32", "name": "digest", "type": "bytes32" }
+    ],
+    "name": "InvalidSignature",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "length", "type": "uint256" }
+    ],
+    "name": "InvalidSignatureLength",
+    "type": "error"
+  },
+  { "inputs": [], "name": "MissingStateFingerprintComputer", "type": "error" },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "addr", "type": "address" },
+      { "internalType": "uint256", "name": "nonceSpace", "type": "uint256" },
+      { "internalType": "uint256", "name": "nonce", "type": "uint256" }
+    ],
+    "name": "NonceNotUsable",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "proposalHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "proposer",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "enum MultiToken.Category",
+            "name": "collateralCategory",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "collateralAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collateralId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collateralAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "checkCollateralStateFingerprint",
+            "type": "bool"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "collateralStateFingerprint",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "address",
+            "name": "creditAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "creditAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "availableCreditLimit",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "utilizedCreditId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "fixedInterestAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint24",
+            "name": "accruingInterestAPR",
+            "type": "uint24"
+          },
+          {
+            "internalType": "uint32",
+            "name": "durationOrDate",
+            "type": "uint32"
+          },
+          { "internalType": "uint40", "name": "expiration", "type": "uint40" },
+          {
+            "internalType": "address",
+            "name": "allowedAcceptor",
+            "type": "address"
+          },
+          { "internalType": "address", "name": "proposer", "type": "address" },
+          {
+            "internalType": "bytes32",
+            "name": "proposerSpecHash",
+            "type": "bytes32"
+          },
+          { "internalType": "bool", "name": "isOffer", "type": "bool" },
+          {
+            "internalType": "uint256",
+            "name": "refinancingLoanId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nonceSpace",
+            "type": "uint256"
+          },
+          { "internalType": "uint256", "name": "nonce", "type": "uint256" },
+          {
+            "internalType": "address",
+            "name": "loanContract",
+            "type": "address"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct PWNSimpleLoanSimpleProposal.Proposal",
+        "name": "proposal",
+        "type": "tuple"
+      }
+    ],
+    "name": "ProposalMade",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "DOMAIN_SEPARATOR",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MULTIPROPOSAL_DOMAIN_SEPARATOR",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MULTIPROPOSAL_TYPEHASH",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PROPOSAL_TYPEHASH",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "VERSION",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "acceptor", "type": "address" },
+      {
+        "internalType": "uint256",
+        "name": "refinancingLoanId",
+        "type": "uint256"
+      },
+      { "internalType": "bytes", "name": "proposalData", "type": "bytes" },
+      {
+        "internalType": "bytes32[]",
+        "name": "proposalInclusionProof",
+        "type": "bytes32[]"
+      },
+      { "internalType": "bytes", "name": "signature", "type": "bytes" }
+    ],
+    "name": "acceptProposal",
+    "outputs": [
+      { "internalType": "bytes32", "name": "proposalHash", "type": "bytes32" },
+      {
+        "components": [
+          { "internalType": "address", "name": "lender", "type": "address" },
+          { "internalType": "address", "name": "borrower", "type": "address" },
+          { "internalType": "uint32", "name": "duration", "type": "uint32" },
+          {
+            "components": [
+              {
+                "internalType": "enum MultiToken.Category",
+                "name": "category",
+                "type": "uint8"
+              },
+              {
+                "internalType": "address",
+                "name": "assetAddress",
+                "type": "address"
+              },
+              { "internalType": "uint256", "name": "id", "type": "uint256" },
+              { "internalType": "uint256", "name": "amount", "type": "uint256" }
+            ],
+            "internalType": "struct MultiToken.Asset",
+            "name": "collateral",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "enum MultiToken.Category",
+                "name": "category",
+                "type": "uint8"
+              },
+              {
+                "internalType": "address",
+                "name": "assetAddress",
+                "type": "address"
+              },
+              { "internalType": "uint256", "name": "id", "type": "uint256" },
+              { "internalType": "uint256", "name": "amount", "type": "uint256" }
+            ],
+            "internalType": "struct MultiToken.Asset",
+            "name": "credit",
+            "type": "tuple"
+          },
+          {
+            "internalType": "uint256",
+            "name": "fixedInterestAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint24",
+            "name": "accruingInterestAPR",
+            "type": "uint24"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "lenderSpecHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "borrowerSpecHash",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct PWNSimpleLoan.Terms",
+        "name": "loanTerms",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "config",
+    "outputs": [
+      { "internalType": "contract PWNConfig", "name": "", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes", "name": "proposalData", "type": "bytes" }
+    ],
+    "name": "decodeProposalData",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum MultiToken.Category",
+            "name": "collateralCategory",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "collateralAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collateralId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collateralAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "checkCollateralStateFingerprint",
+            "type": "bool"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "collateralStateFingerprint",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "address",
+            "name": "creditAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "creditAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "availableCreditLimit",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "utilizedCreditId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "fixedInterestAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint24",
+            "name": "accruingInterestAPR",
+            "type": "uint24"
+          },
+          {
+            "internalType": "uint32",
+            "name": "durationOrDate",
+            "type": "uint32"
+          },
+          { "internalType": "uint40", "name": "expiration", "type": "uint40" },
+          {
+            "internalType": "address",
+            "name": "allowedAcceptor",
+            "type": "address"
+          },
+          { "internalType": "address", "name": "proposer", "type": "address" },
+          {
+            "internalType": "bytes32",
+            "name": "proposerSpecHash",
+            "type": "bytes32"
+          },
+          { "internalType": "bool", "name": "isOffer", "type": "bool" },
+          {
+            "internalType": "uint256",
+            "name": "refinancingLoanId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nonceSpace",
+            "type": "uint256"
+          },
+          { "internalType": "uint256", "name": "nonce", "type": "uint256" },
+          {
+            "internalType": "address",
+            "name": "loanContract",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct PWNSimpleLoanSimpleProposal.Proposal",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum MultiToken.Category",
+            "name": "collateralCategory",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "collateralAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collateralId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collateralAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "checkCollateralStateFingerprint",
+            "type": "bool"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "collateralStateFingerprint",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "address",
+            "name": "creditAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "creditAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "availableCreditLimit",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "utilizedCreditId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "fixedInterestAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint24",
+            "name": "accruingInterestAPR",
+            "type": "uint24"
+          },
+          {
+            "internalType": "uint32",
+            "name": "durationOrDate",
+            "type": "uint32"
+          },
+          { "internalType": "uint40", "name": "expiration", "type": "uint40" },
+          {
+            "internalType": "address",
+            "name": "allowedAcceptor",
+            "type": "address"
+          },
+          { "internalType": "address", "name": "proposer", "type": "address" },
+          {
+            "internalType": "bytes32",
+            "name": "proposerSpecHash",
+            "type": "bytes32"
+          },
+          { "internalType": "bool", "name": "isOffer", "type": "bool" },
+          {
+            "internalType": "uint256",
+            "name": "refinancingLoanId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nonceSpace",
+            "type": "uint256"
+          },
+          { "internalType": "uint256", "name": "nonce", "type": "uint256" },
+          {
+            "internalType": "address",
+            "name": "loanContract",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct PWNSimpleLoanSimpleProposal.Proposal",
+        "name": "proposal",
+        "type": "tuple"
+      }
+    ],
+    "name": "encodeProposalData",
+    "outputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "multiproposalMerkleRoot",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct PWNSimpleLoanProposal.Multiproposal",
+        "name": "multiproposal",
+        "type": "tuple"
+      }
+    ],
+    "name": "getMultiproposalHash",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum MultiToken.Category",
+            "name": "collateralCategory",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "collateralAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collateralId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collateralAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "checkCollateralStateFingerprint",
+            "type": "bool"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "collateralStateFingerprint",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "address",
+            "name": "creditAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "creditAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "availableCreditLimit",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "utilizedCreditId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "fixedInterestAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint24",
+            "name": "accruingInterestAPR",
+            "type": "uint24"
+          },
+          {
+            "internalType": "uint32",
+            "name": "durationOrDate",
+            "type": "uint32"
+          },
+          { "internalType": "uint40", "name": "expiration", "type": "uint40" },
+          {
+            "internalType": "address",
+            "name": "allowedAcceptor",
+            "type": "address"
+          },
+          { "internalType": "address", "name": "proposer", "type": "address" },
+          {
+            "internalType": "bytes32",
+            "name": "proposerSpecHash",
+            "type": "bytes32"
+          },
+          { "internalType": "bool", "name": "isOffer", "type": "bool" },
+          {
+            "internalType": "uint256",
+            "name": "refinancingLoanId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nonceSpace",
+            "type": "uint256"
+          },
+          { "internalType": "uint256", "name": "nonce", "type": "uint256" },
+          {
+            "internalType": "address",
+            "name": "loanContract",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct PWNSimpleLoanSimpleProposal.Proposal",
+        "name": "proposal",
+        "type": "tuple"
+      }
+    ],
+    "name": "getProposalHash",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "hub",
+    "outputs": [
+      { "internalType": "contract PWNHub", "name": "", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum MultiToken.Category",
+            "name": "collateralCategory",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "collateralAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collateralId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collateralAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "checkCollateralStateFingerprint",
+            "type": "bool"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "collateralStateFingerprint",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "address",
+            "name": "creditAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "creditAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "availableCreditLimit",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "utilizedCreditId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "fixedInterestAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint24",
+            "name": "accruingInterestAPR",
+            "type": "uint24"
+          },
+          {
+            "internalType": "uint32",
+            "name": "durationOrDate",
+            "type": "uint32"
+          },
+          { "internalType": "uint40", "name": "expiration", "type": "uint40" },
+          {
+            "internalType": "address",
+            "name": "allowedAcceptor",
+            "type": "address"
+          },
+          { "internalType": "address", "name": "proposer", "type": "address" },
+          {
+            "internalType": "bytes32",
+            "name": "proposerSpecHash",
+            "type": "bytes32"
+          },
+          { "internalType": "bool", "name": "isOffer", "type": "bool" },
+          {
+            "internalType": "uint256",
+            "name": "refinancingLoanId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nonceSpace",
+            "type": "uint256"
+          },
+          { "internalType": "uint256", "name": "nonce", "type": "uint256" },
+          {
+            "internalType": "address",
+            "name": "loanContract",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct PWNSimpleLoanSimpleProposal.Proposal",
+        "name": "proposal",
+        "type": "tuple"
+      }
+    ],
+    "name": "makeProposal",
+    "outputs": [
+      { "internalType": "bytes32", "name": "proposalHash", "type": "bytes32" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "name": "proposalsMade",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "nonceSpace", "type": "uint256" },
+      { "internalType": "uint256", "name": "nonce", "type": "uint256" }
+    ],
+    "name": "revokeNonce",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "revokedNonce",
+    "outputs": [
+      {
+        "internalType": "contract PWNRevokedNonce",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "utilizedCredit",
+    "outputs": [
+      {
+        "internalType": "contract PWNUtilizedCredit",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

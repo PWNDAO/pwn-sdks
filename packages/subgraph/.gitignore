@@ -32,3 +32,6 @@ typechain-types
 
 # Hardhat files
 cache
+
+# note: we commit subgraph.template.yaml, but the subgraph.yaml is generated
+subgraph.yaml

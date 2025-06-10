@@ -1,5 +1,5 @@
-import { Address, BigDecimal } from "@graphprotocol/graph-ts";
-import { LOANClaimed, LOANCreated, LOANPaidBack, LOANCreatedTermsCollateralStruct, LOANCreatedTermsCreditStruct } from "../generated/PWN_SimpleLoan/SimpleLoan"; // Path to generated code
+import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
+import { LOANClaimed, LOANCreated, LOANPaidBack, LOANCreatedTermsCollateralStruct, LOANCreatedTermsCreditStruct, LOANExtended } from "../generated/SimpleLoan/SimpleLoan"; // Path to generated code
 import { Account, Asset, Loan } from "../generated/schema";
 
 // Helper to get or create an Account entity
@@ -40,6 +40,39 @@ function getOrCreateCreditAsset(asset: LOANCreatedTermsCreditStruct): Asset {
 	return creditAsset;
 }
 
+// Helper function to check if a loan should be considered defaulted based on time
+function isLoanDefaulted(loan: Loan, currentTimestamp: BigInt): boolean {
+	// Only check for default if loan is still active
+	if (loan.status != "Active") {
+		return false;
+	}
+	
+	// Calculate default deadline: createdAt + duration
+	const defaultDeadline = loan.createdAt.plus(loan.duration);
+	
+	// Loan is defaulted if current time is past the deadline
+	return currentTimestamp.gt(defaultDeadline);
+}
+
+// Helper function to update loan status based on time
+function updateLoanStatusIfDefaulted(loan: Loan, currentTimestamp: BigInt): void {
+	if (isLoanDefaulted(loan, currentTimestamp)) {
+		loan.status = "Defaulted";
+	}
+}
+
+// Helper function to check and update multiple loans for defaults
+// This can be called from any event handler to update loan statuses
+function checkAndUpdateLoansForDefaults(currentTimestamp: BigInt, loanIds: string[]): void {
+	for (let i = 0; i < loanIds.length; i++) {
+		const loan = Loan.load(loanIds[i]);
+		if (loan && loan.status == "Active") {
+			updateLoanStatusIfDefaulted(loan, currentTimestamp);
+			loan.save();
+		}
+	}
+}
+
 export function handleLOANCreated(event: LOANCreated): void {
 	const loanEntityId = `${event.address.toHex()}-${event.params.loanId.toString()}`;
 	const loan = new Loan(loanEntityId);
@@ -58,10 +91,12 @@ export function handleLOANCreated(event: LOANCreated): void {
 
 	// terms setting
 	loan.duration = terms.duration;
+	// Calculate and store the default deadline for easier querying
+	// loan.defaultDeadline = event.block.timestamp.plus(terms.duration); // Uncomment after codegen
 	loan.collateral = getOrCreateCollateralAsset(terms.collateral).id;
 	loan.credit = getOrCreateCreditAsset(terms.credit).id;
 
-	loan.status = "ACTIVE";
+	loan.status = "Active";
 
 	loan.extra = event.params.extra;
 
@@ -74,20 +109,42 @@ export function handleLOANPaidBack(event: LOANPaidBack): void {
 	const loan = Loan.load(loanEntityId);
 	if (!loan) return;
 
-	loan.status = "REPAID";
+	loan.status = "Repaid";
 	loan.save();
 
 	// TODO: Update the linked Proposal entity status
 }
 
+// Updated function to handle both explicit defaults and time-based defaults
 export function handleLOANClaimed(event: LOANClaimed): void {
 	const loanEntityId = `${event.address.toHex()}-${event.params.loanId.toString()}`;
 	const loan = Loan.load(loanEntityId);
 	if (!loan) return;
 
 	if (event.params.defaulted) {
-		loan.status = "DEFAULTED";
+		loan.status = "Defaulted";
+	} else {
+		// Even if not explicitly defaulted, check if it should be considered defaulted based on time
+		updateLoanStatusIfDefaulted(loan, event.block.timestamp);
 	}
+
+	loan.save();
+}
+
+// New handler for loan extensions - this updates the default deadline
+export function handleLOANExtended(event: LOANExtended): void {
+	const loanEntityId = `${event.address.toHex()}-${event.params.loanId.toString()}`;
+	const loan = Loan.load(loanEntityId);
+	if (!loan) return;
+
+	// Update the duration to reflect the extension
+	// The new default deadline is the extendedDefaultTimestamp
+	const originalDeadline = loan.createdAt.plus(loan.duration);
+	const extensionDuration = event.params.extendedDefaultTimestamp.minus(originalDeadline);
+	loan.duration = loan.duration.plus(extensionDuration);
+	
+	// Update default deadline if the field is available after codegen
+	// loan.defaultDeadline = event.params.extendedDefaultTimestamp;
 
 	loan.save();
 }
