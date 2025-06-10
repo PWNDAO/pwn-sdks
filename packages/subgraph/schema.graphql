@@ -481,6 +481,7 @@ type ConfigOwnershipTransferred @entity(immutable: true) {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
+
 type AccessControllerSet @entity(immutable: true) {
   id: Bytes!
   accessController: Bytes! # address
@@ -515,30 +516,14 @@ type FeedProposed @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type OwnershipTransferRequested @entity(immutable: true) {
-  id: Bytes!
-  from: Bytes! # address
-  to: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type ChainlinkFeedRegistryOwnershipTransferred @entity(immutable: true) {
-  id: Bytes!
-  from: Bytes! # address
-  to: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
 type Category @entity(immutable: true) {
   # TODO can we make this Bytes?
   id: Int!  # category id
+  # TODO have here relation to Assset or AssetInCategory?
+  assets: [AssetInCategory!]! @derivedFrom(field: "category")
 }
 
-type AssetCategory @entity(immutable: true) {
+type AssetInCategory @entity(immutable: true) {
   id: Bytes!  # asset address
   category: Category!
 }

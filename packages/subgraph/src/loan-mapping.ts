@@ -2,6 +2,8 @@ import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import { LOANClaimed, LOANCreated, LOANPaidBack, LOANCreatedTermsCollateralStruct, LOANCreatedTermsCreditStruct, LOANExtended } from "../generated/SimpleLoan/SimpleLoan"; // Path to generated code
 import { Account, Asset, Loan } from "../generated/schema";
 
+// TODO add logs where applicable
+
 // Helper to get or create an Account entity
 function getOrCreateAccount(address: Address): Account {
 	let account = Account.load(address);
