@@ -7,9 +7,6 @@ import {
   afterAll
 } from "matchstick-as/assembly/index"
 import { Address, BigInt } from "@graphprotocol/graph-ts"
-import { Approval } from "../generated/schema"
-import { Approval as ApprovalEvent } from "../generated/LoanToken/LoanToken"
-import { handleApproval } from "../src/loan-token"
 import { createApprovalEvent } from "./loan-token-utils"
 
 // Tests structure (matchstick-as >=0.5.0)

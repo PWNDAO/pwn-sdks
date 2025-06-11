@@ -22,12 +22,16 @@
 		"deploy": "nx exec -- graph deploy pwn-test-proposals subgraph.yaml",
 		"create-local": "nx exec -- graph create --node http://localhost:8020/ pwn-test-proposals", 
 		"remove-local": "nx exec -- graph remove --node http://localhost:8020/ pwn-test-proposals",
-		"deploy-local": "nx exec -- graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 pwn-test-proposals"
+		"deploy-local": "nx exec -- graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 pwn-test-proposals",
+		"test:with-docker": "nx exec -- graph test -d",
+		"test": "nx exec -- graph test",
+		"help": "nx exec -- graph test --help"
 	},
 	"dependencies": {
 		"@graphprotocol/graph-cli": "0.97.1",
 		"@graphprotocol/graph-ts": "0.38.1",
-		"mustache": "^3.1.0"
+		"mustache": "^3.1.0",
+		"matchstick-as": "0.6.0"
 	},
 	"files": ["dist", "!**/*.tsbuildinfo"]
 }
