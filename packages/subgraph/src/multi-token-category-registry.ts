@@ -47,7 +47,8 @@ export function handleCategoryUnregistered(
     // no need to do anything here
     return
   }
-  store.remove("AssetContract", event.params.assetAddress.toString())
+  assetInCategory.category = null
+  assetInCategory.save()
 
   // TODO shall we save also the raw event?
   // const entity = new CategoryUnregistered(

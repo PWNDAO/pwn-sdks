@@ -1,73 +1,27 @@
-import { newMockEvent } from "matchstick-as"
-import { ethereum, Address, Bytes } from "@graphprotocol/graph-ts"
-import {
-  OwnershipTransferStarted,
-  OwnershipTransferred,
-  TagSet
-} from "../generated/Hub/Hub"
-
-export function createOwnershipTransferStartedEvent(
-  previousOwner: Address,
-  newOwner: Address
-): OwnershipTransferStarted {
-  let ownershipTransferStartedEvent =
-    changetype<OwnershipTransferStarted>(newMockEvent())
-
-  ownershipTransferStartedEvent.parameters = new Array()
-
-  ownershipTransferStartedEvent.parameters.push(
-    new ethereum.EventParam(
-      "previousOwner",
-      ethereum.Value.fromAddress(previousOwner)
-    )
-  )
-  ownershipTransferStartedEvent.parameters.push(
-    new ethereum.EventParam("newOwner", ethereum.Value.fromAddress(newOwner))
-  )
-
-  return ownershipTransferStartedEvent
-}
-
-export function createOwnershipTransferredEvent(
-  previousOwner: Address,
-  newOwner: Address
-): OwnershipTransferred {
-  let ownershipTransferredEvent =
-    changetype<OwnershipTransferred>(newMockEvent())
-
-  ownershipTransferredEvent.parameters = new Array()
-
-  ownershipTransferredEvent.parameters.push(
-    new ethereum.EventParam(
-      "previousOwner",
-      ethereum.Value.fromAddress(previousOwner)
-    )
-  )
-  ownershipTransferredEvent.parameters.push(
-    new ethereum.EventParam("newOwner", ethereum.Value.fromAddress(newOwner))
-  )
-
-  return ownershipTransferredEvent
-}
+import { Address, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts"
+import { TagSet } from "../generated/Hub/Hub"
+import { assert, test, newMockEvent } from 'matchstick-as/assembly/index'
 
 export function createTagSetEvent(
-  _address: Address,
+  contractAddress: Address,
   tag: Bytes,
   hasTag: boolean
 ): TagSet {
-  let tagSetEvent = changetype<TagSet>(newMockEvent())
-
-  tagSetEvent.parameters = new Array()
-
-  tagSetEvent.parameters.push(
-    new ethereum.EventParam("_address", ethereum.Value.fromAddress(_address))
+  let event = changetype<TagSet>(newMockEvent())
+  
+  event.parameters = new Array()
+  
+  event.parameters.push(
+    new ethereum.EventParam("_address", ethereum.Value.fromAddress(contractAddress))
   )
-  tagSetEvent.parameters.push(
-    new ethereum.EventParam("tag", ethereum.Value.fromFixedBytes(tag))
+  event.parameters.push(
+    new ethereum.EventParam("tag", ethereum.Value.fromBytes(tag))
   )
-  tagSetEvent.parameters.push(
+  event.parameters.push(
     new ethereum.EventParam("hasTag", ethereum.Value.fromBoolean(hasTag))
   )
-
-  return tagSetEvent
-}
+  
+  event.address = Address.fromString("0x0000000000000000000000000000000000000001")
+  
+  return event
+} 

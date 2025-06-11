@@ -14,12 +14,13 @@ import {
 } from "../generated/schema"
 import { getOrCreateAccount } from "./helpers"
 import { getOrCreateAsset } from "./utils"
+import { log } from "matchstick-as/assembly/log"
 
 export function getLoanId(loanContractAddress: Address, loanId: BigInt): Bytes {
   return loanContractAddress.concat(Bytes.fromByteArray(Bytes.fromBigInt(loanId)))
 }
 
-export function handleLOANCreated(event: LOANCreatedEvent): void {
+export function handleLOANCreated(event: LOANCreatedEvent): Loan {
   const loanId = getLoanId(event.address, event.params.loanId)
   const loan = new Loan(loanId)
   loan.loanId = event.params.loanId
@@ -32,31 +33,49 @@ export function handleLOANCreated(event: LOANCreatedEvent): void {
   loan.borrower = getOrCreateAccount(event.params.terms.borrower).id
   loan.duration = event.params.terms.duration
 
+  log.info("loan.duration", [])
+
   loan.createdAt = event.block.timestamp
 
   loan.collateral = getOrCreateAsset(event.params.terms.collateral.assetAddress, event.params.terms.collateral.id, event.params.terms.collateral.category).id
   loan.collateralAmount = event.params.terms.collateral.amount
+
+  log.info("loan.collateralAmount", [])
+
   loan.credit = getOrCreateAsset(event.params.terms.credit.assetAddress, event.params.terms.credit.id, event.params.terms.credit.category).id
   loan.creditAmount = event.params.terms.credit.amount
+
+  log.info("loan.collateral", [])
 
   loan.status = "Active"
 
   loan.fixedInterestAmount = event.params.terms.fixedInterestAmount
   loan.accruingInterestAPR = event.params.terms.accruingInterestAPR
 
+  log.info("loan.accruingInterestAPR", [])
+
   loan.lenderSpecHash = event.params.terms.lenderSpecHash
   loan.borrowerSpecHash = event.params.terms.borrowerSpecHash
 
+  log.info("loan.sourceOfFunds", [])
   loan.sourceOfFunds = event.params.lenderSpec.sourceOfFunds
+
+  log.info("loan.aasda", [])
 
   loan.defaultDate = event.params.terms.duration.plus(loan.createdAt)
 
   loan.extra = event.params.extra
 
+  log.info("before contract call", [])
+
   const simpleLoanContract = SimpleLoan.bind(Address.fromBytes(loan.contractAddress))
   loan.loanTokenAddress = simpleLoanContract.loanToken()
 
+  loan.hasDefaulted = false
+
   loan.save()
+
+  return loan
 }
 
 export function handleLOANPaidBack(event: LOANPaidBackEvent): void {

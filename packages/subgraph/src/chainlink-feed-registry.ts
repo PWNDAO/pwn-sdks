@@ -7,7 +7,7 @@ import {
 import { Bytes } from "@graphprotocol/graph-ts"
 
 function getChainlinkFeedId(event: FeedConfirmedEvent): Bytes {
-  return event.params.asset.concatI32(event.params.denomination.toI32())
+  return event.params.asset.concat(event.params.denomination)
 }
 
 export function handleFeedConfirmed(event: FeedConfirmedEvent): void {

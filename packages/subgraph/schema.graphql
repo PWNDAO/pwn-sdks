@@ -12,7 +12,7 @@ type Category @entity(immutable: true) {
 
 type AssetContract @entity(immutable: true) {
   id: Bytes!  # asset address
-  category: Category!
+  category: Category
   # TODO add also metadata like name / symbol / decimals?
 }
 
@@ -480,6 +480,7 @@ type LOANExtended @entity(immutable: true) {
 
 type LoanTokenTransfer @entity(immutable: true) {
   id: Bytes!
+  contractAddress: Bytes! # address
   from: Bytes! # address
   to: Bytes! # address
   tokenId: BigInt! # uint256

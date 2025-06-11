@@ -1,60 +1,48 @@
-import {
-  assert,
-  describe,
-  test,
-  clearStore,
-  beforeAll,
-  afterAll
-} from "matchstick-as/assembly/index"
-import { Address, Bytes } from "@graphprotocol/graph-ts"
-import { OwnershipTransferStarted } from "../generated/schema"
-import { OwnershipTransferStarted as OwnershipTransferStartedEvent } from "../generated/Hub/Hub"
-import { handleOwnershipTransferStarted } from "../src/hub"
-import { createOwnershipTransferStartedEvent } from "./hub-utils"
+import { assert, describe, test, clearStore, beforeEach, afterEach } from "matchstick-as/assembly/index"
+import { Address, BigInt, ethereum, Bytes } from "@graphprotocol/graph-ts"
+import { handleTagSet } from "../src/hub"
+import { createTagSetEvent } from "./hub-utils"
 
-// Tests structure (matchstick-as >=0.5.0)
-// https://thegraph.com/docs/en/subgraphs/developing/creating/unit-testing-framework/#tests-structure
-
-describe("Describe entity assertions", () => {
-  beforeAll(() => {
-    let previousOwner = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
-    )
-    let newOwner = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
-    )
-    let newOwnershipTransferStartedEvent = createOwnershipTransferStartedEvent(
-      previousOwner,
-      newOwner
-    )
-    handleOwnershipTransferStarted(newOwnershipTransferStartedEvent)
-  })
-
-  afterAll(() => {
+describe("Hub Events", () => {
+  beforeEach(() => {
+    // Clear the store before each test
     clearStore()
   })
 
-  // For more test scenarios, see:
-  // https://thegraph.com/docs/en/subgraphs/developing/creating/unit-testing-framework/#write-a-unit-test
-
-  test("OwnershipTransferStarted created and stored", () => {
-    assert.entityCount("OwnershipTransferStarted", 1)
-
-    // 0xa16081f360e3847006db660bae1c6d1b2e17ec2a is the default address used in newMockEvent() function
-    assert.fieldEquals(
-      "OwnershipTransferStarted",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
-      "previousOwner",
-      "0x0000000000000000000000000000000000000001"
-    )
-    assert.fieldEquals(
-      "OwnershipTransferStarted",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
-      "newOwner",
-      "0x0000000000000000000000000000000000000001"
-    )
-
-    // More assert options:
-    // https://thegraph.com/docs/en/subgraphs/developing/creating/unit-testing-framework/#asserts
+  afterEach(() => {
+    // Clear the store after each test
+    clearStore()
   })
-})
+
+  test("handleTagSet - creates a new Tag entity", () => {
+    let tag = Bytes.fromHexString("0x1234")
+    let value = true
+    let contractAddress = Address.fromString("0x0000000000000000000000000000000000000001")
+
+    let event = createTagSetEvent(contractAddress, tag, value)
+
+    handleTagSet(event)
+
+    const tagSetId: Bytes = event.transaction.hash.concatI32(event.logIndex.toI32())
+
+    assert.entityCount("TagSet", 1)
+    assert.fieldEquals(
+      "TagSet",
+      tagSetId.toHexString(),
+      "tag",
+      tag.toHexString()
+    )
+    assert.fieldEquals(
+      "TagSet",
+      tagSetId.toHexString(),
+      "hasTag",
+      value.toString(),
+    )
+    assert.fieldEquals(
+      "TagSet",
+      tagSetId.toHexString(),
+      "_address",
+      contractAddress.toHexString()
+    )
+  })
+}) 

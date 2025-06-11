@@ -1,60 +1,55 @@
-import {
-  assert,
-  describe,
-  test,
-  clearStore,
-  beforeAll,
-  afterAll
-} from "matchstick-as/assembly/index"
-import { Address } from "@graphprotocol/graph-ts"
-import { AccessControllerSet } from "../generated/schema"
-import { AccessControllerSet as AccessControllerSetEvent } from "../generated/ChainlinkFeedRegistry/ChainlinkFeedRegistry"
-import { handleAccessControllerSet } from "../src/chainlink-feed-registry"
-import { createAccessControllerSetEvent } from "./chainlink-feed-registry-utils"
+import { assert, describe, test, clearStore, beforeEach, afterEach } from "matchstick-as/assembly/index"
+import { Address, BigInt, ethereum, Bytes } from "@graphprotocol/graph-ts"
+import { handleFeedConfirmed } from "../src/chainlink-feed-registry"
+import { createFeedConfirmedEvent } from "./chainlink-feed-registry-utils"
 
-// Tests structure (matchstick-as >=0.5.0)
-// https://thegraph.com/docs/en/subgraphs/developing/creating/unit-testing-framework/#tests-structure
-
-describe("Describe entity assertions", () => {
-  beforeAll(() => {
-    let accessController = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
-    )
-    let sender = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
-    )
-    let newAccessControllerSetEvent = createAccessControllerSetEvent(
-      accessController,
-      sender
-    )
-    handleAccessControllerSet(newAccessControllerSetEvent)
-  })
-
-  afterAll(() => {
+describe("ChainlinkFeedRegistry", () => {
+  beforeEach(() => {
     clearStore()
   })
 
-  // For more test scenarios, see:
-  // https://thegraph.com/docs/en/subgraphs/developing/creating/unit-testing-framework/#write-a-unit-test
-
-  test("AccessControllerSet created and stored", () => {
-    assert.entityCount("AccessControllerSet", 1)
-
-    // 0xa16081f360e3847006db660bae1c6d1b2e17ec2a is the default address used in newMockEvent() function
-    assert.fieldEquals(
-      "AccessControllerSet",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
-      "accessController",
-      "0x0000000000000000000000000000000000000001"
-    )
-    assert.fieldEquals(
-      "AccessControllerSet",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
-      "sender",
-      "0x0000000000000000000000000000000000000001"
-    )
-
-    // More assert options:
-    // https://thegraph.com/docs/en/subgraphs/developing/creating/unit-testing-framework/#asserts
+  afterEach(() => {
+    clearStore()
   })
-})
+
+  test("handleFeedConfirmed - creates a new ChainlinkFeed entity", () => {
+    // Create test data
+    const asset = Address.fromString("0x0000000000000000000000000000000000000001")
+    const denomination = Address.fromString("0x0000000000000000000000000000000000000002")
+    const latestAggregator = Address.fromString("0x0000000000000000000000000000000000000003")
+    
+    // Create the event
+    const event = createFeedConfirmedEvent(
+      asset,
+      denomination,
+      latestAggregator
+    )
+
+    // Handle the event
+    handleFeedConfirmed(event)
+
+    // Get the expected ID
+    const chainlinkFeedId = asset.concat(denomination)
+
+    // Assert the ChainlinkFeed entity was created with correct data
+    assert.entityCount("ChainlinkFeed", 1)
+    assert.fieldEquals(
+      "ChainlinkFeed",
+      chainlinkFeedId.toHexString(),
+      "asset",
+      asset.toHexString()
+    )
+    assert.fieldEquals(
+      "ChainlinkFeed",
+      chainlinkFeedId.toHexString(),
+      "denomination",
+      denomination.toHexString()
+    )
+    assert.fieldEquals(
+      "ChainlinkFeed",
+      chainlinkFeedId.toHexString(),
+      "aggregator",
+      latestAggregator.toHexString()
+    )
+  })
+}) 
