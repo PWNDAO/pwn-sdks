@@ -46,6 +46,7 @@ export function createSimpleProposalMadeEvent(
   let proposalTuple = new ethereum.Tuple()
   proposalTuple.push(ethereum.Value.fromI32(collateralCategory))
   proposalTuple.push(ethereum.Value.fromAddress(collateralAddress))
+  proposalTuple.push(ethereum.Value.fromUnsignedBigInt(collateralId))
   proposalTuple.push(ethereum.Value.fromUnsignedBigInt(collateralAmount))
   proposalTuple.push(ethereum.Value.fromBoolean(checkCollateralStateFingerprint))
   proposalTuple.push(ethereum.Value.fromBytes(collateralStateFingerprint))
@@ -222,7 +223,7 @@ export function createElasticChainlinkProposalMadeEvent(
   checkCollateralStateFingerprint: boolean,
   collateralStateFingerprint: Bytes,
   creditAddress: Address,
-  feedIntermediaryDenominations: Bytes[],
+  feedIntermediaryDenominations: Address[],
   feedInvertFlags: boolean[],
   loanToValue: BigInt,
   minCreditAmount: BigInt,
@@ -261,7 +262,7 @@ export function createElasticChainlinkProposalMadeEvent(
   
   let feedDenominationsArray = new Array<ethereum.Value>()
   for (let i = 0; i < feedIntermediaryDenominations.length; i++) {
-    feedDenominationsArray.push(ethereum.Value.fromBytes(feedIntermediaryDenominations[i]))
+    feedDenominationsArray.push(ethereum.Value.fromAddress(feedIntermediaryDenominations[i]))
   }
   proposalTuple.push(ethereum.Value.fromArray(feedDenominationsArray))
   
@@ -303,7 +304,7 @@ export function createUniswapV3LPIndividualProposalMadeEvent(
   collateralId: BigInt,
   token0Denominator: Address,
   creditAddress: Address,
-  feedIntermediaryDenominations: Bytes[],
+  feedIntermediaryDenominations: Address[],
   feedInvertFlags: boolean[],
   loanToValue: BigInt,
   minCreditAmount: BigInt,
@@ -340,7 +341,7 @@ export function createUniswapV3LPIndividualProposalMadeEvent(
   
   let feedDenominationsArray = new Array<ethereum.Value>()
   for (let i = 0; i < feedIntermediaryDenominations.length; i++) {
-    feedDenominationsArray.push(ethereum.Value.fromBytes(feedIntermediaryDenominations[i]))
+    feedDenominationsArray.push(ethereum.Value.fromAddress(feedIntermediaryDenominations[i]))
   }
   proposalTuple.push(ethereum.Value.fromArray(feedDenominationsArray))
   
@@ -380,10 +381,10 @@ export function createUniswapV3LPIndividualProposalMadeEvent(
 export function createUniswapV3LPSetProposalMadeEvent(
   proposalHash: Bytes,
   proposer: Address,
-  tokenAAllowlist: Bytes[],
-  tokenBAllowlist: Bytes[],
+  tokenAAllowlist: Address[],
+  tokenBAllowlist: Address[],
   creditAddress: Address,
-  feedIntermediaryDenominations: Bytes[],
+  feedIntermediaryDenominations: Address[],
   feedInvertFlags: boolean[],
   loanToValue: BigInt,
   minCreditAmount: BigInt,
@@ -417,13 +418,13 @@ export function createUniswapV3LPSetProposalMadeEvent(
   
   let tokenAArray = new Array<ethereum.Value>()
   for (let i = 0; i < tokenAAllowlist.length; i++) {
-    tokenAArray.push(ethereum.Value.fromBytes(tokenAAllowlist[i]))
+    tokenAArray.push(ethereum.Value.fromAddress(tokenAAllowlist[i]))
   }
   proposalTuple.push(ethereum.Value.fromArray(tokenAArray))
   
   let tokenBArray = new Array<ethereum.Value>()
   for (let i = 0; i < tokenBAllowlist.length; i++) {
-    tokenBArray.push(ethereum.Value.fromBytes(tokenBAllowlist[i]))
+    tokenBArray.push(ethereum.Value.fromAddress(tokenBAllowlist[i]))
   }
   proposalTuple.push(ethereum.Value.fromArray(tokenBArray))
   
@@ -431,7 +432,7 @@ export function createUniswapV3LPSetProposalMadeEvent(
   
   let feedDenominationsArray = new Array<ethereum.Value>()
   for (let i = 0; i < feedIntermediaryDenominations.length; i++) {
-    feedDenominationsArray.push(ethereum.Value.fromBytes(feedIntermediaryDenominations[i]))
+    feedDenominationsArray.push(ethereum.Value.fromAddress(feedIntermediaryDenominations[i]))
   }
   proposalTuple.push(ethereum.Value.fromArray(feedDenominationsArray))
   

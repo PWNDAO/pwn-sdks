@@ -1,6 +1,6 @@
 import { Address, BigInt, ethereum, Bytes } from "@graphprotocol/graph-ts"
 import { LOANCreated, LOANPaidBack, LOANClaimed, LOANExtended, ExtensionProposalMade } from "../generated/SimpleLoan/SimpleLoan"
-import { assert, test, newMockEvent, dataSourceMock } from 'matchstick-as/assembly/index'
+import { assert, test, newMockEvent, dataSourceMock, createMockedFunction } from 'matchstick-as/assembly/index'
 import { handleLOANCreated } from "../src/simple-loan"
 import { Loan } from "../generated/schema";
 
@@ -28,9 +28,10 @@ export class TestLoanParams {
   sourceOfFunds: Address = Address.fromString("0x0000000000000000000000000000000000000003");
   extra: Bytes = Bytes.fromHexString("0x1234");
   loanTokenAddress: Address = Address.fromString("0x0000000000000000000000000000000000000006");
+  loanContractAddress: Address = Address.fromString("0x0000000000000000000000000000000000000007");
 }
 
-export function createDefaultTestLoan(loanId: BigInt, params: TestLoanParams | null = null): Loan {
+export function createTestLoan(loanId: BigInt, params: TestLoanParams | null = null): Loan {
   // Use default params if none provided
   const p = params ? params : new TestLoanParams();
   
@@ -57,8 +58,11 @@ export function createDefaultTestLoan(loanId: BigInt, params: TestLoanParams | n
     p.borrowerSpecHash,
     p.sourceOfFunds,
     p.extra,
-    p.loanTokenAddress
+    p.loanContractAddress
   );
+
+  createMockedFunction(p.loanContractAddress, 'loanToken', 'loanToken():(address)')
+    .returns([ethereum.Value.fromAddress(p.loanTokenAddress)])
 
   const loan = handleLOANCreated(createEvent);
   return loan;
@@ -87,7 +91,7 @@ export function createLOANCreatedEvent(
   borrowerSpecHash: Bytes,
   sourceOfFunds: Address,
   extra: Bytes,
-  loanTokenAddress: Address
+  loanContractAddress: Address
 ): LOANCreated {
   let event = changetype<LOANCreated>(newMockEvent())
   
@@ -133,8 +137,9 @@ export function createLOANCreatedEvent(
     new ethereum.EventParam("extra", ethereum.Value.fromBytes(extra))
   )
 
-  // TODO is this fine or we should also pass the loan contract address and set it here?
-  // event.address = loanContractAddress
+  event.block.timestamp = createdAt
+
+  event.address = loanContractAddress
 
   return event
 }
@@ -204,7 +209,7 @@ function createLenderSpecTuple(
 export function createLOANClaimedEvent(
   loanId: BigInt,
   defaulted: boolean,
-  loanTokenAddress: Address
+  loanContractAddress: Address
 ): LOANClaimed {
   let event = changetype<LOANClaimed>(newMockEvent())
   
@@ -218,7 +223,7 @@ export function createLOANClaimedEvent(
   )
 
   // Mock the loanToken() call
-  event.address = loanTokenAddress
+  event.address = loanContractAddress
 
   return event
 }
@@ -316,7 +321,7 @@ function createExtensionProposalTuple(
 export function createLOANPaidBackEvent(
     loanId: BigInt,
     paidBackAt: BigInt,
-    loanTokenAddress: Address
+    loanContractAddress: Address
   ): LOANPaidBack {
     let event = changetype<LOANPaidBack>(newMockEvent())
     
@@ -328,9 +333,10 @@ export function createLOANPaidBackEvent(
     event.parameters.push(
       new ethereum.EventParam("paidBackAt", ethereum.Value.fromUnsignedBigInt(paidBackAt))
     )
+
+    event.block.timestamp = paidBackAt
   
-    // Mock the loanToken() call
-    event.address = loanTokenAddress
+    event.address = loanContractAddress
   
     return event
   }

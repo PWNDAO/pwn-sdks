@@ -249,7 +249,6 @@ type SimpleLoanSimpleProposalMade @entity(immutable: true) {
   durationOrDate: BigInt! # uint32
   expiration: BigInt! # uint40
   allowedAcceptor: Bytes! # address
-  proposerAddress: Bytes! # address (renamed to avoid conflict with proposer field)
   proposerSpecHash: Bytes! # bytes32
   isOffer: Boolean! # bool
   refinancingLoanId: BigInt! # uint256
@@ -286,7 +285,6 @@ type SimpleLoanUniswapV3LPIndividualProposalProposalMade
   expiration: BigInt! # uint40
   acceptorController: Bytes! # address
   acceptorControllerData: Bytes! # bytes
-  proposerAddress: Bytes! # address (renamed to avoid conflict with proposer field)
   proposerSpecHash: Bytes! # bytes32
   isOffer: Boolean! # bool
   refinancingLoanId: BigInt! # uint256
@@ -322,7 +320,6 @@ type SimpleLoanUniswapV3LPSetProposalProposalMade @entity(immutable: true) {
   expiration: BigInt! # uint40
   acceptorController: Bytes! # address
   acceptorControllerData: Bytes! # bytes
-  proposerAddress: Bytes! # address (renamed to avoid conflict with proposer field)
   proposerSpecHash: Bytes! # bytes32
   isOffer: Boolean! # bool
   refinancingLoanId: BigInt! # uint256
@@ -358,7 +355,6 @@ type SimpleLoanListProposalProposalMade @entity(immutable: true) {
   durationOrDate: BigInt! # uint32
   expiration: BigInt! # uint40
   allowedAcceptor: Bytes! # address
-  proposerAddress: Bytes! # address (renamed to avoid conflict with proposer field)
   proposerSpecHash: Bytes! # bytes32
   isOffer: Boolean! # bool
   refinancingLoanId: BigInt! # uint256
@@ -393,7 +389,6 @@ type SimpleLoanElasticProposalProposalMade @entity(immutable: true) {
   durationOrDate: BigInt! # uint32
   expiration: BigInt! # uint40
   allowedAcceptor: Bytes! # address
-  proposerAddress: Bytes! # address (renamed to avoid conflict with proposer field)
   proposerSpecHash: Bytes! # bytes32
   isOffer: Boolean! # bool
   refinancingLoanId: BigInt! # uint256
@@ -430,7 +425,6 @@ type SimpleLoanElasticChainlinkProposalProposalMade @entity(immutable: true) {
   durationOrDate: BigInt! # uint32
   expiration: BigInt! # uint40
   allowedAcceptor: Bytes! # address
-  proposerAddress: Bytes! # address (renamed to avoid conflict with proposer field)
   proposerSpecHash: Bytes! # bytes32
   isOffer: Boolean! # bool
   refinancingLoanId: BigInt! # uint256

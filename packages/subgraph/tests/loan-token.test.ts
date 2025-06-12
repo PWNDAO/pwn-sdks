@@ -4,7 +4,7 @@ import { handleTransfer } from "../src/loan-token"
 import { createTransferEvent } from "./loan-token-utils"
 import { getLoanId } from "../src/simple-loan"
 import { Loan } from "../generated/schema"
-import { createDefaultTestLoan, TestLoanParams } from "./simple-loan-utils"
+import { createTestLoan, TestLoanParams } from "./simple-loan-utils"
 import { log } from "matchstick-as/assembly/log"
 
 describe("LoanToken Events", () => {
@@ -31,13 +31,11 @@ describe("LoanToken Events", () => {
     const loanParams = new TestLoanParams()
     loanParams.loanTokenAddress = loanTokenAddress
     loanParams.lender = from
+    loanParams.loanContractAddress = loanContractAddress
 
-    createMockedFunction(loanContractAddress, 'loanToken', 'loanToken():(address)')
-      .returns([ethereum.Value.fromAddress(loanTokenAddress)])
-
-    log.info("before createDefaultTestLoan", [])
-    createDefaultTestLoan(tokenId, loanParams)
-    log.info("after createDefaultTestLoan", [])
+    log.info("before createTestLoan", [])
+    createTestLoan(tokenId, loanParams)
+    log.info("after createTestLoan", [])
     assert.fieldEquals("Loan", loanId.toHexString(), "loanOwner", from.toHexString())
 
     log.info("before createTransferEvent", [])

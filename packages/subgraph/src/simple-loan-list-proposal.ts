@@ -31,7 +31,6 @@ export function handleProposalMade(event: ProposalMadeEvent): void {
   eventEntity.durationOrDate = event.params.proposal.durationOrDate
   eventEntity.expiration = event.params.proposal.expiration
   eventEntity.allowedAcceptor = event.params.proposal.allowedAcceptor
-  eventEntity.proposerAddress = event.params.proposal.proposer
   eventEntity.proposerSpecHash = event.params.proposal.proposerSpecHash
   eventEntity.isOffer = event.params.proposal.isOffer
   eventEntity.refinancingLoanId = event.params.proposal.refinancingLoanId
