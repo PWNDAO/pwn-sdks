@@ -1,0 +1,16 @@
+{
+  "extends": "@graphprotocol/graph-ts/types/tsconfig.base.json",
+  "include": ["src", "tests"],
+  "references": [
+    {
+      "path": "./tsconfig.lib.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ],
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "bundler"
+  }
+}
