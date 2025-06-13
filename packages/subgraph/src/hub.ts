@@ -2,11 +2,11 @@ import {
   TagSet as TagSetEvent,
 } from "../generated/Hub/Hub"
 import {
-  TagSet,
+  TagSetEvent as TagSetEventEntity,
 } from "../generated/schema"
 
 export function handleTagSet(event: TagSetEvent): void {
-  const entity = new TagSet(
+  const entity = new TagSetEventEntity(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity._address = event.params._address

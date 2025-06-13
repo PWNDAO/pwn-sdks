@@ -108,7 +108,7 @@ dataSources:
         - ExtensionProposalMade
         - LOANClaimed
         - LOANCreated
-        - LOANExtended
+        - LoanExtendedEvent
         - LOANPaidBack
         #- PoolSupply
         #- PoolWithdraw
@@ -241,7 +241,7 @@ dataSources:
       entities:
         #- OwnershipTransferStarted
         #- OwnershipTransferred
-        - TagSet
+        - TagSetEvent
       abis:
         - name: Hub
           file: ./abis/Hub.json

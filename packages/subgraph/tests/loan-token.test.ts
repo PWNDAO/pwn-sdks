@@ -33,24 +33,17 @@ describe("LoanToken Events", () => {
     loanParams.lender = from
     loanParams.loanContractAddress = loanContractAddress
 
-    log.info("before createTestLoan", [])
     createTestLoan(tokenId, loanParams)
-    log.info("after createTestLoan", [])
     assert.fieldEquals("Loan", loanId.toHexString(), "loanOwner", from.toHexString())
 
-    log.info("before createTransferEvent", [])
     let event = createTransferEvent(from, to, tokenId, loanTokenAddress)
-    log.info("after createTransferEvent", [])
     const transferEventId = event.transaction.hash.concatI32(event.logIndex.toI32())
 
     createMockedFunction(loanTokenAddress, 'loanContract', 'loanContract(uint256):(address)')
       .withArgs([ethereum.Value.fromUnsignedBigInt(event.params.tokenId)])
       .returns([ethereum.Value.fromAddress(loanContractAddress)])
 
-    log.info("before handleTransfer", [])
     handleTransfer(event)
-
-    log.info("after handleTransfer", [])
 
     assert.fieldEquals("Loan", loanId.toHexString(), "loanOwner", to.toHexString())
 

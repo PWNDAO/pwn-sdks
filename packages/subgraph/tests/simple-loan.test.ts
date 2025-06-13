@@ -79,8 +79,6 @@ describe("SimpleLoan", () => {
     handleLOANClaimed(claimEvent)
 
     const loanEntityId = getLoanId(params.loanContractAddress, loanId).toHexString()
-    log.info("loanEntityId: {}", [loanEntityId])
-    log.info("params.loanContractAddress: {}", [params.loanContractAddress.toHexString()])
 
     assert.fieldEquals("Loan", loanEntityId, "status", "Claimed")
     assert.fieldEquals("Loan", loanEntityId, "hasDefaulted", defaulted.toString())
@@ -112,6 +110,12 @@ describe("SimpleLoan", () => {
 
     const loanEntityId = getLoanId(loanContractAddress, loanId).toHexString()
     assert.fieldEquals("Loan", loanEntityId, "defaultDate", extendedDefaultTimestamp.toString())
+
+    assert.entityCount("LoanExtendedEvent", 1)
+    const eventId = extendEvent.transaction.hash.concatI32(extendEvent.logIndex.toI32())
+    assert.fieldEquals("LoanExtendedEvent", eventId.toHexString(), "loanId", loanId.toString())
+    assert.fieldEquals("LoanExtendedEvent", eventId.toHexString(), "originalDefaultTimestamp", originalDefaultTimestamp.toString())
+    assert.fieldEquals("LoanExtendedEvent", eventId.toHexString(), "extendedDefaultTimestamp", extendedDefaultTimestamp.toString())
   })
 
   test("handleExtensionProposalMade - creates a new ExtensionProposal entity", () => {

@@ -489,7 +489,7 @@ type LoanTokenTransfer @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type TagSet @entity(immutable: true) {
+type TagSetEvent @entity(immutable: true) {
   id: Bytes!
   _address: Bytes! # address
   tag: Bytes! # bytes32
@@ -503,50 +503,50 @@ type TagSet @entity(immutable: true) {
 # TO REMOVE???
 # ==============================
 
-type LOANPaidBack @entity(immutable: true) {
-  id: Bytes!
-  loanId: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
+# type LoanPaidBackEvent @entity(immutable: true) {
+#   id: Bytes!
+#   loanId: BigInt! # uint256
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
 
-type LOANClaimed @entity(immutable: true) {
-  id: Bytes!
-  loanId: BigInt! # uint256
-  defaulted: Boolean! # bool
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
+# type LoanClaimedEvent @entity(immutable: true) {
+#   id: Bytes!
+#   loanId: BigInt! # uint256
+#   defaulted: Boolean! # bool
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
 
-type LOANCreated @entity(immutable: true) {
-  id: Bytes!
-  loanId: BigInt! # uint256
-  proposalHash: Bytes! # bytes32
-  proposalContract: Bytes! # address
-  refinancingLoanId: BigInt! # uint256
-  terms_lender: Bytes! # address
-  terms_borrower: Bytes! # address
-  terms_duration: BigInt! # uint32
-  terms_collateral_category: Int! # uint8
-  terms_collateral_assetAddress: Bytes! # address
-  terms_collateral_id: BigInt! # uint256
-  terms_collateral_amount: BigInt! # uint256
-  terms_credit_category: Int! # uint8
-  terms_credit_assetAddress: Bytes! # address
-  terms_credit_id: BigInt! # uint256
-  terms_credit_amount: BigInt! # uint256
-  terms_fixedInterestAmount: BigInt! # uint256
-  terms_accruingInterestAPR: Int! # uint24
-  terms_lenderSpecHash: Bytes! # bytes32
-  terms_borrowerSpecHash: Bytes! # bytes32
-  lenderSpec_sourceOfFunds: Bytes! # address
-  extra: Bytes! # bytes
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
+# type LoanCreatedEvent @entity(immutable: true) {
+#   id: Bytes!
+#   loanId: BigInt! # uint256
+#   proposalHash: Bytes! # bytes32
+#   proposalContract: Bytes! # address
+#   refinancingLoanId: BigInt! # uint256
+#   terms_lender: Bytes! # address
+#   terms_borrower: Bytes! # address
+#   terms_duration: BigInt! # uint32
+#   terms_collateral_category: Int! # uint8
+#   terms_collateral_assetAddress: Bytes! # address
+#   terms_collateral_id: BigInt! # uint256
+#   terms_collateral_amount: BigInt! # uint256
+#   terms_credit_category: Int! # uint8
+#   terms_credit_assetAddress: Bytes! # address
+#   terms_credit_id: BigInt! # uint256
+#   terms_credit_amount: BigInt! # uint256
+#   terms_fixedInterestAmount: BigInt! # uint256
+#   terms_accruingInterestAPR: Int! # uint24
+#   terms_lenderSpecHash: Bytes! # bytes32
+#   terms_borrowerSpecHash: Bytes! # bytes32
+#   lenderSpec_sourceOfFunds: Bytes! # address
+#   extra: Bytes! # bytes
+#   blockNumber: BigInt!
+#   blockTimestamp: BigInt!
+#   transactionHash: Bytes!
+# }
 
 # ===============================
 # UNUSED ENTITIES

@@ -25,21 +25,21 @@ describe("Hub Events", () => {
 
     const tagSetId: Bytes = event.transaction.hash.concatI32(event.logIndex.toI32())
 
-    assert.entityCount("TagSet", 1)
+    assert.entityCount("TagSetEvent", 1)
     assert.fieldEquals(
-      "TagSet",
+      "TagSetEvent",
       tagSetId.toHexString(),
       "tag",
       tag.toHexString()
     )
     assert.fieldEquals(
-      "TagSet",
+      "TagSetEvent",
       tagSetId.toHexString(),
       "hasTag",
       value.toString(),
     )
     assert.fieldEquals(
-      "TagSet",
+      "TagSetEvent",
       tagSetId.toHexString(),
       "_address",
       contractAddress.toHexString()
