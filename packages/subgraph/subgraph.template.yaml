@@ -300,7 +300,7 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - AssetInCategory
-        - Category
+        - AssetCategory
         #- CategoryRegistered
         #- CategoryUnregistered
         #- MultiTokenCategoryRegistryOwnershipTransferStarted

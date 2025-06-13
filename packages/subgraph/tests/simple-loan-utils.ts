@@ -1,7 +1,7 @@
 import { Address, BigInt, ethereum, Bytes } from "@graphprotocol/graph-ts"
 import { LOANCreated, LOANPaidBack, LOANClaimed, LOANExtended, ExtensionProposalMade } from "../generated/SimpleLoan/SimpleLoan"
 import { assert, test, newMockEvent, dataSourceMock, createMockedFunction } from 'matchstick-as/assembly/index'
-import { handleLOANCreated } from "../src/simple-loan"
+import { getLoanId, handleLOANCreated } from "../src/simple-loan"
 import { Loan } from "../generated/schema";
 
 // Define a class to hold the parameters
@@ -29,6 +29,7 @@ export class TestLoanParams {
   extra: Bytes = Bytes.fromHexString("0x1234");
   loanTokenAddress: Address = Address.fromString("0x0000000000000000000000000000000000000006");
   loanContractAddress: Address = Address.fromString("0x0000000000000000000000000000000000000007");
+  loanType: string = "SimpleLoan";
 }
 
 export function createTestLoan(loanId: BigInt, params: TestLoanParams | null = null): Loan {
@@ -58,13 +59,14 @@ export function createTestLoan(loanId: BigInt, params: TestLoanParams | null = n
     p.borrowerSpecHash,
     p.sourceOfFunds,
     p.extra,
-    p.loanContractAddress
+    p.loanContractAddress,
   );
 
   createMockedFunction(p.loanContractAddress, 'loanToken', 'loanToken():(address)')
     .returns([ethereum.Value.fromAddress(p.loanTokenAddress)])
 
-  const loan = handleLOANCreated(createEvent);
+  handleLOANCreated(createEvent);
+  const loan = new Loan(getLoanId(p.loanContractAddress, loanId));
   return loan;
 }
 

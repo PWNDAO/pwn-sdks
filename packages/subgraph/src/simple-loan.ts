@@ -20,7 +20,7 @@ export function getLoanId(loanContractAddress: Address, loanId: BigInt): Bytes {
   return loanContractAddress.concat(Bytes.fromByteArray(Bytes.fromBigInt(loanId)))
 }
 
-export function handleLOANCreated(event: LOANCreatedEvent): Loan {
+export function handleLOANCreated(event: LOANCreatedEvent): void {
   const loanId = getLoanId(event.address, event.params.loanId)
   const loan = new Loan(loanId)
   loan.loanId = event.params.loanId
@@ -32,6 +32,7 @@ export function handleLOANCreated(event: LOANCreatedEvent): Loan {
   loan.loanOwner = getOrCreateAccount(event.params.terms.lender).id
   loan.borrower = getOrCreateAccount(event.params.terms.borrower).id
   loan.duration = event.params.terms.duration
+  loan.loanType = "SimpleLoan"
 
   log.info("loan.duration", [])
 
@@ -74,8 +75,6 @@ export function handleLOANCreated(event: LOANCreatedEvent): Loan {
   loan.hasDefaulted = false
 
   loan.save()
-
-  return loan
 }
 
 export function handleLOANPaidBack(event: LOANPaidBackEvent): void {

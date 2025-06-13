@@ -1,4 +1,4 @@
-import { Asset, AssetContract, Category, Account } from "../generated/schema"
+import { Asset, AssetContract, AssetCategory, Account } from "../generated/schema"
 import { Bytes, BigInt, Address } from "@graphprotocol/graph-ts"
 
 // Helper function to create or get Asset entity
@@ -10,9 +10,9 @@ export function getOrCreateAsset(contractAddress: Bytes, tokenId: BigInt, catego
     let assetContract = AssetContract.load(contractAddress)
     if (assetContract == null) {
       // Create or get the category
-      let categoryEntity = Category.load(Bytes.fromI32(category))
+      let categoryEntity = AssetCategory.load(Bytes.fromI32(category))
       if (categoryEntity == null) {
-        categoryEntity = new Category(Bytes.fromI32(category))
+        categoryEntity = new AssetCategory(Bytes.fromI32(category))
         categoryEntity.save()
       }
       

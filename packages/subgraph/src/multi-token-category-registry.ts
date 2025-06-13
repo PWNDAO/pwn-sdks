@@ -4,16 +4,15 @@ import {
 } from "../generated/MultiTokenCategoryRegistry/MultiTokenCategoryRegistry"
 import {
   AssetContract,
-  Category,
+  AssetCategory,
 } from "../generated/schema"
-import { store } from '@graphprotocol/graph-ts'
-import { Bytes, Address } from "@graphprotocol/graph-ts"
+import { Bytes } from "@graphprotocol/graph-ts"
 
 export function handleCategoryRegistered(event: CategoryRegisteredEvent): void {
   const categoryId = Bytes.fromI32(event.params.category)
-  let category = Category.load(categoryId)
+  let category = AssetCategory.load(categoryId)
   if (category == null) {
-    category = new Category(categoryId)
+    category = new AssetCategory(categoryId)
     category.save()
   }
   let assetContract = AssetContract.load(event.params.assetAddress)

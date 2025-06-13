@@ -5,14 +5,14 @@ type Account @entity(immutable: true) {
   loansAsLoanOwner: [Loan!]! @derivedFrom(field: "loanOwner")
 }
 
-type Category @entity(immutable: true) {
+type AssetCategory @entity(immutable: true) {
   id: Bytes!  # category id
   assets: [AssetContract!]! @derivedFrom(field: "category")
 }
 
 type AssetContract @entity(immutable: true) {
   id: Bytes!  # asset address
-  category: Category
+  category: AssetCategory
   # TODO add also metadata like name / symbol / decimals?
 }
 
@@ -30,9 +30,14 @@ type Asset @entity(immutable: true) {
 enum LoanStatus {
   Active
   Repaid
-  # TODO this state will probably never be reached right?
-  Defaulted
+  # we do not use defaulted state here as it can't be calculated from the onchain event
+  # as there is no onchain event when a loan defaults
+  # Defaulted
   Claimed
+}
+
+enum LoanType {
+  SimpleLoan
 }
 
 type Loan @entity(immutable: false) {
@@ -52,7 +57,6 @@ type Loan @entity(immutable: false) {
   repaidAt: BigInt
   claimedAt: BigInt
 
-  # Loan contract address
 	contractAddress: Bytes!
 
   refinancingLoanId: BigInt!
@@ -90,6 +94,8 @@ type Loan @entity(immutable: false) {
 	extra: Bytes!
 
   hasDefaulted: Boolean!
+
+  loanType: LoanType!
 
   # TODO also add Loan contract version?
 }
@@ -462,7 +468,7 @@ type ChainlinkFeed @entity(immutable: true) {
   aggregator: Bytes! # feed address
 }
 
-type LOANExtended @entity(immutable: true) {
+type LoanExtendedEvent @entity(immutable: true) {
   id: Bytes!
   loanId: BigInt! # uint256
   originalDefaultTimestamp: BigInt! # uint40

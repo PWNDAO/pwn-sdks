@@ -40,6 +40,7 @@ describe("SimpleLoan", () => {
     assert.fieldEquals("Loan", loanEntityId, "createdAt", params.createdAt.toString())
     assert.fieldEquals("Loan", loanEntityId, "status", "Active")
     assert.fieldEquals("Loan", loanEntityId, "loanTokenAddress", loanTokenAddress.toHexString())
+    assert.fieldEquals("Loan", loanEntityId, "loanType", "SimpleLoan")
   })
 
   test("handleLOANPaidBack - updates Loan status to Repaid", () => {

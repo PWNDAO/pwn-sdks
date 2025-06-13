@@ -17,7 +17,7 @@ describe("MultiTokenCategoryRegistry Events", () => {
     clearStore()
   })
 
-  test("handleCategoryRegistered - creates a new Category entity", () => {
+  test("handleCategoryRegistered - creates a new AssetCategory entity", () => {
     let category = Bytes.fromHexString("0x1234").toI32()
     let assetAddress = Address.fromString("0x0000000000000000000000000000000000000001")
 
@@ -27,9 +27,9 @@ describe("MultiTokenCategoryRegistry Events", () => {
 
     let categoryId = Bytes.fromI32(category).toHexString()
 
-    assert.entityCount("Category", 1)
+    assert.entityCount("AssetCategory", 1)
     assert.fieldEquals(
-      "Category",
+      "AssetCategory",
       categoryId,
       "id",
       categoryId
@@ -50,7 +50,7 @@ describe("MultiTokenCategoryRegistry Events", () => {
     )
   })
 
-  test("handleCategoryUnregistered - removes the Category entity", () => {
+  test("handleCategoryUnregistered - removes the AssetCategory entity", () => {
     let category = Bytes.fromHexString("0x1234").toI32()
     let registryAddress = Address.fromString("0x0000000000000000000000000000000000000001")
 
@@ -62,7 +62,7 @@ describe("MultiTokenCategoryRegistry Events", () => {
     let unregisterEvent = createCategoryUnregisteredEvent(registryAddress)
     handleCategoryUnregistered(unregisterEvent)
 
-    assert.entityCount("Category", 1)
+    assert.entityCount("AssetCategory", 1)
     assert.entityCount("AssetContract", 1)
     const assetContract = AssetContract.load(Bytes.fromHexString(registryAddress.toHexString()))
     assert.assertNotNull(assetContract)
