@@ -19,11 +19,12 @@
 		"prepare:sepolia": "mustache config/sepolia.json subgraph.template.yaml > subgraph.yaml",
 		"codegen": "nx exec -- graph codegen",
 		"build": "nx exec -- graph build",
-		"deploy": "nx exec -- graph deploy pwn-test-proposals subgraph.yaml",
+		"deploy": "nx exec -- graph deploy pwndao-test-subgraph subgraph.yaml",
 		"create-local": "nx exec -- graph create --node http://localhost:8020/ pwn-test-proposals", 
 		"remove-local": "nx exec -- graph remove --node http://localhost:8020/ pwn-test-proposals",
 		"deploy-local": "nx exec -- graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 pwn-test-proposals",
 		"docker-prepare": "docker build -t matchstick .",
+		"auth-subgraph-studio": "graph auth",
 		"test:with-docker": "nx exec -- graph test -d",
 		"test": "nx exec -- graph test",
 		"help": "nx exec -- graph test --help"
