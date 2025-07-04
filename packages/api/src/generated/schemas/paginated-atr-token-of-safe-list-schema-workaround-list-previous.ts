@@ -5,5 +5,5 @@
  */
 
 export type PaginatedAtrTokenOfSafeListSchemaWorkaroundListPrevious =
-	| string
-	| null;
+  | string
+  | null;

@@ -5,5 +5,4 @@
  */
 
 export type V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestMinCreditAmount =
-	| number
-	| string;
+  number | string;

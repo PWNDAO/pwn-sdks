@@ -5,5 +5,5 @@
  */
 
 export type SimpleLoanSimpleProposalDetailSchemaWorkaroundSignature =
-	| string
-	| null;
+  | string
+  | null;

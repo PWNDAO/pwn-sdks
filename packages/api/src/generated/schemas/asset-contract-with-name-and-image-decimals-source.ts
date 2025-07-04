@@ -3,9 +3,9 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { DecimalsSourceEnum } from "./decimals-source-enum";
-import type { NullEnum } from "./null-enum";
+import type { DecimalsSourceEnum } from './decimals-source-enum';
+import type { NullEnum } from './null-enum';
 
 export type AssetContractWithNameAndImageDecimalsSource =
-	| DecimalsSourceEnum
-	| NullEnum;
+  | DecimalsSourceEnum
+  | NullEnum;

@@ -5,10 +5,10 @@
  */
 
 export interface AtrTokenOfAssetSchema {
-	contract_address: string;
-	token_id: string;
-	is_tokenized_asset_in_user_safe: boolean;
-	atr_token_created_by: string;
-	tokenized_asset_owner: string;
-	tokenized_amount: string;
+  contract_address: string;
+  token_id: string;
+  is_tokenized_asset_in_user_safe: boolean;
+  atr_token_created_by: string;
+  tokenized_asset_owner: string;
+  tokenized_amount: string;
 }

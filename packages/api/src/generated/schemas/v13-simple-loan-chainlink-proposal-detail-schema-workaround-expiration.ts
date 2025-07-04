@@ -5,5 +5,5 @@
  */
 
 export type V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundExpiration =
-	| number
-	| null;
+  | number
+  | null;

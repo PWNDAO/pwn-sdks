@@ -3,6 +3,6 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { WalletStatsBreakdown } from "./wallet-stats-breakdown";
+import type { WalletStatsBreakdown } from './wallet-stats-breakdown';
 
 export type WalletStatsDetailBorrow = WalletStatsBreakdown | null;

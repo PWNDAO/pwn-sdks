@@ -3,47 +3,47 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ChainIdEnum } from "./chain-id-enum";
-import type { ProposalAdminDuration } from "./proposal-admin-duration";
+import type { ChainIdEnum } from './chain-id-enum';
+import type { ProposalAdminDuration } from './proposal-admin-duration';
 
 export interface ProposalAdmin {
-	readonly id: number;
-	/**
-	 * @minimum 0
-	 * @maximum 2147483647
-	 */
-	chain_id: ChainIdEnum;
-	/** @maxLength 66 */
-	proposal_contract_address: string;
-	created_at?: string;
-	proposer_address: string;
-	readonly collateral_asset_chain_id: string;
-	readonly collateral_asset_address: string;
-	readonly collateral_asset_amount: string;
-	readonly collateral_asset_decimals: string;
-	readonly collateral_asset_thumbnail_url: string;
-	readonly collateral_asset_name: string;
-	readonly collateral_asset_symbol: string;
-	readonly collateral_asset_is_verified: string;
-	readonly collateral_asset_token_id: string;
-	readonly credit_asset_chain_id: string;
-	readonly credit_asset_address: string;
-	readonly credit_asset_amount: string;
-	readonly credit_asset_repayment_amount: string;
-	readonly credit_asset_decimals: string;
-	readonly credit_asset_thumbnail_url: string;
-	readonly credit_asset_name: string;
-	readonly credit_asset_symbol: string;
-	readonly credit_asset_is_verified: string;
-	expiration: string;
-	readonly status: string;
-	readonly ltv: string;
-	readonly chain_name: string;
-	/**
-	 * @minimum 0
-	 * @maximum 9223372036854776000
-	 */
-	duration?: ProposalAdminDuration;
-	readonly related_loan_token_contract_address: string;
-	readonly related_loan_on_chain_id: string;
+  readonly id: number;
+  /**
+   * @minimum 0
+   * @maximum 2147483647
+   */
+  chain_id: ChainIdEnum;
+  /** @maxLength 66 */
+  proposal_contract_address: string;
+  created_at?: string;
+  proposer_address: string;
+  readonly collateral_asset_chain_id: string;
+  readonly collateral_asset_address: string;
+  readonly collateral_asset_amount: string;
+  readonly collateral_asset_decimals: string;
+  readonly collateral_asset_thumbnail_url: string;
+  readonly collateral_asset_name: string;
+  readonly collateral_asset_symbol: string;
+  readonly collateral_asset_is_verified: string;
+  readonly collateral_asset_token_id: string;
+  readonly credit_asset_chain_id: string;
+  readonly credit_asset_address: string;
+  readonly credit_asset_amount: string;
+  readonly credit_asset_repayment_amount: string;
+  readonly credit_asset_decimals: string;
+  readonly credit_asset_thumbnail_url: string;
+  readonly credit_asset_name: string;
+  readonly credit_asset_symbol: string;
+  readonly credit_asset_is_verified: string;
+  expiration: string;
+  readonly status: string;
+  readonly ltv: string;
+  readonly chain_name: string;
+  /**
+   * @minimum 0
+   * @maximum 9223372036854776000
+   */
+  duration?: ProposalAdminDuration;
+  readonly related_loan_token_contract_address: string;
+  readonly related_loan_on_chain_id: string;
 }

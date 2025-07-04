@@ -5,5 +5,5 @@
  */
 
 export type CreateSimpleLoanListProposalRequestSchemaRequestSourceOfFunds =
-	| string
-	| null;
+  | string
+  | null;

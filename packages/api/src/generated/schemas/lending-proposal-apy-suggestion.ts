@@ -5,7 +5,7 @@
  */
 
 export interface LendingProposalAPYSuggestion {
-	day1: number;
-	day7: number;
-	day30: number;
+  day1: number;
+  day7: number;
+  day30: number;
 }

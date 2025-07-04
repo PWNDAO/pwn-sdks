@@ -3,6 +3,6 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { TaskStatus } from "./task-status";
+import type { TaskStatus } from './task-status';
 
 export type TaskInfoStatus = TaskStatus | null;

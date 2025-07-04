@@ -5,5 +5,5 @@
  */
 
 export type BetaProposalDetailSchemaWorkaroundProposalContractAddress =
-	| string
-	| null;
+  | string
+  | null;

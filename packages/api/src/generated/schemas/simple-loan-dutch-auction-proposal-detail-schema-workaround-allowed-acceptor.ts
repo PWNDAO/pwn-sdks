@@ -5,5 +5,4 @@
  */
 
 export type SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundAllowedAcceptor =
-	| string
-	| null;
+  string | null;

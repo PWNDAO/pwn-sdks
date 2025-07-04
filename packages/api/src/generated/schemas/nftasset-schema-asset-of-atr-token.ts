@@ -3,10 +3,10 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ERC20AssetSchemaWithBalanceAndOwner } from "./erc20-asset-schema-with-balance-and-owner";
-import type { NFTAssetSchemaWithBalanceAndOwner } from "./nftasset-schema-with-balance-and-owner";
+import type { ERC20AssetSchemaWithBalanceAndOwner } from './erc20-asset-schema-with-balance-and-owner';
+import type { NFTAssetSchemaWithBalanceAndOwner } from './nftasset-schema-with-balance-and-owner';
 
 export type NFTAssetSchemaAssetOfAtrToken =
-	| ERC20AssetSchemaWithBalanceAndOwner
-	| NFTAssetSchemaWithBalanceAndOwner
-	| null;
+  | ERC20AssetSchemaWithBalanceAndOwner
+  | NFTAssetSchemaWithBalanceAndOwner
+  | null;

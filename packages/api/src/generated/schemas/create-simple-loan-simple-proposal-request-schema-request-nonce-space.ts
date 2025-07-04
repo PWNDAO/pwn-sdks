@@ -5,5 +5,5 @@
  */
 
 export type CreateSimpleLoanSimpleProposalRequestSchemaRequestNonceSpace =
-	| number
-	| string;
+  | number
+  | string;

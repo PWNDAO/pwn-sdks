@@ -5,5 +5,5 @@
  */
 
 export type ProposalTokenApprovalTriggerSchemaRequestSourceOfFunds =
-	| string
-	| null;
+  | string
+  | null;

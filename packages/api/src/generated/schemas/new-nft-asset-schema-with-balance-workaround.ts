@@ -3,42 +3,42 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { BaseAssetContractSchema } from "./base-asset-contract-schema";
-import type { NewNFTAssetSchemaWithBalanceWorkaroundAnimationUrl } from "./new-nft-asset-schema-with-balance-workaround-animation-url";
-import type { NewNFTAssetSchemaWithBalanceWorkaroundAssetOfAtrToken } from "./new-nft-asset-schema-with-balance-workaround-asset-of-atr-token";
-import type { NewNFTAssetSchemaWithBalanceWorkaroundAtrTokensOfUser } from "./new-nft-asset-schema-with-balance-workaround-atr-tokens-of-user";
-import type { NewNFTAssetSchemaWithBalanceWorkaroundBundledAssets } from "./new-nft-asset-schema-with-balance-workaround-bundled-assets";
-import type { NewNFTAssetSchemaWithBalanceWorkaroundBundledAssetsTotalCount } from "./new-nft-asset-schema-with-balance-workaround-bundled-assets-total-count";
-import type { NewNFTAssetSchemaWithBalanceWorkaroundBundledAssetsVerifiedCount } from "./new-nft-asset-schema-with-balance-workaround-bundled-assets-verified-count";
-import type { NewNFTAssetSchemaWithBalanceWorkaroundDescription } from "./new-nft-asset-schema-with-balance-workaround-description";
-import type { NewNFTAssetSchemaWithBalanceWorkaroundId } from "./new-nft-asset-schema-with-balance-workaround-id";
-import type { NewNFTAssetSchemaWithBalanceWorkaroundIsVerified } from "./new-nft-asset-schema-with-balance-workaround-is-verified";
-import type { NewNFTAssetSchemaWithBalanceWorkaroundIsVerifiedSource } from "./new-nft-asset-schema-with-balance-workaround-is-verified-source";
-import type { NewNFTAssetSchemaWithBalanceWorkaroundLatestPrice } from "./new-nft-asset-schema-with-balance-workaround-latest-price";
-import type { NewNFTAssetSchemaWithBalanceWorkaroundName } from "./new-nft-asset-schema-with-balance-workaround-name";
-import type { NewNFTAssetSchemaWithBalanceWorkaroundThumbnailUrl } from "./new-nft-asset-schema-with-balance-workaround-thumbnail-url";
-import type { NewNFTAssetSchemaWithBalanceWorkaroundTokenUri } from "./new-nft-asset-schema-with-balance-workaround-token-uri";
-import type { NewNFTAssetSchemaWithBalanceWorkaroundType } from "./new-nft-asset-schema-with-balance-workaround-type";
-import type { NFTAssetCollectionSchema } from "./nftasset-collection-schema";
+import type { BaseAssetContractSchema } from './base-asset-contract-schema';
+import type { NewNFTAssetSchemaWithBalanceWorkaroundName } from './new-nft-asset-schema-with-balance-workaround-name';
+import type { NewNFTAssetSchemaWithBalanceWorkaroundDescription } from './new-nft-asset-schema-with-balance-workaround-description';
+import type { NewNFTAssetSchemaWithBalanceWorkaroundType } from './new-nft-asset-schema-with-balance-workaround-type';
+import type { NewNFTAssetSchemaWithBalanceWorkaroundAnimationUrl } from './new-nft-asset-schema-with-balance-workaround-animation-url';
+import type { NewNFTAssetSchemaWithBalanceWorkaroundTokenUri } from './new-nft-asset-schema-with-balance-workaround-token-uri';
+import type { NewNFTAssetSchemaWithBalanceWorkaroundId } from './new-nft-asset-schema-with-balance-workaround-id';
+import type { NFTAssetCollectionSchema } from './nftasset-collection-schema';
+import type { NewNFTAssetSchemaWithBalanceWorkaroundBundledAssets } from './new-nft-asset-schema-with-balance-workaround-bundled-assets';
+import type { NewNFTAssetSchemaWithBalanceWorkaroundThumbnailUrl } from './new-nft-asset-schema-with-balance-workaround-thumbnail-url';
+import type { NewNFTAssetSchemaWithBalanceWorkaroundIsVerified } from './new-nft-asset-schema-with-balance-workaround-is-verified';
+import type { NewNFTAssetSchemaWithBalanceWorkaroundIsVerifiedSource } from './new-nft-asset-schema-with-balance-workaround-is-verified-source';
+import type { NewNFTAssetSchemaWithBalanceWorkaroundBundledAssetsVerifiedCount } from './new-nft-asset-schema-with-balance-workaround-bundled-assets-verified-count';
+import type { NewNFTAssetSchemaWithBalanceWorkaroundBundledAssetsTotalCount } from './new-nft-asset-schema-with-balance-workaround-bundled-assets-total-count';
+import type { NewNFTAssetSchemaWithBalanceWorkaroundAssetOfAtrToken } from './new-nft-asset-schema-with-balance-workaround-asset-of-atr-token';
+import type { NewNFTAssetSchemaWithBalanceWorkaroundAtrTokensOfUser } from './new-nft-asset-schema-with-balance-workaround-atr-tokens-of-user';
+import type { NewNFTAssetSchemaWithBalanceWorkaroundLatestPrice } from './new-nft-asset-schema-with-balance-workaround-latest-price';
 
 export interface NewNFTAssetSchemaWithBalanceWorkaround {
-	contract: BaseAssetContractSchema;
-	tokenId: string;
-	name?: NewNFTAssetSchemaWithBalanceWorkaroundName;
-	description?: NewNFTAssetSchemaWithBalanceWorkaroundDescription;
-	type?: NewNFTAssetSchemaWithBalanceWorkaroundType;
-	animationUrl?: NewNFTAssetSchemaWithBalanceWorkaroundAnimationUrl;
-	tokenUri?: NewNFTAssetSchemaWithBalanceWorkaroundTokenUri;
-	id?: NewNFTAssetSchemaWithBalanceWorkaroundId;
-	collection: NFTAssetCollectionSchema;
-	bundledAssets?: NewNFTAssetSchemaWithBalanceWorkaroundBundledAssets;
-	thumbnailUrl?: NewNFTAssetSchemaWithBalanceWorkaroundThumbnailUrl;
-	isVerified?: NewNFTAssetSchemaWithBalanceWorkaroundIsVerified;
-	isVerifiedSource?: NewNFTAssetSchemaWithBalanceWorkaroundIsVerifiedSource;
-	bundledAssetsVerifiedCount?: NewNFTAssetSchemaWithBalanceWorkaroundBundledAssetsVerifiedCount;
-	bundledAssetsTotalCount?: NewNFTAssetSchemaWithBalanceWorkaroundBundledAssetsTotalCount;
-	assetOfAtrToken?: NewNFTAssetSchemaWithBalanceWorkaroundAssetOfAtrToken;
-	atrTokensOfUser?: NewNFTAssetSchemaWithBalanceWorkaroundAtrTokensOfUser;
-	latestPrice?: NewNFTAssetSchemaWithBalanceWorkaroundLatestPrice;
-	balance: string;
+  contract: BaseAssetContractSchema;
+  tokenId: string;
+  name?: NewNFTAssetSchemaWithBalanceWorkaroundName;
+  description?: NewNFTAssetSchemaWithBalanceWorkaroundDescription;
+  type?: NewNFTAssetSchemaWithBalanceWorkaroundType;
+  animationUrl?: NewNFTAssetSchemaWithBalanceWorkaroundAnimationUrl;
+  tokenUri?: NewNFTAssetSchemaWithBalanceWorkaroundTokenUri;
+  id?: NewNFTAssetSchemaWithBalanceWorkaroundId;
+  collection: NFTAssetCollectionSchema;
+  bundledAssets?: NewNFTAssetSchemaWithBalanceWorkaroundBundledAssets;
+  thumbnailUrl?: NewNFTAssetSchemaWithBalanceWorkaroundThumbnailUrl;
+  isVerified?: NewNFTAssetSchemaWithBalanceWorkaroundIsVerified;
+  isVerifiedSource?: NewNFTAssetSchemaWithBalanceWorkaroundIsVerifiedSource;
+  bundledAssetsVerifiedCount?: NewNFTAssetSchemaWithBalanceWorkaroundBundledAssetsVerifiedCount;
+  bundledAssetsTotalCount?: NewNFTAssetSchemaWithBalanceWorkaroundBundledAssetsTotalCount;
+  assetOfAtrToken?: NewNFTAssetSchemaWithBalanceWorkaroundAssetOfAtrToken;
+  atrTokensOfUser?: NewNFTAssetSchemaWithBalanceWorkaroundAtrTokensOfUser;
+  latestPrice?: NewNFTAssetSchemaWithBalanceWorkaroundLatestPrice;
+  balance: string;
 }

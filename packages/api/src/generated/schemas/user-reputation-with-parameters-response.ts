@@ -3,22 +3,22 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ReputationParameterResponse } from "./reputation-parameter-response";
-import type { UserReputationWithParametersResponseProgressToNextLevelPercentage } from "./user-reputation-with-parameters-response-progress-to-next-level-percentage";
-import type { UserReputationWithParametersResponseTotalBase } from "./user-reputation-with-parameters-response-total-base";
-import type { UserReputationWithParametersResponseTotalLinear } from "./user-reputation-with-parameters-response-total-linear";
-import type { UserReputationWithParametersResponseTotalMultiplier } from "./user-reputation-with-parameters-response-total-multiplier";
+import type { ReputationParameterResponse } from './reputation-parameter-response';
+import type { UserReputationWithParametersResponseTotalBase } from './user-reputation-with-parameters-response-total-base';
+import type { UserReputationWithParametersResponseTotalMultiplier } from './user-reputation-with-parameters-response-total-multiplier';
+import type { UserReputationWithParametersResponseTotalLinear } from './user-reputation-with-parameters-response-total-linear';
+import type { UserReputationWithParametersResponseProgressToNextLevelPercentage } from './user-reputation-with-parameters-response-progress-to-next-level-percentage';
 
 export interface UserReputationWithParametersResponse {
-	walletAddress: string;
-	timestamp: string;
-	reputationScore: number;
-	position: number;
-	parameters: ReputationParameterResponse[];
-	potentialReputationScore: number;
-	totalBase: UserReputationWithParametersResponseTotalBase;
-	totalMultiplier: UserReputationWithParametersResponseTotalMultiplier;
-	totalLinear: UserReputationWithParametersResponseTotalLinear;
-	level: number;
-	progressToNextLevelPercentage: UserReputationWithParametersResponseProgressToNextLevelPercentage;
+  walletAddress: string;
+  timestamp: string;
+  reputationScore: number;
+  position: number;
+  parameters: ReputationParameterResponse[];
+  potentialReputationScore: number;
+  totalBase: UserReputationWithParametersResponseTotalBase;
+  totalMultiplier: UserReputationWithParametersResponseTotalMultiplier;
+  totalLinear: UserReputationWithParametersResponseTotalLinear;
+  level: number;
+  progressToNextLevelPercentage: UserReputationWithParametersResponseProgressToNextLevelPercentage;
 }

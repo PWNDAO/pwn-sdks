@@ -3,9 +3,9 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { NewERC20AssetSchemaWithBalanceWorkaround } from "./new-er-c20-asset-schema-with-balance-workaround";
-import type { NewNFTAssetSchemaWithBalanceWorkaround } from "./new-nft-asset-schema-with-balance-workaround";
+import type { NewERC20AssetSchemaWithBalanceWorkaround } from './new-er-c20-asset-schema-with-balance-workaround';
+import type { NewNFTAssetSchemaWithBalanceWorkaround } from './new-nft-asset-schema-with-balance-workaround';
 
 export type NewNFTAssetSchemaWorkaroundBundledAssetsAnyOfItem =
-	| NewERC20AssetSchemaWithBalanceWorkaround
-	| NewNFTAssetSchemaWithBalanceWorkaround;
+  | NewERC20AssetSchemaWithBalanceWorkaround
+  | NewNFTAssetSchemaWithBalanceWorkaround;

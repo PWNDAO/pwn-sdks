@@ -5,6 +5,6 @@
  */
 
 export type NFTAssetCollectionDetailWithStatsSchemaTlvValueEth =
-	| number
-	| string
-	| null;
+  | number
+  | string
+  | null;

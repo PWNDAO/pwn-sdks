@@ -5,7 +5,7 @@
  */
 
 export interface ParsedLeaderboardPositionResponse {
-	walletAddress: string;
-	reputationScore: number;
-	position: number;
+  walletAddress: string;
+  reputationScore: number;
+  position: number;
 }

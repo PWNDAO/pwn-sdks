@@ -3,12 +3,12 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AmountInTokenAndEthAndUsdEthAmount } from "./amount-in-token-and-eth-and-usd-eth-amount";
-import type { AmountInTokenAndEthAndUsdTokenAmount } from "./amount-in-token-and-eth-and-usd-token-amount";
-import type { AmountInTokenAndEthAndUsdUsdAmount } from "./amount-in-token-and-eth-and-usd-usd-amount";
+import type { AmountInTokenAndEthAndUsdEthAmount } from './amount-in-token-and-eth-and-usd-eth-amount';
+import type { AmountInTokenAndEthAndUsdUsdAmount } from './amount-in-token-and-eth-and-usd-usd-amount';
+import type { AmountInTokenAndEthAndUsdTokenAmount } from './amount-in-token-and-eth-and-usd-token-amount';
 
 export interface AmountInTokenAndEthAndUsd {
-	eth_amount?: AmountInTokenAndEthAndUsdEthAmount;
-	usd_amount?: AmountInTokenAndEthAndUsdUsdAmount;
-	token_amount?: AmountInTokenAndEthAndUsdTokenAmount;
+  eth_amount?: AmountInTokenAndEthAndUsdEthAmount;
+  usd_amount?: AmountInTokenAndEthAndUsdUsdAmount;
+  token_amount?: AmountInTokenAndEthAndUsdTokenAmount;
 }

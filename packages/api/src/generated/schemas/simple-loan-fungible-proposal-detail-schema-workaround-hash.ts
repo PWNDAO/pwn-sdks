@@ -5,5 +5,5 @@
  */
 
 export type SimpleLoanFungibleProposalDetailSchemaWorkaroundHash =
-	| string
-	| null;
+  | string
+  | null;

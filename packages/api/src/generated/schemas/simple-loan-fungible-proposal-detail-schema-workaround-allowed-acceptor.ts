@@ -5,5 +5,5 @@
  */
 
 export type SimpleLoanFungibleProposalDetailSchemaWorkaroundAllowedAcceptor =
-	| string
-	| null;
+  | string
+  | null;

@@ -5,5 +5,4 @@
  */
 
 export type V13CreateSimpleLoanSimpleProposalRequestSchemaRequestRelatedThesisId =
-	| number
-	| null;
+  number | null;

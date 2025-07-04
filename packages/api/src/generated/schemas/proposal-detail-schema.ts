@@ -3,29 +3,29 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { BetaProposalDetailSchemaWorkaround } from "./beta-proposal-detail-schema-workaround";
-import type { SimpleLoanDutchAuctionProposalDetailSchemaWorkaround } from "./simple-loan-dutch-auction-proposal-detail-schema-workaround";
-import type { SimpleLoanFungibleProposalDetailSchemaWorkaround } from "./simple-loan-fungible-proposal-detail-schema-workaround";
-import type { SimpleLoanListProposalDetailSchemaWorkaround } from "./simple-loan-list-proposal-detail-schema-workaround";
-import type { SimpleLoanSimpleProposalDetailSchemaWorkaround } from "./simple-loan-simple-proposal-detail-schema-workaround";
-import type { V11SimpleLoanListProposalDetailSchemaWorkaround } from "./v11-simple-loan-list-proposal-detail-schema-workaround";
-import type { V11SimpleLoanSimpleProposalDetailSchemaWorkaround } from "./v11-simple-loan-simple-proposal-detail-schema-workaround";
-import type { V13SimpleLoanChainlinkProposalDetailSchemaWorkaround } from "./v13-simple-loan-chainlink-proposal-detail-schema-workaround";
-import type { V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaround } from "./v13-simple-loan-dutch-auction-proposal-detail-schema-workaround";
-import type { V13SimpleLoanElasticProposalDetailSchemaWorkaround } from "./v13-simple-loan-elastic-proposal-detail-schema-workaround";
-import type { V13SimpleLoanListProposalDetailSchemaWorkaround } from "./v13-simple-loan-list-proposal-detail-schema-workaround";
-import type { V13SimpleLoanSimpleProposalDetailSchemaWorkaround } from "./v13-simple-loan-simple-proposal-detail-schema-workaround";
+import type { BetaProposalDetailSchemaWorkaround } from './beta-proposal-detail-schema-workaround';
+import type { V11SimpleLoanSimpleProposalDetailSchemaWorkaround } from './v11-simple-loan-simple-proposal-detail-schema-workaround';
+import type { V11SimpleLoanListProposalDetailSchemaWorkaround } from './v11-simple-loan-list-proposal-detail-schema-workaround';
+import type { SimpleLoanSimpleProposalDetailSchemaWorkaround } from './simple-loan-simple-proposal-detail-schema-workaround';
+import type { SimpleLoanListProposalDetailSchemaWorkaround } from './simple-loan-list-proposal-detail-schema-workaround';
+import type { SimpleLoanFungibleProposalDetailSchemaWorkaround } from './simple-loan-fungible-proposal-detail-schema-workaround';
+import type { SimpleLoanDutchAuctionProposalDetailSchemaWorkaround } from './simple-loan-dutch-auction-proposal-detail-schema-workaround';
+import type { V13SimpleLoanSimpleProposalDetailSchemaWorkaround } from './v13-simple-loan-simple-proposal-detail-schema-workaround';
+import type { V13SimpleLoanListProposalDetailSchemaWorkaround } from './v13-simple-loan-list-proposal-detail-schema-workaround';
+import type { V13SimpleLoanElasticProposalDetailSchemaWorkaround } from './v13-simple-loan-elastic-proposal-detail-schema-workaround';
+import type { V13SimpleLoanChainlinkProposalDetailSchemaWorkaround } from './v13-simple-loan-chainlink-proposal-detail-schema-workaround';
+import type { V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaround } from './v13-simple-loan-dutch-auction-proposal-detail-schema-workaround';
 
 export type ProposalDetailSchema =
-	| BetaProposalDetailSchemaWorkaround
-	| V11SimpleLoanSimpleProposalDetailSchemaWorkaround
-	| V11SimpleLoanListProposalDetailSchemaWorkaround
-	| SimpleLoanSimpleProposalDetailSchemaWorkaround
-	| SimpleLoanListProposalDetailSchemaWorkaround
-	| SimpleLoanFungibleProposalDetailSchemaWorkaround
-	| SimpleLoanDutchAuctionProposalDetailSchemaWorkaround
-	| V13SimpleLoanSimpleProposalDetailSchemaWorkaround
-	| V13SimpleLoanListProposalDetailSchemaWorkaround
-	| V13SimpleLoanElasticProposalDetailSchemaWorkaround
-	| V13SimpleLoanChainlinkProposalDetailSchemaWorkaround
-	| V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaround;
+  | BetaProposalDetailSchemaWorkaround
+  | V11SimpleLoanSimpleProposalDetailSchemaWorkaround
+  | V11SimpleLoanListProposalDetailSchemaWorkaround
+  | SimpleLoanSimpleProposalDetailSchemaWorkaround
+  | SimpleLoanListProposalDetailSchemaWorkaround
+  | SimpleLoanFungibleProposalDetailSchemaWorkaround
+  | SimpleLoanDutchAuctionProposalDetailSchemaWorkaround
+  | V13SimpleLoanSimpleProposalDetailSchemaWorkaround
+  | V13SimpleLoanListProposalDetailSchemaWorkaround
+  | V13SimpleLoanElasticProposalDetailSchemaWorkaround
+  | V13SimpleLoanChainlinkProposalDetailSchemaWorkaround
+  | V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaround;

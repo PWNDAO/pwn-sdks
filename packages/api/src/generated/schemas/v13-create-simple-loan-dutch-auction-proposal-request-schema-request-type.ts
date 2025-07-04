@@ -5,10 +5,10 @@
  */
 
 export type V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestType =
-	(typeof V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestType)[keyof typeof V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestType];
+  (typeof V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestType)[keyof typeof V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestType = {
-	pwn_contractsv1_3simpleloandutchauctionproposal:
-		"pwn_contracts.v1_3simpleloandutchauctionproposal",
+  pwn_contractsv1_3simpleloandutchauctionproposal:
+    'pwn_contracts.v1_3simpleloandutchauctionproposal',
 } as const;

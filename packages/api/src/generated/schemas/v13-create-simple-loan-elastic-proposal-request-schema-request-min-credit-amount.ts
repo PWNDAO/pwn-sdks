@@ -5,5 +5,4 @@
  */
 
 export type V13CreateSimpleLoanElasticProposalRequestSchemaRequestMinCreditAmount =
-	| number
-	| string;
+  number | string;

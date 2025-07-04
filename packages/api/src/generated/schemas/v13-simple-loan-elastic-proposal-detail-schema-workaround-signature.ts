@@ -5,5 +5,5 @@
  */
 
 export type V13SimpleLoanElasticProposalDetailSchemaWorkaroundSignature =
-	| string
-	| null;
+  | string
+  | null;

@@ -5,5 +5,5 @@
  */
 
 export type ThesisCreateUpdateSchemaRequestCustomAprValuesAnyOfItem =
-	| number
-	| number;
+  | number
+  | number;

@@ -5,5 +5,5 @@
  */
 
 export type LoanExtensionCounterProposalSchemaWorkaroundSignature =
-	| string
-	| null;
+  | string
+  | null;

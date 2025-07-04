@@ -5,5 +5,5 @@
  */
 
 export type V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundDuration =
-	| number
-	| null;
+  | number
+  | null;

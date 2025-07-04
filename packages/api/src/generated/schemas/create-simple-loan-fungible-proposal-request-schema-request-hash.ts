@@ -5,5 +5,5 @@
  */
 
 export type CreateSimpleLoanFungibleProposalRequestSchemaRequestHash =
-	| string
-	| null;
+  | string
+  | null;

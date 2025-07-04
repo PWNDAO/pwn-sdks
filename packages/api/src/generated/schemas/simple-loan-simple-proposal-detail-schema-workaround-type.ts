@@ -5,10 +5,10 @@
  */
 
 export type SimpleLoanSimpleProposalDetailSchemaWorkaroundType =
-	(typeof SimpleLoanSimpleProposalDetailSchemaWorkaroundType)[keyof typeof SimpleLoanSimpleProposalDetailSchemaWorkaroundType];
+  (typeof SimpleLoanSimpleProposalDetailSchemaWorkaroundType)[keyof typeof SimpleLoanSimpleProposalDetailSchemaWorkaroundType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SimpleLoanSimpleProposalDetailSchemaWorkaroundType = {
-	pwn_contractsv1_2simpleloansimpleproposal:
-		"pwn_contracts.v1_2simpleloansimpleproposal",
+  pwn_contractsv1_2simpleloansimpleproposal:
+    'pwn_contracts.v1_2simpleloansimpleproposal',
 } as const;

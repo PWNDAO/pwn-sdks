@@ -3,13 +3,13 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { PaginatedWalletAssetsResponseWorkaroundListNext } from "./paginated-wallet-assets-response-workaround-list-next";
-import type { PaginatedWalletAssetsResponseWorkaroundListPrevious } from "./paginated-wallet-assets-response-workaround-list-previous";
-import type { WalletAssetsResponseWorkaround } from "./wallet-assets-response-workaround";
+import type { PaginatedWalletAssetsResponseWorkaroundListNext } from './paginated-wallet-assets-response-workaround-list-next';
+import type { PaginatedWalletAssetsResponseWorkaroundListPrevious } from './paginated-wallet-assets-response-workaround-list-previous';
+import type { WalletAssetsResponseWorkaround } from './wallet-assets-response-workaround';
 
 export interface PaginatedWalletAssetsResponseWorkaroundList {
-	count?: number;
-	next?: PaginatedWalletAssetsResponseWorkaroundListNext;
-	previous?: PaginatedWalletAssetsResponseWorkaroundListPrevious;
-	results?: WalletAssetsResponseWorkaround;
+  count?: number;
+  next?: PaginatedWalletAssetsResponseWorkaroundListNext;
+  previous?: PaginatedWalletAssetsResponseWorkaroundListPrevious;
+  results?: WalletAssetsResponseWorkaround;
 }

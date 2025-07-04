@@ -5,25 +5,25 @@
  */
 
 export type ProposalAndLoanListChainsItem =
-	(typeof ProposalAndLoanListChainsItem)[keyof typeof ProposalAndLoanListChainsItem];
+  (typeof ProposalAndLoanListChainsItem)[keyof typeof ProposalAndLoanListChainsItem];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ProposalAndLoanListChainsItem = {
-	NUMBER_1: 1,
-	NUMBER_10: 10,
-	NUMBER_100: 100,
-	NUMBER_11155111: 11155111,
-	NUMBER_11155112: 11155112,
-	NUMBER_112211: 112211,
-	NUMBER_130: 130,
-	NUMBER_1301: 1301,
-	NUMBER_137: 137,
-	NUMBER_25: 25,
-	NUMBER_42161: 42161,
-	NUMBER_42220: 42220,
-	NUMBER_480: 480,
-	NUMBER_56: 56,
-	NUMBER_57073: 57073,
-	NUMBER_59144: 59144,
-	NUMBER_8453: 8453,
+  NUMBER_1: 1,
+  NUMBER_10: 10,
+  NUMBER_100: 100,
+  NUMBER_11155111: 11155111,
+  NUMBER_11155112: 11155112,
+  NUMBER_112211: 112211,
+  NUMBER_130: 130,
+  NUMBER_1301: 1301,
+  NUMBER_137: 137,
+  NUMBER_25: 25,
+  NUMBER_42161: 42161,
+  NUMBER_42220: 42220,
+  NUMBER_480: 480,
+  NUMBER_56: 56,
+  NUMBER_57073: 57073,
+  NUMBER_59144: 59144,
+  NUMBER_8453: 8453,
 } as const;

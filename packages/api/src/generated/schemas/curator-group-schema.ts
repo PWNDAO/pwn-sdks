@@ -3,13 +3,13 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { CuratorGroupSchemaAvatar } from "./curator-group-schema-avatar";
-import type { CuratorGroupSchemaUrl } from "./curator-group-schema-url";
+import type { CuratorGroupSchemaAvatar } from './curator-group-schema-avatar';
+import type { CuratorGroupSchemaUrl } from './curator-group-schema-url';
 
 export interface CuratorGroupSchema {
-	id: number;
-	name: string;
-	avatar: CuratorGroupSchemaAvatar;
-	description: string;
-	url: CuratorGroupSchemaUrl;
+  id: number;
+  name: string;
+  avatar: CuratorGroupSchemaAvatar;
+  description: string;
+  url: CuratorGroupSchemaUrl;
 }

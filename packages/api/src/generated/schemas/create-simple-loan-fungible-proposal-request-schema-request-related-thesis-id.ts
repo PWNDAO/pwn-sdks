@@ -5,5 +5,4 @@
  */
 
 export type CreateSimpleLoanFungibleProposalRequestSchemaRequestRelatedThesisId =
-	| number
-	| null;
+  number | null;

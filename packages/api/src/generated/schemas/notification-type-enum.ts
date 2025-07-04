@@ -12,13 +12,13 @@
  * `pending` - Pending
  */
 export type NotificationTypeEnum =
-	(typeof NotificationTypeEnum)[keyof typeof NotificationTypeEnum];
+  (typeof NotificationTypeEnum)[keyof typeof NotificationTypeEnum];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const NotificationTypeEnum = {
-	error: "error",
-	danger: "danger",
-	success: "success",
-	info: "info",
-	pending: "pending",
+  error: 'error',
+  danger: 'danger',
+  success: 'success',
+  info: 'info',
+  pending: 'pending',
 } as const;

@@ -3,6 +3,6 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { TopTokenModelMarketCapAnyOf } from "./top-token-model-market-cap-any-of";
+import type { TopTokenModelMarketCapAnyOf } from './top-token-model-market-cap-any-of';
 
 export type TopTokenModelMarketCap = TopTokenModelMarketCapAnyOf | null;

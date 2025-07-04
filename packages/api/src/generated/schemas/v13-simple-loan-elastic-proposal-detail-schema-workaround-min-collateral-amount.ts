@@ -5,5 +5,4 @@
  */
 
 export type V13SimpleLoanElasticProposalDetailSchemaWorkaroundMinCollateralAmount =
-	| string
-	| null;
+  string | null;

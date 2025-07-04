@@ -5,5 +5,4 @@
  */
 
 export type SimpleLoanFungibleProposalDetailSchemaWorkaroundProposalContractAddress =
-	| string
-	| null;
+  string | null;

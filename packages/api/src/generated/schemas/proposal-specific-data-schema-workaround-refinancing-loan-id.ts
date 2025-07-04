@@ -5,5 +5,5 @@
  */
 
 export type ProposalSpecificDataSchemaWorkaroundRefinancingLoanId =
-	| number
-	| null;
+  | number
+  | null;

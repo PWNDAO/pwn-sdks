@@ -5,13 +5,13 @@
  */
 
 export type LoanExtensionProposalStatus =
-	(typeof LoanExtensionProposalStatus)[keyof typeof LoanExtensionProposalStatus];
+  (typeof LoanExtensionProposalStatus)[keyof typeof LoanExtensionProposalStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const LoanExtensionProposalStatus = {
-	OPEN: "OPEN",
-	IGNORED: "IGNORED",
-	CANCELLED: "CANCELLED",
-	ACCEPTED: "ACCEPTED",
-	EXPIRED: "EXPIRED",
+  OPEN: 'OPEN',
+  IGNORED: 'IGNORED',
+  CANCELLED: 'CANCELLED',
+  ACCEPTED: 'ACCEPTED',
+  EXPIRED: 'EXPIRED',
 } as const;

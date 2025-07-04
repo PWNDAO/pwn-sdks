@@ -5,5 +5,5 @@
  */
 
 export type V11SimpleLoanListProposalDetailSchemaWorkaroundRefinancingLoanId =
-	| string
-	| null;
+  | string
+  | null;

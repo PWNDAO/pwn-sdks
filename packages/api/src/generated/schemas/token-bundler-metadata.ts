@@ -3,28 +3,28 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ChainIdEnum } from "./chain-id-enum";
-import type { TokenBundlerMetadataCreatedBy } from "./token-bundler-metadata-created-by";
-import type { TokenBundlerMetadataOnChainId } from "./token-bundler-metadata-on-chain-id";
-import type { TokenBundlerMetadataThumbnailFile } from "./token-bundler-metadata-thumbnail-file";
+import type { ChainIdEnum } from './chain-id-enum';
+import type { TokenBundlerMetadataOnChainId } from './token-bundler-metadata-on-chain-id';
+import type { TokenBundlerMetadataThumbnailFile } from './token-bundler-metadata-thumbnail-file';
+import type { TokenBundlerMetadataCreatedBy } from './token-bundler-metadata-created-by';
 
 /**
  * Metadata URI Public Endpoint Serializer
  */
 export interface TokenBundlerMetadata {
-	readonly id: number;
-	created_at?: string;
-	readonly modified_at: string;
-	/**
-	 * @minimum 0
-	 * @maximum 2147483647
-	 */
-	chain_id: ChainIdEnum;
-	/** @maxLength 66 */
-	contract_address: string;
-	on_chain_id: TokenBundlerMetadataOnChainId;
-	thumbnail_file?: TokenBundlerMetadataThumbnailFile;
-	created_by?: TokenBundlerMetadataCreatedBy;
-	unwrapped?: boolean;
-	readonly assets: readonly number[];
+  readonly id: number;
+  created_at?: string;
+  readonly modified_at: string;
+  /**
+   * @minimum 0
+   * @maximum 2147483647
+   */
+  chain_id: ChainIdEnum;
+  /** @maxLength 66 */
+  contract_address: string;
+  on_chain_id: TokenBundlerMetadataOnChainId;
+  thumbnail_file?: TokenBundlerMetadataThumbnailFile;
+  created_by?: TokenBundlerMetadataCreatedBy;
+  unwrapped?: boolean;
+  readonly assets: readonly number[];
 }

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AtrTokenOfSafeSchemaWorkaround } from "./atr-token-of-safe-schema-workaround";
+import type { AtrTokenOfSafeSchemaWorkaround } from './atr-token-of-safe-schema-workaround';
 
 export type AtrTokenOfSafeListSchemaWorkaround =
-	AtrTokenOfSafeSchemaWorkaround[];
+  AtrTokenOfSafeSchemaWorkaround[];

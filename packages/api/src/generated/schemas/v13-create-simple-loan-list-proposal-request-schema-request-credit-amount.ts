@@ -5,5 +5,5 @@
  */
 
 export type V13CreateSimpleLoanListProposalRequestSchemaRequestCreditAmount =
-	| number
-	| string;
+  | number
+  | string;

@@ -5,5 +5,5 @@
  */
 
 export type V13SimpleLoanElasticProposalDetailSchemaWorkaroundExpiration =
-	| number
-	| null;
+  | number
+  | null;

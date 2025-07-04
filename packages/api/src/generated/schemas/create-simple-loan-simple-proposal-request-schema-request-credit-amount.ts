@@ -5,5 +5,5 @@
  */
 
 export type CreateSimpleLoanSimpleProposalRequestSchemaRequestCreditAmount =
-	| number
-	| string;
+  | number
+  | string;

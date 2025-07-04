@@ -5,5 +5,5 @@
  */
 
 export type V13CreateSimpleLoanSimpleProposalRequestSchemaRequestHash =
-	| string
-	| null;
+  | string
+  | null;

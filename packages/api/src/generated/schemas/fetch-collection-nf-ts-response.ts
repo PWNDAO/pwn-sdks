@@ -3,11 +3,11 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { BaseNFTAssetSchema } from "./base-nft-asset-schema";
-import type { FetchCollectionNFTsResponseCursor } from "./fetch-collection-nf-ts-response-cursor";
+import type { BaseNFTAssetSchema } from './base-nft-asset-schema';
+import type { FetchCollectionNFTsResponseCursor } from './fetch-collection-nf-ts-response-cursor';
 
 export interface FetchCollectionNFTsResponse {
-	assets: BaseNFTAssetSchema[];
-	limit: number;
-	cursor?: FetchCollectionNFTsResponseCursor;
+  assets: BaseNFTAssetSchema[];
+  limit: number;
+  cursor?: FetchCollectionNFTsResponseCursor;
 }

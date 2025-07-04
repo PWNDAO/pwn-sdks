@@ -3,13 +3,13 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { PaginatedWaitListListNext } from "./paginated-wait-list-list-next";
-import type { PaginatedWaitListListPrevious } from "./paginated-wait-list-list-previous";
-import type { WaitList } from "./wait-list";
+import type { PaginatedWaitListListNext } from './paginated-wait-list-list-next';
+import type { PaginatedWaitListListPrevious } from './paginated-wait-list-list-previous';
+import type { WaitList } from './wait-list';
 
 export interface PaginatedWaitListList {
-	count?: number;
-	next?: PaginatedWaitListListNext;
-	previous?: PaginatedWaitListListPrevious;
-	results?: WaitList[];
+  count?: number;
+  next?: PaginatedWaitListListNext;
+  previous?: PaginatedWaitListListPrevious;
+  results?: WaitList[];
 }

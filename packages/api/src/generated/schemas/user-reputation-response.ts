@@ -5,8 +5,8 @@
  */
 
 export interface UserReputationResponse {
-	walletAddress: string;
-	timestamp: string;
-	reputationScore: number;
-	position: number;
+  walletAddress: string;
+  timestamp: string;
+  reputationScore: number;
+  position: number;
 }

@@ -5,7 +5,7 @@
  */
 
 export interface Web3TokenObtainPair {
-	readonly refresh: string;
-	readonly access: string;
-	readonly access_expiration: string;
+  readonly refresh: string;
+  readonly access: string;
+  readonly access_expiration: string;
 }

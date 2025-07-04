@@ -3,10 +3,10 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { RefereeListSchema } from "./referee-list-schema";
+import type { RefereeListSchema } from './referee-list-schema';
 
 export interface RefereesSchema {
-	referees?: RefereeListSchema;
-	totalScoreFromReferrals: string;
-	referralsCount: number;
+  referees?: RefereeListSchema;
+  totalScoreFromReferrals: string;
+  referralsCount: number;
 }

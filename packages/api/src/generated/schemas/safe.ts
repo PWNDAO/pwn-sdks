@@ -3,17 +3,17 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ChainIdEnum } from "./chain-id-enum";
+import type { ChainIdEnum } from './chain-id-enum';
 
 export interface Safe {
-	/** @maxLength 40 */
-	name?: string;
-	/** @maxLength 66 */
-	contract_address: string;
-	owners: string[];
-	/**
-	 * @minimum 0
-	 * @maximum 2147483647
-	 */
-	chain_id: ChainIdEnum;
+  /** @maxLength 40 */
+  name?: string;
+  /** @maxLength 66 */
+  contract_address: string;
+  owners: string[];
+  /**
+   * @minimum 0
+   * @maximum 2147483647
+   */
+  chain_id: ChainIdEnum;
 }

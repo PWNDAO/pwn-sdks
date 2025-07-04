@@ -8,5 +8,5 @@
  * APR mappings stored as key-value pairs where the key follows the format: {collateralAddress}/{collateralChainId}-{creditAddress}/{creditChainId}
  */
 export interface AprMappingsSchema {
-	[key: string]: number;
+  [key: string]: number;
 }

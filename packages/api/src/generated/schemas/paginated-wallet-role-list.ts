@@ -3,13 +3,13 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { PaginatedWalletRoleListNext } from "./paginated-wallet-role-list-next";
-import type { PaginatedWalletRoleListPrevious } from "./paginated-wallet-role-list-previous";
-import type { WalletRole } from "./wallet-role";
+import type { PaginatedWalletRoleListNext } from './paginated-wallet-role-list-next';
+import type { PaginatedWalletRoleListPrevious } from './paginated-wallet-role-list-previous';
+import type { WalletRole } from './wallet-role';
 
 export interface PaginatedWalletRoleList {
-	count?: number;
-	next?: PaginatedWalletRoleListNext;
-	previous?: PaginatedWalletRoleListPrevious;
-	results?: WalletRole[];
+  count?: number;
+  next?: PaginatedWalletRoleListNext;
+  previous?: PaginatedWalletRoleListPrevious;
+  results?: WalletRole[];
 }

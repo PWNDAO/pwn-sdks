@@ -3,9 +3,9 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ERC20AssetSchemaWithBalance } from "./erc20-asset-schema-with-balance";
-import type { NFTAssetSchemaWithBalance } from "./nftasset-schema-with-balance";
+import type { ERC20AssetSchemaWithBalance } from './erc20-asset-schema-with-balance';
+import type { NFTAssetSchemaWithBalance } from './nftasset-schema-with-balance';
 
 export type NFTAssetSchemaBundledAssetsAnyOfItem =
-	| ERC20AssetSchemaWithBalance
-	| NFTAssetSchemaWithBalance;
+  | ERC20AssetSchemaWithBalance
+  | NFTAssetSchemaWithBalance;

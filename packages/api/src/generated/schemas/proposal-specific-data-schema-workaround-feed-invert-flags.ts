@@ -5,5 +5,5 @@
  */
 
 export type ProposalSpecificDataSchemaWorkaroundFeedInvertFlags =
-	| boolean[]
-	| null;
+  | boolean[]
+  | null;

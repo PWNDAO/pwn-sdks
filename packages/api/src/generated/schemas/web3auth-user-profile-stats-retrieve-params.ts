@@ -5,6 +5,6 @@
  */
 
 export type Web3authUserProfileStatsRetrieveParams = {
-	chain_id?: number[];
-	refresh?: boolean;
+  chain_id?: number[];
+  refresh?: boolean;
 };

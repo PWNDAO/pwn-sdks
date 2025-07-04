@@ -5,5 +5,5 @@
  */
 
 export type ProposalAndLoanListSchemaWorkaroundMinCollateralAmount =
-	| string
-	| null;
+  | string
+  | null;

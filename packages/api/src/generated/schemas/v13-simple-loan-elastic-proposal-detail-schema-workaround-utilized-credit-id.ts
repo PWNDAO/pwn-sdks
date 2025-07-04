@@ -5,5 +5,4 @@
  */
 
 export type V13SimpleLoanElasticProposalDetailSchemaWorkaroundUtilizedCreditId =
-	| string
-	| null;
+  string | null;

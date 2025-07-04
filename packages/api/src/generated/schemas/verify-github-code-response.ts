@@ -5,5 +5,5 @@
  */
 
 export interface VerifyGithubCodeResponse {
-	hasStarredRepo: boolean;
+  hasStarredRepo: boolean;
 }

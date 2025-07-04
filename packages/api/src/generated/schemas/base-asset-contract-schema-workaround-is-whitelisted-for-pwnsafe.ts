@@ -5,5 +5,5 @@
  */
 
 export type BaseAssetContractSchemaWorkaroundIsWhitelistedForPwnsafe =
-	| boolean
-	| null;
+  | boolean
+  | null;

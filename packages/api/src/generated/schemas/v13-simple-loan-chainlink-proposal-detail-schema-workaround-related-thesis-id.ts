@@ -5,5 +5,4 @@
  */
 
 export type V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundRelatedThesisId =
-	| string
-	| null;
+  string | null;

@@ -3,19 +3,19 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { Erc20OrNftAsset } from "./erc20-or-nft-asset";
+import type { Erc20OrNftAsset } from './erc20-or-nft-asset';
 
 /**
  * ATRToken Metadata URI Public Endpoint Serializer
  */
 export interface ATRTokenMetadata {
-	readonly name: string;
-	readonly description: string;
-	token_id: string;
-	readonly image: string;
-	tokenized_asset: Erc20OrNftAsset;
-	tokenized_amount: string;
-	readonly asset_token_id: string;
-	readonly asset_contract_address: string;
-	readonly tokenized_asset_owner: string;
+  readonly name: string;
+  readonly description: string;
+  token_id: string;
+  readonly image: string;
+  tokenized_asset: Erc20OrNftAsset;
+  tokenized_amount: string;
+  readonly asset_token_id: string;
+  readonly asset_contract_address: string;
+  readonly tokenized_asset_owner: string;
 }

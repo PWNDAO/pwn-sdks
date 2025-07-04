@@ -5,5 +5,4 @@
  */
 
 export type CreateSimpleLoanFungibleProposalRequestSchemaRequestFixedInterestAmount =
-	| number
-	| string;
+  number | string;

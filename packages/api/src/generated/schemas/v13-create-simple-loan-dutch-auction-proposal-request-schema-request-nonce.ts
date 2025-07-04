@@ -5,5 +5,5 @@
  */
 
 export type V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestNonce =
-	| number
-	| string;
+  | number
+  | string;

@@ -5,5 +5,4 @@
  */
 
 export type SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundCollateralStateFingerprint =
-	| string
-	| null;
+  string | null;

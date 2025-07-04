@@ -5,5 +5,5 @@
  */
 
 export type ThesisCreateUpdateSchemaRequestCustomAprCreditChainIds =
-	| number[]
-	| null;
+  | number[]
+  | null;

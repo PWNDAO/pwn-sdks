@@ -5,5 +5,5 @@
  */
 
 export type LoanExtensionCounterProposalSchemaWorkaroundCompensationAmount =
-	| number
-	| null;
+  | number
+  | null;

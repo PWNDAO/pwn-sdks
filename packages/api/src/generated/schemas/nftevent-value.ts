@@ -3,6 +3,6 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AmountInTokenAndEthAndUsd } from "./amount-in-token-and-eth-and-usd";
+import type { AmountInTokenAndEthAndUsd } from './amount-in-token-and-eth-and-usd';
 
 export type NFTEventValue = AmountInTokenAndEthAndUsd | null;

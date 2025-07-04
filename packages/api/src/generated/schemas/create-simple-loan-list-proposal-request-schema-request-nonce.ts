@@ -5,5 +5,5 @@
  */
 
 export type CreateSimpleLoanListProposalRequestSchemaRequestNonce =
-	| number
-	| string;
+  | number
+  | string;

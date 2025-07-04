@@ -5,5 +5,5 @@
  */
 
 export type ProposalSpecificDataSchemaWorkaroundProposerSpecHash =
-	| string
-	| null;
+  | string
+  | null;

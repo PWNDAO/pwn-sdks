@@ -8,6 +8,6 @@ export type ThesisType = (typeof ThesisType)[keyof typeof ThesisType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ThesisType = {
-	NUMBER_1: 1,
-	NUMBER_2: 2,
+  NUMBER_1: 1,
+  NUMBER_2: 2,
 } as const;

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { DisplayTypeEnum } from "./display-type-enum";
-import type { NullEnum } from "./null-enum";
+import type { DisplayTypeEnum } from './display-type-enum';
+import type { NullEnum } from './null-enum';
 
 export type TraitTypeSchemaDisplayType = DisplayTypeEnum | NullEnum;

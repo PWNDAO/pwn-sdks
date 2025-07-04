@@ -3,7 +3,7 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AssetDetailSchemaWorkaround } from "./asset-detail-schema-workaround";
+import type { AssetDetailSchemaWorkaround } from './asset-detail-schema-workaround';
 
 export type LoanExtensionSchemaWorkaroundCompensationAsset =
-	AssetDetailSchemaWorkaround | null;
+  AssetDetailSchemaWorkaround | null;

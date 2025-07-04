@@ -3,7 +3,7 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ParsedLeaderboardPositionResponse } from "./parsed-leaderboard-position-response";
+import type { ParsedLeaderboardPositionResponse } from './parsed-leaderboard-position-response';
 
 export type ParsedLeaderboardPositionResponseList =
-	ParsedLeaderboardPositionResponse[];
+  ParsedLeaderboardPositionResponse[];

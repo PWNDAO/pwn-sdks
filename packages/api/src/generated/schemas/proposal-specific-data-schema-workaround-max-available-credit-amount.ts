@@ -5,5 +5,5 @@
  */
 
 export type ProposalSpecificDataSchemaWorkaroundMaxAvailableCreditAmount =
-	| string
-	| null;
+  | string
+  | null;

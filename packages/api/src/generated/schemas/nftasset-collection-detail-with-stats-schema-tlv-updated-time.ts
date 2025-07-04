@@ -5,5 +5,5 @@
  */
 
 export type NFTAssetCollectionDetailWithStatsSchemaTlvUpdatedTime =
-	| string
-	| null;
+  | string
+  | null;

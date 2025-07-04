@@ -5,5 +5,5 @@
  */
 
 export type ProposalSpecificDataCheckCollateralStateFingerprint =
-	| boolean
-	| null;
+  | boolean
+  | null;

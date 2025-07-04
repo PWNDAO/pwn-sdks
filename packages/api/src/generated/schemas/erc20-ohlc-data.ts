@@ -5,9 +5,9 @@
  */
 
 export interface ERC20OHLCData {
-	time: string;
-	open: number;
-	high: number;
-	low: number;
-	close: number;
+  time: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
 }

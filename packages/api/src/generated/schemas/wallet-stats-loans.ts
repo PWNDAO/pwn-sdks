@@ -3,6 +3,6 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { WalletStatsDetail } from "./wallet-stats-detail";
+import type { WalletStatsDetail } from './wallet-stats-detail';
 
 export type WalletStatsLoans = WalletStatsDetail | null;

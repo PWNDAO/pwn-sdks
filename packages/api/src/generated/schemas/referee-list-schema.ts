@@ -3,6 +3,6 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { RefereeSchema } from "./referee-schema";
+import type { RefereeSchema } from './referee-schema';
 
 export type RefereeListSchema = RefereeSchema[];

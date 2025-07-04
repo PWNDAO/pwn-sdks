@@ -3,12 +3,12 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { LendingProposalAPYsSuggestionBase } from "./lending-proposal-ap-ys-suggestion-base";
-import type { LendingProposalAPYsSuggestionRewards } from "./lending-proposal-ap-ys-suggestion-rewards";
-import type { LendingProposalAPYsSuggestionTotal } from "./lending-proposal-ap-ys-suggestion-total";
+import type { LendingProposalAPYsSuggestionBase } from './lending-proposal-ap-ys-suggestion-base';
+import type { LendingProposalAPYsSuggestionRewards } from './lending-proposal-ap-ys-suggestion-rewards';
+import type { LendingProposalAPYsSuggestionTotal } from './lending-proposal-ap-ys-suggestion-total';
 
 export interface LendingProposalAPYsSuggestion {
-	base: LendingProposalAPYsSuggestionBase;
-	rewards: LendingProposalAPYsSuggestionRewards;
-	total: LendingProposalAPYsSuggestionTotal;
+  base: LendingProposalAPYsSuggestionBase;
+  rewards: LendingProposalAPYsSuggestionRewards;
+  total: LendingProposalAPYsSuggestionTotal;
 }

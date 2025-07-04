@@ -5,5 +5,5 @@
  */
 
 export type ProposalAndLoanListSchemaWorkaroundCreatedFromProposalId =
-	| string
-	| null;
+  | string
+  | null;

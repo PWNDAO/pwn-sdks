@@ -3,16 +3,16 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AssetVolumeOverPeriodSchemaEthVolume } from "./asset-volume-over-period-schema-eth-volume";
-import type { AssetVolumeOverPeriodSchemaSource } from "./asset-volume-over-period-schema-source";
-import type { AssetVolumeOverPeriodSchemaUsdVolume } from "./asset-volume-over-period-schema-usd-volume";
-import type { PeriodEnum } from "./period-enum";
+import type { AssetVolumeOverPeriodSchemaEthVolume } from './asset-volume-over-period-schema-eth-volume';
+import type { AssetVolumeOverPeriodSchemaUsdVolume } from './asset-volume-over-period-schema-usd-volume';
+import type { PeriodEnum } from './period-enum';
+import type { AssetVolumeOverPeriodSchemaSource } from './asset-volume-over-period-schema-source';
 
 export interface AssetVolumeOverPeriodSchema {
-	eth_volume?: AssetVolumeOverPeriodSchemaEthVolume;
-	usd_volume?: AssetVolumeOverPeriodSchemaUsdVolume;
-	period: PeriodEnum;
-	start_date: string;
-	end_date: string;
-	source?: AssetVolumeOverPeriodSchemaSource;
+  eth_volume?: AssetVolumeOverPeriodSchemaEthVolume;
+  usd_volume?: AssetVolumeOverPeriodSchemaUsdVolume;
+  period: PeriodEnum;
+  start_date: string;
+  end_date: string;
+  source?: AssetVolumeOverPeriodSchemaSource;
 }

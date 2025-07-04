@@ -3,10 +3,10 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { UserPotentialReputationPerLoanRepayResponsePotentialRepsPerLoanRepay } from "./user-potential-reputation-per-loan-repay-response-potential-reps-per-loan-repay";
+import type { UserPotentialReputationPerLoanRepayResponsePotentialRepsPerLoanRepay } from './user-potential-reputation-per-loan-repay-response-potential-reps-per-loan-repay';
 
 export interface UserPotentialReputationPerLoanRepayResponse {
-	walletAddress: string;
-	potentialRepsPerLoanRepay: UserPotentialReputationPerLoanRepayResponsePotentialRepsPerLoanRepay;
-	timestamp: string;
+  walletAddress: string;
+  potentialRepsPerLoanRepay: UserPotentialReputationPerLoanRepayResponsePotentialRepsPerLoanRepay;
+  timestamp: string;
 }

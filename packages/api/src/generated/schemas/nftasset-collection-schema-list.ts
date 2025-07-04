@@ -3,6 +3,6 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { NFTAssetCollectionSchema } from "./nftasset-collection-schema";
+import type { NFTAssetCollectionSchema } from './nftasset-collection-schema';
 
 export type NFTAssetCollectionSchemaList = NFTAssetCollectionSchema[];

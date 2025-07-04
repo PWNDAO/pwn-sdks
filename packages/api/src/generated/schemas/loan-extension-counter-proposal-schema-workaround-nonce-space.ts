@@ -5,5 +5,5 @@
  */
 
 export type LoanExtensionCounterProposalSchemaWorkaroundNonceSpace =
-	| number
-	| null;
+  | number
+  | null;

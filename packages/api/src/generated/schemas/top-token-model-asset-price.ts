@@ -3,6 +3,6 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { TopTokenModelAssetPriceAnyOf } from "./top-token-model-asset-price-any-of";
+import type { TopTokenModelAssetPriceAnyOf } from './top-token-model-asset-price-any-of';
 
 export type TopTokenModelAssetPrice = TopTokenModelAssetPriceAnyOf | null;

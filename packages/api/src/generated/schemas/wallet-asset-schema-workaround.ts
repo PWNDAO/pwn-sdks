@@ -3,17 +3,17 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { WalletAssetSchemaWorkaroundAsset } from "./wallet-asset-schema-workaround-asset";
-import type { WalletAssetSchemaWorkaroundLatestPrice } from "./wallet-asset-schema-workaround-latest-price";
-import type { WalletAssetSchemaWorkaroundValueInEth } from "./wallet-asset-schema-workaround-value-in-eth";
-import type { WalletAssetSchemaWorkaroundValueInUsd } from "./wallet-asset-schema-workaround-value-in-usd";
+import type { WalletAssetSchemaWorkaroundAsset } from './wallet-asset-schema-workaround-asset';
+import type { WalletAssetSchemaWorkaroundLatestPrice } from './wallet-asset-schema-workaround-latest-price';
+import type { WalletAssetSchemaWorkaroundValueInUsd } from './wallet-asset-schema-workaround-value-in-usd';
+import type { WalletAssetSchemaWorkaroundValueInEth } from './wallet-asset-schema-workaround-value-in-eth';
 
 export interface WalletAssetSchemaWorkaround {
-	createdAt: string;
-	userAddress: string;
-	asset: WalletAssetSchemaWorkaroundAsset;
-	amount: string;
-	latestPrice?: WalletAssetSchemaWorkaroundLatestPrice;
-	valueInUsd?: WalletAssetSchemaWorkaroundValueInUsd;
-	valueInEth?: WalletAssetSchemaWorkaroundValueInEth;
+  createdAt: string;
+  userAddress: string;
+  asset: WalletAssetSchemaWorkaroundAsset;
+  amount: string;
+  latestPrice?: WalletAssetSchemaWorkaroundLatestPrice;
+  valueInUsd?: WalletAssetSchemaWorkaroundValueInUsd;
+  valueInEth?: WalletAssetSchemaWorkaroundValueInEth;
 }

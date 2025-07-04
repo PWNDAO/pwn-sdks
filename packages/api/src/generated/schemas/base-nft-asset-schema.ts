@@ -3,20 +3,20 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { BaseAssetContractSchema } from "./base-asset-contract-schema";
-import type { BaseNFTAssetSchemaAnimationUrl } from "./base-nft-asset-schema-animation-url";
-import type { BaseNFTAssetSchemaDescription } from "./base-nft-asset-schema-description";
-import type { BaseNFTAssetSchemaName } from "./base-nft-asset-schema-name";
-import type { BaseNFTAssetSchemaTokenId } from "./base-nft-asset-schema-token-id";
-import type { BaseNFTAssetSchemaTokenUri } from "./base-nft-asset-schema-token-uri";
-import type { BaseNFTAssetSchemaType } from "./base-nft-asset-schema-type";
+import type { BaseAssetContractSchema } from './base-asset-contract-schema';
+import type { BaseNFTAssetSchemaTokenId } from './base-nft-asset-schema-token-id';
+import type { BaseNFTAssetSchemaName } from './base-nft-asset-schema-name';
+import type { BaseNFTAssetSchemaDescription } from './base-nft-asset-schema-description';
+import type { BaseNFTAssetSchemaType } from './base-nft-asset-schema-type';
+import type { BaseNFTAssetSchemaAnimationUrl } from './base-nft-asset-schema-animation-url';
+import type { BaseNFTAssetSchemaTokenUri } from './base-nft-asset-schema-token-uri';
 
 export interface BaseNFTAssetSchema {
-	contract: BaseAssetContractSchema;
-	token_id?: BaseNFTAssetSchemaTokenId;
-	name?: BaseNFTAssetSchemaName;
-	description?: BaseNFTAssetSchemaDescription;
-	type?: BaseNFTAssetSchemaType;
-	animation_url?: BaseNFTAssetSchemaAnimationUrl;
-	token_uri?: BaseNFTAssetSchemaTokenUri;
+  contract: BaseAssetContractSchema;
+  token_id?: BaseNFTAssetSchemaTokenId;
+  name?: BaseNFTAssetSchemaName;
+  description?: BaseNFTAssetSchemaDescription;
+  type?: BaseNFTAssetSchemaType;
+  animation_url?: BaseNFTAssetSchemaAnimationUrl;
+  token_uri?: BaseNFTAssetSchemaTokenUri;
 }

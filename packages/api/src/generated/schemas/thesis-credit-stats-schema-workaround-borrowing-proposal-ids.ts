@@ -5,5 +5,5 @@
  */
 
 export type ThesisCreditStatsSchemaWorkaroundBorrowingProposalIds =
-	| string[]
-	| null;
+  | string[]
+  | null;

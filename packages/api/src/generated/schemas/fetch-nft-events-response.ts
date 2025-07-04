@@ -3,10 +3,10 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { FetchNFTEventsResponseNext } from "./fetch-nft-events-response-next";
-import type { NFTEvent } from "./nftevent";
+import type { FetchNFTEventsResponseNext } from './fetch-nft-events-response-next';
+import type { NFTEvent } from './nftevent';
 
 export interface FetchNFTEventsResponse {
-	next?: FetchNFTEventsResponseNext;
-	nft_events: NFTEvent[];
+  next?: FetchNFTEventsResponseNext;
+  nft_events: NFTEvent[];
 }

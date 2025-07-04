@@ -5,5 +5,4 @@
  */
 
 export type CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestFixedInterestAmount =
-	| number
-	| string;
+  number | string;

@@ -5,5 +5,4 @@
  */
 
 export type V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestAvailableCreditLimit =
-	| number
-	| string;
+  number | string;

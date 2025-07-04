@@ -3,21 +3,21 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AmountInEthAndUsd } from "./amount-in-eth-and-usd";
-import type { AssetPriceSchemaDate } from "./asset-price-schema-date";
-import type { AssetPriceSchemaPricePercentageDeviation } from "./asset-price-schema-price-percentage-deviation";
-import type { AssetPriceSchemaPriceRangeHigh } from "./asset-price-schema-price-range-high";
-import type { AssetPriceSchemaPriceRangeLow } from "./asset-price-schema-price-range-low";
-import type { AssetPriceSchemaPriceSource } from "./asset-price-schema-price-source";
-import type { AssetPriceSchemaUnitPrice } from "./asset-price-schema-unit-price";
+import type { AmountInEthAndUsd } from './amount-in-eth-and-usd';
+import type { AssetPriceSchemaUnitPrice } from './asset-price-schema-unit-price';
+import type { AssetPriceSchemaPricePercentageDeviation } from './asset-price-schema-price-percentage-deviation';
+import type { AssetPriceSchemaPriceSource } from './asset-price-schema-price-source';
+import type { AssetPriceSchemaDate } from './asset-price-schema-date';
+import type { AssetPriceSchemaPriceRangeLow } from './asset-price-schema-price-range-low';
+import type { AssetPriceSchemaPriceRangeHigh } from './asset-price-schema-price-range-high';
 
 export interface AssetPriceSchema {
-	price: AmountInEthAndUsd;
-	unit_price?: AssetPriceSchemaUnitPrice;
-	price_percentage_deviation?: AssetPriceSchemaPricePercentageDeviation;
-	price_source?: AssetPriceSchemaPriceSource;
-	created_at: string;
-	date: AssetPriceSchemaDate;
-	price_range_low?: AssetPriceSchemaPriceRangeLow;
-	price_range_high?: AssetPriceSchemaPriceRangeHigh;
+  price: AmountInEthAndUsd;
+  unit_price?: AssetPriceSchemaUnitPrice;
+  price_percentage_deviation?: AssetPriceSchemaPricePercentageDeviation;
+  price_source?: AssetPriceSchemaPriceSource;
+  created_at: string;
+  date: AssetPriceSchemaDate;
+  price_range_low?: AssetPriceSchemaPriceRangeLow;
+  price_range_high?: AssetPriceSchemaPriceRangeHigh;
 }

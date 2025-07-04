@@ -3,9 +3,9 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { WalletEnsName } from "./wallet-ens-name";
+import type { WalletEnsName } from './wallet-ens-name';
 
 export interface Wallet {
-	wallet_address: string;
-	ens_name?: WalletEnsName;
+  wallet_address: string;
+  ens_name?: WalletEnsName;
 }

@@ -5,5 +5,5 @@
  */
 
 export type ThesisCreateUpdateSchemaRequestMinAllowedBorrowPercentage =
-	| number
-	| number;
+  | number
+  | number;

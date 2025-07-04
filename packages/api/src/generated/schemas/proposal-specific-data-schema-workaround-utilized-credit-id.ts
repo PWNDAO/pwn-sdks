@@ -5,5 +5,5 @@
  */
 
 export type ProposalSpecificDataSchemaWorkaroundUtilizedCreditId =
-	| string
-	| null;
+  | string
+  | null;

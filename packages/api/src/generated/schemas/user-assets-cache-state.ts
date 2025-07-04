@@ -5,5 +5,5 @@
  */
 
 export interface UserAssetsCacheState {
-	created_at: string;
+  created_at: string;
 }

@@ -5,5 +5,5 @@
  */
 
 export interface MarkAsSeenBodyRequest {
-	notifications: number[];
+  notifications: number[];
 }

@@ -5,7 +5,7 @@
  */
 
 export interface RefereeSchema {
-	walletAddress: string;
-	totalVolumeFromReferral: string;
-	totalScoreFromReferral: string;
+  walletAddress: string;
+  totalVolumeFromReferral: string;
+  totalScoreFromReferral: string;
 }

@@ -5,5 +5,5 @@
  */
 
 export type V13SimpleLoanElasticProposalDetailSchemaWorkaroundHash =
-	| string
-	| null;
+  | string
+  | null;

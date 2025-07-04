@@ -5,15 +5,15 @@
  */
 
 export type ProposalStatus =
-	(typeof ProposalStatus)[keyof typeof ProposalStatus];
+  (typeof ProposalStatus)[keyof typeof ProposalStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ProposalStatus = {
-	NUMBER_MINUS_6: -6,
-	NUMBER_MINUS_5: -5,
-	NUMBER_MINUS_4: -4,
-	NUMBER_MINUS_3: -3,
-	NUMBER_MINUS_2: -2,
-	NUMBER_MINUS_1: -1,
-	NUMBER_1: 1,
+  NUMBER_MINUS_6: -6,
+  NUMBER_MINUS_5: -5,
+  NUMBER_MINUS_4: -4,
+  NUMBER_MINUS_3: -3,
+  NUMBER_MINUS_2: -2,
+  NUMBER_MINUS_1: -1,
+  NUMBER_1: 1,
 } as const;

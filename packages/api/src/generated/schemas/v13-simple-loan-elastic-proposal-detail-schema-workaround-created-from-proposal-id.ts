@@ -5,5 +5,4 @@
  */
 
 export type V13SimpleLoanElasticProposalDetailSchemaWorkaroundCreatedFromProposalId =
-	| string
-	| null;
+  string | null;

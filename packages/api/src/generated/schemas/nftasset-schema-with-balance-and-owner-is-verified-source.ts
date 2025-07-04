@@ -3,7 +3,7 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { MetadataSource } from "./metadata-source";
+import type { MetadataSource } from './metadata-source';
 
 export type NFTAssetSchemaWithBalanceAndOwnerIsVerifiedSource =
-	MetadataSource | null;
+  MetadataSource | null;

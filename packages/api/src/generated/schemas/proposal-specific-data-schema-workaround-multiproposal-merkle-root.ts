@@ -5,5 +5,5 @@
  */
 
 export type ProposalSpecificDataSchemaWorkaroundMultiproposalMerkleRoot =
-	| string
-	| null;
+  | string
+  | null;

@@ -3,9 +3,9 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { UserProfile } from "./user-profile";
-import type { UserProfileSerializerAuthenticated } from "./user-profile-serializer-authenticated";
+import type { UserProfile } from './user-profile';
+import type { UserProfileSerializerAuthenticated } from './user-profile-serializer-authenticated';
 
 export type UserProfileResponse =
-	| UserProfile
-	| UserProfileSerializerAuthenticated;
+  | UserProfile
+  | UserProfileSerializerAuthenticated;

@@ -5,5 +5,5 @@
  */
 
 export interface UnseenNotificationsCount {
-	unseen_notifications_count: number;
+  unseen_notifications_count: number;
 }

@@ -3,10 +3,10 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { FetchUserNftsMetadataSource } from "./fetch-user-nfts-metadata-source";
+import type { FetchUserNftsMetadataSource } from './fetch-user-nfts-metadata-source';
 
 export type FetchUserNftsParams = {
-	metadata_source?: FetchUserNftsMetadataSource;
-	page?: string;
-	subdomain?: string;
+  metadata_source?: FetchUserNftsMetadataSource;
+  page?: string;
+  subdomain?: string;
 };

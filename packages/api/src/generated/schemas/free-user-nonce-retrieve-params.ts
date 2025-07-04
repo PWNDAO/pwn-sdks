@@ -5,5 +5,5 @@
  */
 
 export type FreeUserNonceRetrieveParams = {
-	nonce_count_to_reserve?: number;
+  nonce_count_to_reserve?: number;
 };

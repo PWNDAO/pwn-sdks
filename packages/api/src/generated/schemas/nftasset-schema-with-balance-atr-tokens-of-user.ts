@@ -3,8 +3,8 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AtrTokenOfAssetSchema } from "./atr-token-of-asset-schema";
+import type { AtrTokenOfAssetSchema } from './atr-token-of-asset-schema';
 
 export type NFTAssetSchemaWithBalanceAtrTokensOfUser =
-	| AtrTokenOfAssetSchema[]
-	| null;
+  | AtrTokenOfAssetSchema[]
+  | null;

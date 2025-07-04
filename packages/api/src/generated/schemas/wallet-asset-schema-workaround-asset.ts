@@ -3,9 +3,9 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { NewERC20AssetSchemaWorkaround } from "./new-er-c20-asset-schema-workaround";
-import type { NewNFTAssetSchemaWorkaround } from "./new-nft-asset-schema-workaround";
+import type { NewERC20AssetSchemaWorkaround } from './new-er-c20-asset-schema-workaround';
+import type { NewNFTAssetSchemaWorkaround } from './new-nft-asset-schema-workaround';
 
 export type WalletAssetSchemaWorkaroundAsset =
-	| NewERC20AssetSchemaWorkaround
-	| NewNFTAssetSchemaWorkaround;
+  | NewERC20AssetSchemaWorkaround
+  | NewNFTAssetSchemaWorkaround;

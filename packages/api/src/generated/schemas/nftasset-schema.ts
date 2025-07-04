@@ -3,41 +3,41 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { BaseAssetContractSchema } from "./base-asset-contract-schema";
-import type { NFTAssetCollectionSchema } from "./nftasset-collection-schema";
-import type { NFTAssetSchemaAnimationUrl } from "./nftasset-schema-animation-url";
-import type { NFTAssetSchemaAssetOfAtrToken } from "./nftasset-schema-asset-of-atr-token";
-import type { NFTAssetSchemaAtrTokensOfUser } from "./nftasset-schema-atr-tokens-of-user";
-import type { NFTAssetSchemaBundledAssets } from "./nftasset-schema-bundled-assets";
-import type { NFTAssetSchemaBundledAssetsTotalCount } from "./nftasset-schema-bundled-assets-total-count";
-import type { NFTAssetSchemaBundledAssetsVerifiedCount } from "./nftasset-schema-bundled-assets-verified-count";
-import type { NFTAssetSchemaDescription } from "./nftasset-schema-description";
-import type { NFTAssetSchemaId } from "./nftasset-schema-id";
-import type { NFTAssetSchemaIsVerified } from "./nftasset-schema-is-verified";
-import type { NFTAssetSchemaIsVerifiedSource } from "./nftasset-schema-is-verified-source";
-import type { NFTAssetSchemaLatestPrice } from "./nftasset-schema-latest-price";
-import type { NFTAssetSchemaName } from "./nftasset-schema-name";
-import type { NFTAssetSchemaThumbnailUrl } from "./nftasset-schema-thumbnail-url";
-import type { NFTAssetSchemaTokenUri } from "./nftasset-schema-token-uri";
-import type { NFTAssetSchemaType } from "./nftasset-schema-type";
+import type { BaseAssetContractSchema } from './base-asset-contract-schema';
+import type { NFTAssetSchemaName } from './nftasset-schema-name';
+import type { NFTAssetSchemaDescription } from './nftasset-schema-description';
+import type { NFTAssetSchemaType } from './nftasset-schema-type';
+import type { NFTAssetSchemaAnimationUrl } from './nftasset-schema-animation-url';
+import type { NFTAssetSchemaTokenUri } from './nftasset-schema-token-uri';
+import type { NFTAssetSchemaId } from './nftasset-schema-id';
+import type { NFTAssetCollectionSchema } from './nftasset-collection-schema';
+import type { NFTAssetSchemaBundledAssets } from './nftasset-schema-bundled-assets';
+import type { NFTAssetSchemaThumbnailUrl } from './nftasset-schema-thumbnail-url';
+import type { NFTAssetSchemaIsVerified } from './nftasset-schema-is-verified';
+import type { NFTAssetSchemaIsVerifiedSource } from './nftasset-schema-is-verified-source';
+import type { NFTAssetSchemaBundledAssetsVerifiedCount } from './nftasset-schema-bundled-assets-verified-count';
+import type { NFTAssetSchemaBundledAssetsTotalCount } from './nftasset-schema-bundled-assets-total-count';
+import type { NFTAssetSchemaAssetOfAtrToken } from './nftasset-schema-asset-of-atr-token';
+import type { NFTAssetSchemaAtrTokensOfUser } from './nftasset-schema-atr-tokens-of-user';
+import type { NFTAssetSchemaLatestPrice } from './nftasset-schema-latest-price';
 
 export interface NFTAssetSchema {
-	contract: BaseAssetContractSchema;
-	token_id: string;
-	name?: NFTAssetSchemaName;
-	description?: NFTAssetSchemaDescription;
-	type: NFTAssetSchemaType;
-	animation_url?: NFTAssetSchemaAnimationUrl;
-	token_uri?: NFTAssetSchemaTokenUri;
-	id?: NFTAssetSchemaId;
-	collection: NFTAssetCollectionSchema;
-	bundled_assets?: NFTAssetSchemaBundledAssets;
-	thumbnail_url?: NFTAssetSchemaThumbnailUrl;
-	is_verified?: NFTAssetSchemaIsVerified;
-	is_verified_source?: NFTAssetSchemaIsVerifiedSource;
-	bundled_assets_verified_count?: NFTAssetSchemaBundledAssetsVerifiedCount;
-	bundled_assets_total_count?: NFTAssetSchemaBundledAssetsTotalCount;
-	asset_of_atr_token?: NFTAssetSchemaAssetOfAtrToken;
-	atr_tokens_of_user?: NFTAssetSchemaAtrTokensOfUser;
-	latest_price?: NFTAssetSchemaLatestPrice;
+  contract: BaseAssetContractSchema;
+  token_id: string;
+  name?: NFTAssetSchemaName;
+  description?: NFTAssetSchemaDescription;
+  type: NFTAssetSchemaType;
+  animation_url?: NFTAssetSchemaAnimationUrl;
+  token_uri?: NFTAssetSchemaTokenUri;
+  id?: NFTAssetSchemaId;
+  collection: NFTAssetCollectionSchema;
+  bundled_assets?: NFTAssetSchemaBundledAssets;
+  thumbnail_url?: NFTAssetSchemaThumbnailUrl;
+  is_verified?: NFTAssetSchemaIsVerified;
+  is_verified_source?: NFTAssetSchemaIsVerifiedSource;
+  bundled_assets_verified_count?: NFTAssetSchemaBundledAssetsVerifiedCount;
+  bundled_assets_total_count?: NFTAssetSchemaBundledAssetsTotalCount;
+  asset_of_atr_token?: NFTAssetSchemaAssetOfAtrToken;
+  atr_tokens_of_user?: NFTAssetSchemaAtrTokensOfUser;
+  latest_price?: NFTAssetSchemaLatestPrice;
 }

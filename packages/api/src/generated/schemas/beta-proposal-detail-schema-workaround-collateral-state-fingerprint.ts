@@ -5,5 +5,5 @@
  */
 
 export type BetaProposalDetailSchemaWorkaroundCollateralStateFingerprint =
-	| string
-	| null;
+  | string
+  | null;

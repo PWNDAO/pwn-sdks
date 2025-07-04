@@ -3,35 +3,35 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { BaseAssetContractSchemaWorkaround } from "./base-asset-contract-schema-workaround";
-import type { NewNFTAssetSchemaWorkaroundAnimationUrl } from "./new-nft-asset-schema-workaround-animation-url";
-import type { NewNFTAssetSchemaWorkaroundBundledAssets } from "./new-nft-asset-schema-workaround-bundled-assets";
-import type { NewNFTAssetSchemaWorkaroundBundledAssetsTotalCount } from "./new-nft-asset-schema-workaround-bundled-assets-total-count";
-import type { NewNFTAssetSchemaWorkaroundBundledAssetsVerifiedCount } from "./new-nft-asset-schema-workaround-bundled-assets-verified-count";
-import type { NewNFTAssetSchemaWorkaroundDescription } from "./new-nft-asset-schema-workaround-description";
-import type { NewNFTAssetSchemaWorkaroundId } from "./new-nft-asset-schema-workaround-id";
-import type { NewNFTAssetSchemaWorkaroundIsVerified } from "./new-nft-asset-schema-workaround-is-verified";
-import type { NewNFTAssetSchemaWorkaroundIsVerifiedSource } from "./new-nft-asset-schema-workaround-is-verified-source";
-import type { NewNFTAssetSchemaWorkaroundName } from "./new-nft-asset-schema-workaround-name";
-import type { NewNFTAssetSchemaWorkaroundThumbnailUrl } from "./new-nft-asset-schema-workaround-thumbnail-url";
-import type { NewNFTAssetSchemaWorkaroundTokenUri } from "./new-nft-asset-schema-workaround-token-uri";
-import type { NewNFTAssetSchemaWorkaroundType } from "./new-nft-asset-schema-workaround-type";
-import type { NFTAssetCollectionSchemaWorkaround } from "./nftasset-collection-schema-workaround";
+import type { BaseAssetContractSchemaWorkaround } from './base-asset-contract-schema-workaround';
+import type { NewNFTAssetSchemaWorkaroundName } from './new-nft-asset-schema-workaround-name';
+import type { NewNFTAssetSchemaWorkaroundDescription } from './new-nft-asset-schema-workaround-description';
+import type { NewNFTAssetSchemaWorkaroundType } from './new-nft-asset-schema-workaround-type';
+import type { NewNFTAssetSchemaWorkaroundAnimationUrl } from './new-nft-asset-schema-workaround-animation-url';
+import type { NewNFTAssetSchemaWorkaroundTokenUri } from './new-nft-asset-schema-workaround-token-uri';
+import type { NewNFTAssetSchemaWorkaroundId } from './new-nft-asset-schema-workaround-id';
+import type { NFTAssetCollectionSchemaWorkaround } from './nftasset-collection-schema-workaround';
+import type { NewNFTAssetSchemaWorkaroundBundledAssets } from './new-nft-asset-schema-workaround-bundled-assets';
+import type { NewNFTAssetSchemaWorkaroundThumbnailUrl } from './new-nft-asset-schema-workaround-thumbnail-url';
+import type { NewNFTAssetSchemaWorkaroundIsVerified } from './new-nft-asset-schema-workaround-is-verified';
+import type { NewNFTAssetSchemaWorkaroundIsVerifiedSource } from './new-nft-asset-schema-workaround-is-verified-source';
+import type { NewNFTAssetSchemaWorkaroundBundledAssetsVerifiedCount } from './new-nft-asset-schema-workaround-bundled-assets-verified-count';
+import type { NewNFTAssetSchemaWorkaroundBundledAssetsTotalCount } from './new-nft-asset-schema-workaround-bundled-assets-total-count';
 
 export interface NewNFTAssetSchemaWorkaround {
-	contract: BaseAssetContractSchemaWorkaround;
-	tokenId: string;
-	name?: NewNFTAssetSchemaWorkaroundName;
-	description?: NewNFTAssetSchemaWorkaroundDescription;
-	type?: NewNFTAssetSchemaWorkaroundType;
-	animationUrl?: NewNFTAssetSchemaWorkaroundAnimationUrl;
-	tokenUri?: NewNFTAssetSchemaWorkaroundTokenUri;
-	id?: NewNFTAssetSchemaWorkaroundId;
-	collection: NFTAssetCollectionSchemaWorkaround;
-	bundledAssets?: NewNFTAssetSchemaWorkaroundBundledAssets;
-	thumbnailUrl?: NewNFTAssetSchemaWorkaroundThumbnailUrl;
-	isVerified?: NewNFTAssetSchemaWorkaroundIsVerified;
-	isVerifiedSource?: NewNFTAssetSchemaWorkaroundIsVerifiedSource;
-	bundledAssetsVerifiedCount?: NewNFTAssetSchemaWorkaroundBundledAssetsVerifiedCount;
-	bundledAssetsTotalCount?: NewNFTAssetSchemaWorkaroundBundledAssetsTotalCount;
+  contract: BaseAssetContractSchemaWorkaround;
+  tokenId: string;
+  name?: NewNFTAssetSchemaWorkaroundName;
+  description?: NewNFTAssetSchemaWorkaroundDescription;
+  type?: NewNFTAssetSchemaWorkaroundType;
+  animationUrl?: NewNFTAssetSchemaWorkaroundAnimationUrl;
+  tokenUri?: NewNFTAssetSchemaWorkaroundTokenUri;
+  id?: NewNFTAssetSchemaWorkaroundId;
+  collection: NFTAssetCollectionSchemaWorkaround;
+  bundledAssets?: NewNFTAssetSchemaWorkaroundBundledAssets;
+  thumbnailUrl?: NewNFTAssetSchemaWorkaroundThumbnailUrl;
+  isVerified?: NewNFTAssetSchemaWorkaroundIsVerified;
+  isVerifiedSource?: NewNFTAssetSchemaWorkaroundIsVerifiedSource;
+  bundledAssetsVerifiedCount?: NewNFTAssetSchemaWorkaroundBundledAssetsVerifiedCount;
+  bundledAssetsTotalCount?: NewNFTAssetSchemaWorkaroundBundledAssetsTotalCount;
 }

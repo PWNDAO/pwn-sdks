@@ -5,5 +5,4 @@
  */
 
 export type V13SimpleLoanSimpleProposalDetailSchemaWorkaroundMultiproposalMerkleRoot =
-	| string
-	| null;
+  string | null;

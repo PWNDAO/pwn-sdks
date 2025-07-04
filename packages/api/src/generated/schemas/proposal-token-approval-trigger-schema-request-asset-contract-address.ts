@@ -5,5 +5,5 @@
  */
 
 export type ProposalTokenApprovalTriggerSchemaRequestAssetContractAddress =
-	| string
-	| null;
+  | string
+  | null;

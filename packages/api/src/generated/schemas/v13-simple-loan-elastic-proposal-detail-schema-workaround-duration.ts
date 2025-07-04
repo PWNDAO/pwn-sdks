@@ -5,5 +5,5 @@
  */
 
 export type V13SimpleLoanElasticProposalDetailSchemaWorkaroundDuration =
-	| number
-	| null;
+  | number
+  | null;
