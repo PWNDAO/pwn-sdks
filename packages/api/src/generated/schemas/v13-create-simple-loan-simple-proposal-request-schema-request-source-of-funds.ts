@@ -5,4 +5,5 @@
  */
 
 export type V13CreateSimpleLoanSimpleProposalRequestSchemaRequestSourceOfFunds =
-  string | null;
+	| string
+	| null;

@@ -5,5 +5,5 @@
  */
 
 export type SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundReferrer =
-  | string
-  | null;
+	| string
+	| null;

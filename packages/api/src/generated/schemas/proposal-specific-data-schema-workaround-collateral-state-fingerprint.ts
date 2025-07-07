@@ -5,5 +5,5 @@
  */
 
 export type ProposalSpecificDataSchemaWorkaroundCollateralStateFingerprint =
-  | string
-  | null;
+	| string
+	| null;

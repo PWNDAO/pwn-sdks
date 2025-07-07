@@ -5,4 +5,5 @@
  */
 
 export type V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestMultiproposalMerkleRoot =
-  string | null;
+	| string
+	| null;

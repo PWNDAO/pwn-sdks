@@ -5,12 +5,12 @@
  */
 
 export type FetchUserNftsMetadataSource =
-  (typeof FetchUserNftsMetadataSource)[keyof typeof FetchUserNftsMetadataSource];
+	(typeof FetchUserNftsMetadataSource)[keyof typeof FetchUserNftsMetadataSource];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const FetchUserNftsMetadataSource = {
-  ALCHEMY: 'ALCHEMY',
-  CELOSCAN: 'CELOSCAN',
-  INKONCHAIN_EXPLORER: 'INKONCHAIN_EXPLORER',
-  MORALIS: 'MORALIS',
+	ALCHEMY: "ALCHEMY",
+	CELOSCAN: "CELOSCAN",
+	INKONCHAIN_EXPLORER: "INKONCHAIN_EXPLORER",
+	MORALIS: "MORALIS",
 } as const;

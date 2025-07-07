@@ -5,6 +5,6 @@
  */
 
 export interface AssignReferrerRequestRequest {
-  refereeAddress: string;
-  referrerAddress: string;
+	refereeAddress: string;
+	referrerAddress: string;
 }

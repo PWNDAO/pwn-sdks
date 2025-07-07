@@ -5,4 +5,5 @@
  */
 
 export type V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestRefinancingLoanId =
-  number | string;
+	| number
+	| string;

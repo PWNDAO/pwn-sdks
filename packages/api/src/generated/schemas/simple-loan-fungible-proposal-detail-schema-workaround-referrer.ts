@@ -5,5 +5,5 @@
  */
 
 export type SimpleLoanFungibleProposalDetailSchemaWorkaroundReferrer =
-  | string
-  | null;
+	| string
+	| null;

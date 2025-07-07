@@ -5,5 +5,5 @@
  */
 
 export type CollateralAssetInThesisSchemaWorkaroundUnderlyingTokenAddress =
-  | string
-  | null;
+	| string
+	| null;

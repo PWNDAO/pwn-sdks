@@ -5,4 +5,5 @@
  */
 
 export type V13CreateSimpleLoanListProposalRequestSchemaRequestUtilizedCreditId =
-  string | null;
+	| string
+	| null;

@@ -5,5 +5,5 @@
  */
 
 export type V13SimpleLoanElasticProposalDetailSchemaWorkaroundReferrer =
-  | string
-  | null;
+	| string
+	| null;

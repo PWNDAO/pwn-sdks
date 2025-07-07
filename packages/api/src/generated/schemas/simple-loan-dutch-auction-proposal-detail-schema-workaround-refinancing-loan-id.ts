@@ -5,4 +5,5 @@
  */
 
 export type SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundRefinancingLoanId =
-  string | null;
+	| string
+	| null;

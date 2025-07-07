@@ -5,4 +5,5 @@
  */
 
 export type SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundMinCreditAmount =
-  string | null;
+	| string
+	| null;

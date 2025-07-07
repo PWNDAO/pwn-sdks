@@ -5,4 +5,5 @@
  */
 
 export type V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestMaxCreditAmount =
-  number | string;
+	| number
+	| string;

@@ -5,4 +5,5 @@
  */
 
 export type V13CreateSimpleLoanElasticProposalRequestSchemaRequestCreditPerCollateralUnit =
-  number | string;
+	| number
+	| string;

@@ -5,5 +5,5 @@
  */
 
 export type ThesisCreditStatsSchemaWorkaroundBorrowingProposalNonces =
-  | string[]
-  | null;
+	| string[]
+	| null;

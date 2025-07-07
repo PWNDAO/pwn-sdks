@@ -5,4 +5,5 @@
  */
 
 export type V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundLoanDefaultDate =
-  number | null;
+	| number
+	| null;

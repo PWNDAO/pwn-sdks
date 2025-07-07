@@ -5,4 +5,5 @@
  */
 
 export type V13CreateSimpleLoanChainlinkProposalRequestSchemaRequestNonceSpace =
-  number | string;
+	| number
+	| string;

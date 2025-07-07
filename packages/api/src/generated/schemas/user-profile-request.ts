@@ -5,8 +5,8 @@
  */
 
 export interface UserProfileRequest {
-  description?: string;
-  /** @maxLength 19 */
-  discord_user_id?: string;
-  world_notifications?: boolean;
+	description?: string;
+	/** @maxLength 19 */
+	discord_user_id?: string;
+	world_notifications?: boolean;
 }

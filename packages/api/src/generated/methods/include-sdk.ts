@@ -4,156 +4,156 @@
  * OpenAPI spec version: 0.0.0
  */
 import type {
-  AssetDetail,
-  AssetPriceAndTaskStatusSchema,
-  CreateProposalRequestSchemaRequest,
-  CreateStrategy201,
-  CuratorGroupDetail,
-  ERC20AssetSchemaWithBalance,
-  FetchAssetMetadataParams,
-  FetchAssetPriceParams,
-  FetchNFTAssetCollectionMetadata2Params,
-  FetchNFTAssetCollectionMetadataParams,
-  FetchUserErc20sParams,
-  FetchUserNFTsResponse,
-  FetchUserNftsParams,
-  FreeUserNonceRetrieveParams,
-  FreeUserNonceSchemaWorkaround,
-  LoanDetailSchemaWorkaround,
-  MarkAsSeenBodyRequest,
-  NFTAssetCollectionDetailSchema,
-  NotificationSettings,
-  NotificationSettingsRequest,
-  NotificationUserUnseenNotificationsCountParams,
-  PaginatedCuratorGroupDetailList,
-  PaginatedProposalAndLoanListSchemaWorkaroundList,
-  PaginatedProposalDetailSchemaList,
-  PaginatedThesisSchemaWorkaroundList,
-  ProposalAndLoanListParams,
-  ProposalDetailSchema,
-  ProposalHashesListSchema,
-  ProposalListParams,
-  ThesisCreateUpdateSchemaRequest,
-  ThesisDetail2Params,
-  ThesisDetailParams,
-  ThesisListParams,
-  ThesisSchemaWorkaround,
-  UnseenNotificationsCount,
-  UpdateStrategy200,
-  UpdateStrategy2200,
-  UserProfileRequestRequest,
-  UserProfileResponse,
-  WalletRole,
-  WalletStats,
-  Web3authCuratorGroupsListParams,
-  Web3authUserProfileStatsRetrieveParams,
-} from '../schemas';
+	AssetDetail,
+	AssetPriceAndTaskStatusSchema,
+	CreateProposalRequestSchemaRequest,
+	CreateStrategy201,
+	CuratorGroupDetail,
+	ERC20AssetSchemaWithBalance,
+	FetchAssetMetadataParams,
+	FetchAssetPriceParams,
+	FetchNFTAssetCollectionMetadata2Params,
+	FetchNFTAssetCollectionMetadataParams,
+	FetchUserErc20sParams,
+	FetchUserNFTsResponse,
+	FetchUserNftsParams,
+	FreeUserNonceRetrieveParams,
+	FreeUserNonceSchemaWorkaround,
+	LoanDetailSchemaWorkaround,
+	MarkAsSeenBodyRequest,
+	NFTAssetCollectionDetailSchema,
+	NotificationSettings,
+	NotificationSettingsRequest,
+	NotificationUserUnseenNotificationsCountParams,
+	PaginatedCuratorGroupDetailList,
+	PaginatedProposalAndLoanListSchemaWorkaroundList,
+	PaginatedProposalDetailSchemaList,
+	PaginatedThesisSchemaWorkaroundList,
+	ProposalAndLoanListParams,
+	ProposalDetailSchema,
+	ProposalHashesListSchema,
+	ProposalListParams,
+	ThesisCreateUpdateSchemaRequest,
+	ThesisDetail2Params,
+	ThesisDetailParams,
+	ThesisListParams,
+	ThesisSchemaWorkaround,
+	UnseenNotificationsCount,
+	UpdateStrategy200,
+	UpdateStrategy2200,
+	UserProfileRequestRequest,
+	UserProfileResponse,
+	WalletRole,
+	WalletStats,
+	Web3authCuratorGroupsListParams,
+	Web3authUserProfileStatsRetrieveParams,
+} from "../schemas";
 
-import { customInstance } from '../../custom-instance';
+import { customInstance } from "../../custom-instance";
 
 export const getFetchAssetMetadataUrl = (
-  chainId: string,
-  address: string,
-  tokenId?: string,
-  params?: FetchAssetMetadataParams
+	chainId: string,
+	address: string,
+	tokenId?: string,
+	params?: FetchAssetMetadataParams,
 ) => {
-  const normalizedParams = new URLSearchParams();
+	const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? "null" : value.toString());
+		}
+	});
 
-  const stringifiedParams = normalizedParams.toString();
+	const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/asset/asset/${chainId}/${address}/${tokenId}?${stringifiedParams}`
-    : `/api/v1/asset/asset/${chainId}/${address}/${tokenId}`;
+	return stringifiedParams.length > 0
+		? `/api/v1/asset/asset/${chainId}/${address}/${tokenId}?${stringifiedParams}`
+		: `/api/v1/asset/asset/${chainId}/${address}/${tokenId}`;
 };
 
 export const fetchAssetMetadata = async (
-  chainId: string,
-  address: string,
-  tokenId?: string,
-  params?: FetchAssetMetadataParams,
-  options?: RequestInit
+	chainId: string,
+	address: string,
+	tokenId?: string,
+	params?: FetchAssetMetadataParams,
+	options?: RequestInit,
 ): Promise<AssetDetail> => {
-  return customInstance<AssetDetail>(
-    getFetchAssetMetadataUrl(chainId, address, tokenId, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<AssetDetail>(
+		getFetchAssetMetadataUrl(chainId, address, tokenId, params),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 export const getFetchNFTAssetCollectionMetadata2Url = (
-  chainId: string,
-  address: string,
-  params?: FetchNFTAssetCollectionMetadata2Params
+	chainId: string,
+	address: string,
+	params?: FetchNFTAssetCollectionMetadata2Params,
 ) => {
-  const normalizedParams = new URLSearchParams();
+	const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? "null" : value.toString());
+		}
+	});
 
-  const stringifiedParams = normalizedParams.toString();
+	const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/asset/collection/${chainId}/${address}/?${stringifiedParams}`
-    : `/api/v1/asset/collection/${chainId}/${address}/`;
+	return stringifiedParams.length > 0
+		? `/api/v1/asset/collection/${chainId}/${address}/?${stringifiedParams}`
+		: `/api/v1/asset/collection/${chainId}/${address}/`;
 };
 
 export const fetchNFTAssetCollectionMetadata2 = async (
-  chainId: string,
-  address: string,
-  params?: FetchNFTAssetCollectionMetadata2Params,
-  options?: RequestInit
+	chainId: string,
+	address: string,
+	params?: FetchNFTAssetCollectionMetadata2Params,
+	options?: RequestInit,
 ): Promise<NFTAssetCollectionDetailSchema> => {
-  return customInstance<NFTAssetCollectionDetailSchema>(
-    getFetchNFTAssetCollectionMetadata2Url(chainId, address, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<NFTAssetCollectionDetailSchema>(
+		getFetchNFTAssetCollectionMetadata2Url(chainId, address, params),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 export const getFetchNFTAssetCollectionMetadataUrl = (
-  openseaSlug: string,
-  params?: FetchNFTAssetCollectionMetadataParams
+	openseaSlug: string,
+	params?: FetchNFTAssetCollectionMetadataParams,
 ) => {
-  const normalizedParams = new URLSearchParams();
+	const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? "null" : value.toString());
+		}
+	});
 
-  const stringifiedParams = normalizedParams.toString();
+	const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/asset/collection/slug/${openseaSlug}/?${stringifiedParams}`
-    : `/api/v1/asset/collection/slug/${openseaSlug}/`;
+	return stringifiedParams.length > 0
+		? `/api/v1/asset/collection/slug/${openseaSlug}/?${stringifiedParams}`
+		: `/api/v1/asset/collection/slug/${openseaSlug}/`;
 };
 
 export const fetchNFTAssetCollectionMetadata = async (
-  openseaSlug: string,
-  params?: FetchNFTAssetCollectionMetadataParams,
-  options?: RequestInit
+	openseaSlug: string,
+	params?: FetchNFTAssetCollectionMetadataParams,
+	options?: RequestInit,
 ): Promise<NFTAssetCollectionDetailSchema> => {
-  return customInstance<NFTAssetCollectionDetailSchema>(
-    getFetchNFTAssetCollectionMetadataUrl(openseaSlug, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<NFTAssetCollectionDetailSchema>(
+		getFetchNFTAssetCollectionMetadataUrl(openseaSlug, params),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 /**
@@ -164,746 +164,746 @@ HTTP Status:
     * TODO: get asset category (once asset_category_refactor is merged)
  */
 export const getFetchAssetPriceUrl = (
-  chainId: string,
-  contractAddress: string,
-  tokenId: string,
-  params?: FetchAssetPriceParams
+	chainId: string,
+	contractAddress: string,
+	tokenId: string,
+	params?: FetchAssetPriceParams,
 ) => {
-  const normalizedParams = new URLSearchParams();
+	const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? "null" : value.toString());
+		}
+	});
 
-  const stringifiedParams = normalizedParams.toString();
+	const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/asset/price/${chainId}/${contractAddress}/${tokenId}?${stringifiedParams}`
-    : `/api/v1/asset/price/${chainId}/${contractAddress}/${tokenId}`;
+	return stringifiedParams.length > 0
+		? `/api/v1/asset/price/${chainId}/${contractAddress}/${tokenId}?${stringifiedParams}`
+		: `/api/v1/asset/price/${chainId}/${contractAddress}/${tokenId}`;
 };
 
 export const fetchAssetPrice = async (
-  chainId: string,
-  contractAddress: string,
-  tokenId: string,
-  params?: FetchAssetPriceParams,
-  options?: RequestInit
+	chainId: string,
+	contractAddress: string,
+	tokenId: string,
+	params?: FetchAssetPriceParams,
+	options?: RequestInit,
 ): Promise<AssetPriceAndTaskStatusSchema> => {
-  return customInstance<AssetPriceAndTaskStatusSchema>(
-    getFetchAssetPriceUrl(chainId, contractAddress, tokenId, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<AssetPriceAndTaskStatusSchema>(
+		getFetchAssetPriceUrl(chainId, contractAddress, tokenId, params),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 export const getFetchUserErc20sUrl = (
-  chainId: string,
-  userAddress: string,
-  params?: FetchUserErc20sParams
+	chainId: string,
+	userAddress: string,
+	params?: FetchUserErc20sParams,
 ) => {
-  const normalizedParams = new URLSearchParams();
+	const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? "null" : value.toString());
+		}
+	});
 
-  const stringifiedParams = normalizedParams.toString();
+	const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/asset/user-erc20s/${chainId}/${userAddress}/?${stringifiedParams}`
-    : `/api/v1/asset/user-erc20s/${chainId}/${userAddress}/`;
+	return stringifiedParams.length > 0
+		? `/api/v1/asset/user-erc20s/${chainId}/${userAddress}/?${stringifiedParams}`
+		: `/api/v1/asset/user-erc20s/${chainId}/${userAddress}/`;
 };
 
 export const fetchUserErc20s = async (
-  chainId: string,
-  userAddress: string,
-  params?: FetchUserErc20sParams,
-  options?: RequestInit
+	chainId: string,
+	userAddress: string,
+	params?: FetchUserErc20sParams,
+	options?: RequestInit,
 ): Promise<ERC20AssetSchemaWithBalance[]> => {
-  return customInstance<ERC20AssetSchemaWithBalance[]>(
-    getFetchUserErc20sUrl(chainId, userAddress, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<ERC20AssetSchemaWithBalance[]>(
+		getFetchUserErc20sUrl(chainId, userAddress, params),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 export const getFetchUserNftsUrl = (
-  chainId: string,
-  userAddress: string,
-  params?: FetchUserNftsParams
+	chainId: string,
+	userAddress: string,
+	params?: FetchUserNftsParams,
 ) => {
-  const normalizedParams = new URLSearchParams();
+	const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? "null" : value.toString());
+		}
+	});
 
-  const stringifiedParams = normalizedParams.toString();
+	const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/asset/user-nfts/${chainId}/${userAddress}/?${stringifiedParams}`
-    : `/api/v1/asset/user-nfts/${chainId}/${userAddress}/`;
+	return stringifiedParams.length > 0
+		? `/api/v1/asset/user-nfts/${chainId}/${userAddress}/?${stringifiedParams}`
+		: `/api/v1/asset/user-nfts/${chainId}/${userAddress}/`;
 };
 
 export const fetchUserNfts = async (
-  chainId: string,
-  userAddress: string,
-  params?: FetchUserNftsParams,
-  options?: RequestInit
+	chainId: string,
+	userAddress: string,
+	params?: FetchUserNftsParams,
+	options?: RequestInit,
 ): Promise<FetchUserNFTsResponse> => {
-  return customInstance<FetchUserNFTsResponse>(
-    getFetchUserNftsUrl(chainId, userAddress, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<FetchUserNFTsResponse>(
+		getFetchUserNftsUrl(chainId, userAddress, params),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 export const getNotificationsMarkAsSeenAllUrl = (recipientAddress: string) => {
-  return `/api/v1/notification/mark-as-seen-all/${recipientAddress}/`;
+	return `/api/v1/notification/mark-as-seen-all/${recipientAddress}/`;
 };
 
 export const notificationsMarkAsSeenAll = async (
-  recipientAddress: string,
-  options?: RequestInit
+	recipientAddress: string,
+	options?: RequestInit,
 ): Promise<void> => {
-  return customInstance<void>(
-    getNotificationsMarkAsSeenAllUrl(recipientAddress),
-    {
-      ...options,
-      method: 'POST',
-    }
-  );
+	return customInstance<void>(
+		getNotificationsMarkAsSeenAllUrl(recipientAddress),
+		{
+			...options,
+			method: "POST",
+		},
+	);
 };
 
 export const getNotificationsMarkAsSeenUrl = (recipientAddress: string) => {
-  return `/api/v1/notification/mark-as-seen/${recipientAddress}/`;
+	return `/api/v1/notification/mark-as-seen/${recipientAddress}/`;
 };
 
 export const notificationsMarkAsSeen = async (
-  recipientAddress: string,
-  markAsSeenBodyRequest: MarkAsSeenBodyRequest,
-  options?: RequestInit
+	recipientAddress: string,
+	markAsSeenBodyRequest: MarkAsSeenBodyRequest,
+	options?: RequestInit,
 ): Promise<void> => {
-  return customInstance<void>(getNotificationsMarkAsSeenUrl(recipientAddress), {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(markAsSeenBodyRequest),
-  });
+	return customInstance<void>(getNotificationsMarkAsSeenUrl(recipientAddress), {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(markAsSeenBodyRequest),
+	});
 };
 
 export const getNotificationUserUnseenNotificationsCountUrl = (
-  recipientAddress: string,
-  params?: NotificationUserUnseenNotificationsCountParams
+	recipientAddress: string,
+	params?: NotificationUserUnseenNotificationsCountParams,
 ) => {
-  const normalizedParams = new URLSearchParams();
+	const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? "null" : value.toString());
+		}
+	});
 
-  const stringifiedParams = normalizedParams.toString();
+	const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/notification/user-unseen-notifications-count/${recipientAddress}/?${stringifiedParams}`
-    : `/api/v1/notification/user-unseen-notifications-count/${recipientAddress}/`;
+	return stringifiedParams.length > 0
+		? `/api/v1/notification/user-unseen-notifications-count/${recipientAddress}/?${stringifiedParams}`
+		: `/api/v1/notification/user-unseen-notifications-count/${recipientAddress}/`;
 };
 
 export const notificationUserUnseenNotificationsCount = async (
-  recipientAddress: string,
-  params?: NotificationUserUnseenNotificationsCountParams,
-  options?: RequestInit
+	recipientAddress: string,
+	params?: NotificationUserUnseenNotificationsCountParams,
+	options?: RequestInit,
 ): Promise<UnseenNotificationsCount> => {
-  return customInstance<UnseenNotificationsCount>(
-    getNotificationUserUnseenNotificationsCountUrl(recipientAddress, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<UnseenNotificationsCount>(
+		getNotificationUserUnseenNotificationsCountUrl(recipientAddress, params),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 export const getWeb3authCuratorGroupsListUrl = (
-  params?: Web3authCuratorGroupsListParams
+	params?: Web3authCuratorGroupsListParams,
 ) => {
-  const normalizedParams = new URLSearchParams();
+	const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? "null" : value.toString());
+		}
+	});
 
-  const stringifiedParams = normalizedParams.toString();
+	const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/web3auth/curator_groups/?${stringifiedParams}`
-    : `/api/v1/web3auth/curator_groups/`;
+	return stringifiedParams.length > 0
+		? `/api/v1/web3auth/curator_groups/?${stringifiedParams}`
+		: "/api/v1/web3auth/curator_groups/";
 };
 
 export const web3authCuratorGroupsList = async (
-  params?: Web3authCuratorGroupsListParams,
-  options?: RequestInit
+	params?: Web3authCuratorGroupsListParams,
+	options?: RequestInit,
 ): Promise<PaginatedCuratorGroupDetailList> => {
-  return customInstance<PaginatedCuratorGroupDetailList>(
-    getWeb3authCuratorGroupsListUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<PaginatedCuratorGroupDetailList>(
+		getWeb3authCuratorGroupsListUrl(params),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 export const getWeb3authCuratorGroupsRetrieveUrl = (name: string) => {
-  return `/api/v1/web3auth/curator_groups/${name}/`;
+	return `/api/v1/web3auth/curator_groups/${name}/`;
 };
 
 export const web3authCuratorGroupsRetrieve = async (
-  name: string,
-  options?: RequestInit
+	name: string,
+	options?: RequestInit,
 ): Promise<CuratorGroupDetail> => {
-  return customInstance<CuratorGroupDetail>(
-    getWeb3authCuratorGroupsRetrieveUrl(name),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<CuratorGroupDetail>(
+		getWeb3authCuratorGroupsRetrieveUrl(name),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 /**
  * Returns full message to sign in response body.
  */
 export const getWeb3authMessageToSignRetrieveUrl = (walletAddress: string) => {
-  return `/api/v1/web3auth/message_to_sign/${walletAddress}/`;
+	return `/api/v1/web3auth/message_to_sign/${walletAddress}/`;
 };
 
 export const web3authMessageToSignRetrieve = async (
-  walletAddress: string,
-  options?: RequestInit
+	walletAddress: string,
+	options?: RequestInit,
 ): Promise<string> => {
-  return customInstance<string>(
-    getWeb3authMessageToSignRetrieveUrl(walletAddress),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<string>(
+		getWeb3authMessageToSignRetrieveUrl(walletAddress),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 export const getWeb3authNotificationSettingsRetrieveUrl = (
-  walletAddress: string
+	walletAddress: string,
 ) => {
-  return `/api/v1/web3auth/notification_settings/${walletAddress}/`;
+	return `/api/v1/web3auth/notification_settings/${walletAddress}/`;
 };
 
 export const web3authNotificationSettingsRetrieve = async (
-  walletAddress: string,
-  options?: RequestInit
+	walletAddress: string,
+	options?: RequestInit,
 ): Promise<NotificationSettings> => {
-  return customInstance<NotificationSettings>(
-    getWeb3authNotificationSettingsRetrieveUrl(walletAddress),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<NotificationSettings>(
+		getWeb3authNotificationSettingsRetrieveUrl(walletAddress),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 export const getWeb3authNotificationSettingsCreateUrl = (
-  walletAddress: string
+	walletAddress: string,
 ) => {
-  return `/api/v1/web3auth/notification_settings/${walletAddress}/`;
+	return `/api/v1/web3auth/notification_settings/${walletAddress}/`;
 };
 
 export const web3authNotificationSettingsCreate = async (
-  walletAddress: string,
-  notificationSettingsRequest: NotificationSettingsRequest,
-  options?: RequestInit
+	walletAddress: string,
+	notificationSettingsRequest: NotificationSettingsRequest,
+	options?: RequestInit,
 ): Promise<NotificationSettings> => {
-  return customInstance<NotificationSettings>(
-    getWeb3authNotificationSettingsCreateUrl(walletAddress),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(notificationSettingsRequest),
-    }
-  );
+	return customInstance<NotificationSettings>(
+		getWeb3authNotificationSettingsCreateUrl(walletAddress),
+		{
+			...options,
+			method: "POST",
+			headers: { "Content-Type": "application/json", ...options?.headers },
+			body: JSON.stringify(notificationSettingsRequest),
+		},
+	);
 };
 
 export const getWeb3authUserProfileRetrieveUrl = (walletAddress: string) => {
-  return `/api/v1/web3auth/user_profile/${walletAddress}/`;
+	return `/api/v1/web3auth/user_profile/${walletAddress}/`;
 };
 
 export const web3authUserProfileRetrieve = async (
-  walletAddress: string,
-  options?: RequestInit
+	walletAddress: string,
+	options?: RequestInit,
 ): Promise<UserProfileResponse> => {
-  return customInstance<UserProfileResponse>(
-    getWeb3authUserProfileRetrieveUrl(walletAddress),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<UserProfileResponse>(
+		getWeb3authUserProfileRetrieveUrl(walletAddress),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 export const getWeb3authUserProfileCreateUrl = (walletAddress: string) => {
-  return `/api/v1/web3auth/user_profile/${walletAddress}/`;
+	return `/api/v1/web3auth/user_profile/${walletAddress}/`;
 };
 
 export const web3authUserProfileCreate = async (
-  walletAddress: string,
-  userProfileRequestRequest: UserProfileRequestRequest,
-  options?: RequestInit
+	walletAddress: string,
+	userProfileRequestRequest: UserProfileRequestRequest,
+	options?: RequestInit,
 ): Promise<UserProfileResponse> => {
-  return customInstance<UserProfileResponse>(
-    getWeb3authUserProfileCreateUrl(walletAddress),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(userProfileRequestRequest),
-    }
-  );
+	return customInstance<UserProfileResponse>(
+		getWeb3authUserProfileCreateUrl(walletAddress),
+		{
+			...options,
+			method: "POST",
+			headers: { "Content-Type": "application/json", ...options?.headers },
+			body: JSON.stringify(userProfileRequestRequest),
+		},
+	);
 };
 
 export const getWeb3authUserProfileStatsRetrieveUrl = (
-  walletAddress: string,
-  params?: Web3authUserProfileStatsRetrieveParams
+	walletAddress: string,
+	params?: Web3authUserProfileStatsRetrieveParams,
 ) => {
-  const normalizedParams = new URLSearchParams();
+	const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? "null" : value.toString());
+		}
+	});
 
-  const stringifiedParams = normalizedParams.toString();
+	const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/web3auth/user_profile/stats/${walletAddress}/?${stringifiedParams}`
-    : `/api/v1/web3auth/user_profile/stats/${walletAddress}/`;
+	return stringifiedParams.length > 0
+		? `/api/v1/web3auth/user_profile/stats/${walletAddress}/?${stringifiedParams}`
+		: `/api/v1/web3auth/user_profile/stats/${walletAddress}/`;
 };
 
 export const web3authUserProfileStatsRetrieve = async (
-  walletAddress: string,
-  params?: Web3authUserProfileStatsRetrieveParams,
-  options?: RequestInit
+	walletAddress: string,
+	params?: Web3authUserProfileStatsRetrieveParams,
+	options?: RequestInit,
 ): Promise<WalletStats> => {
-  return customInstance<WalletStats>(
-    getWeb3authUserProfileStatsRetrieveUrl(walletAddress, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<WalletStats>(
+		getWeb3authUserProfileStatsRetrieveUrl(walletAddress, params),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 export const getWeb3authWalletsRetrieveUrl = (walletAddress: string) => {
-  return `/api/v1/web3auth/wallets/${walletAddress}/`;
+	return `/api/v1/web3auth/wallets/${walletAddress}/`;
 };
 
 export const web3authWalletsRetrieve = async (
-  walletAddress: string,
-  options?: RequestInit
+	walletAddress: string,
+	options?: RequestInit,
 ): Promise<WalletRole> => {
-  return customInstance<WalletRole>(
-    getWeb3authWalletsRetrieveUrl(walletAddress),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<WalletRole>(
+		getWeb3authWalletsRetrieveUrl(walletAddress),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 export const getAllProposalHashesForRootUrl = (
-  multiproposalMerkleRoot: string
+	multiproposalMerkleRoot: string,
 ) => {
-  return `/api/v2/pwn_contracts/all-proposal-hashes-for-root/${multiproposalMerkleRoot}/`;
+	return `/api/v2/pwn_contracts/all-proposal-hashes-for-root/${multiproposalMerkleRoot}/`;
 };
 
 export const allProposalHashesForRoot = async (
-  multiproposalMerkleRoot: string,
-  options?: RequestInit
+	multiproposalMerkleRoot: string,
+	options?: RequestInit,
 ): Promise<ProposalHashesListSchema> => {
-  return customInstance<ProposalHashesListSchema>(
-    getAllProposalHashesForRootUrl(multiproposalMerkleRoot),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<ProposalHashesListSchema>(
+		getAllProposalHashesForRootUrl(multiproposalMerkleRoot),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 export const getProposalCreateBatchUrl = () => {
-  return `/api/v2/pwn_contracts/create-proposal-batch`;
+	return "/api/v2/pwn_contracts/create-proposal-batch";
 };
 
 export const proposalCreateBatch = async (
-  createProposalRequestSchemaRequest: CreateProposalRequestSchemaRequest[],
-  options?: RequestInit
+	createProposalRequestSchemaRequest: CreateProposalRequestSchemaRequest[],
+	options?: RequestInit,
 ): Promise<ProposalDetailSchema[]> => {
-  return customInstance<ProposalDetailSchema[]>(getProposalCreateBatchUrl(), {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(createProposalRequestSchemaRequest),
-  });
+	return customInstance<ProposalDetailSchema[]>(getProposalCreateBatchUrl(), {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(createProposalRequestSchemaRequest),
+	});
 };
 
 export const getProposalCreateBatch2Url = () => {
-  return `/api/v2/pwn_contracts/create-proposal-batch/`;
+	return "/api/v2/pwn_contracts/create-proposal-batch/";
 };
 
 export const proposalCreateBatch2 = async (
-  createProposalRequestSchemaRequest: CreateProposalRequestSchemaRequest[],
-  options?: RequestInit
+	createProposalRequestSchemaRequest: CreateProposalRequestSchemaRequest[],
+	options?: RequestInit,
 ): Promise<ProposalDetailSchema[]> => {
-  return customInstance<ProposalDetailSchema[]>(getProposalCreateBatch2Url(), {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(createProposalRequestSchemaRequest),
-  });
+	return customInstance<ProposalDetailSchema[]>(getProposalCreateBatch2Url(), {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(createProposalRequestSchemaRequest),
+	});
 };
 
 export const getFreeUserNonceRetrieveUrl = (
-  chainId: string,
-  revokedNonceContractAddress: string,
-  userAddress: string,
-  params?: FreeUserNonceRetrieveParams
+	chainId: string,
+	revokedNonceContractAddress: string,
+	userAddress: string,
+	params?: FreeUserNonceRetrieveParams,
 ) => {
-  const normalizedParams = new URLSearchParams();
+	const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? "null" : value.toString());
+		}
+	});
 
-  const stringifiedParams = normalizedParams.toString();
+	const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v2/pwn_contracts/free-user-nonce/${chainId}/${revokedNonceContractAddress}/${userAddress}/?${stringifiedParams}`
-    : `/api/v2/pwn_contracts/free-user-nonce/${chainId}/${revokedNonceContractAddress}/${userAddress}/`;
+	return stringifiedParams.length > 0
+		? `/api/v2/pwn_contracts/free-user-nonce/${chainId}/${revokedNonceContractAddress}/${userAddress}/?${stringifiedParams}`
+		: `/api/v2/pwn_contracts/free-user-nonce/${chainId}/${revokedNonceContractAddress}/${userAddress}/`;
 };
 
 export const freeUserNonceRetrieve = async (
-  chainId: string,
-  revokedNonceContractAddress: string,
-  userAddress: string,
-  params?: FreeUserNonceRetrieveParams,
-  options?: RequestInit
+	chainId: string,
+	revokedNonceContractAddress: string,
+	userAddress: string,
+	params?: FreeUserNonceRetrieveParams,
+	options?: RequestInit,
 ): Promise<FreeUserNonceSchemaWorkaround> => {
-  return customInstance<FreeUserNonceSchemaWorkaround>(
-    getFreeUserNonceRetrieveUrl(
-      chainId,
-      revokedNonceContractAddress,
-      userAddress,
-      params
-    ),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<FreeUserNonceSchemaWorkaround>(
+		getFreeUserNonceRetrieveUrl(
+			chainId,
+			revokedNonceContractAddress,
+			userAddress,
+			params,
+		),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 export const getLoanDetailUrl = (
-  chainId: string,
-  loanTokenContractAddress: string,
-  onChainId: string
+	chainId: string,
+	loanTokenContractAddress: string,
+	onChainId: string,
 ) => {
-  return `/api/v2/pwn_contracts/loan/${chainId}/${loanTokenContractAddress}/${onChainId}/`;
+	return `/api/v2/pwn_contracts/loan/${chainId}/${loanTokenContractAddress}/${onChainId}/`;
 };
 
 export const loanDetail = async (
-  chainId: string,
-  loanTokenContractAddress: string,
-  onChainId: string,
-  options?: RequestInit
+	chainId: string,
+	loanTokenContractAddress: string,
+	onChainId: string,
+	options?: RequestInit,
 ): Promise<LoanDetailSchemaWorkaround> => {
-  return customInstance<LoanDetailSchemaWorkaround>(
-    getLoanDetailUrl(chainId, loanTokenContractAddress, onChainId),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<LoanDetailSchemaWorkaround>(
+		getLoanDetailUrl(chainId, loanTokenContractAddress, onChainId),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 export const getProposalCreateUrl = () => {
-  return `/api/v2/pwn_contracts/proposal/`;
+	return "/api/v2/pwn_contracts/proposal/";
 };
 
 export const proposalCreate = async (
-  createProposalRequestSchemaRequest: CreateProposalRequestSchemaRequest,
-  options?: RequestInit
+	createProposalRequestSchemaRequest: CreateProposalRequestSchemaRequest,
+	options?: RequestInit,
 ): Promise<ProposalDetailSchema> => {
-  return customInstance<ProposalDetailSchema>(getProposalCreateUrl(), {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(createProposalRequestSchemaRequest),
-  });
+	return customInstance<ProposalDetailSchema>(getProposalCreateUrl(), {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(createProposalRequestSchemaRequest),
+	});
 };
 
 export const getProposalAndLoanListUrl = (
-  params?: ProposalAndLoanListParams
+	params?: ProposalAndLoanListParams,
 ) => {
-  const normalizedParams = new URLSearchParams();
+	const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ['chains', 'statuses'];
+	Object.entries(params || {}).forEach(([key, value]) => {
+		const explodeParameters = ["chains", "statuses"];
 
-    if (value instanceof Array && explodeParameters.includes(key)) {
-      value.forEach((v) =>
-        normalizedParams.append(key, v === null ? 'null' : v.toString())
-      );
-      return;
-    }
+		if (Array.isArray(value) && explodeParameters.includes(key)) {
+			value.forEach((v) =>
+				normalizedParams.append(key, v === null ? "null" : v.toString()),
+			);
+			return;
+		}
 
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? "null" : value.toString());
+		}
+	});
 
-  const stringifiedParams = normalizedParams.toString();
+	const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v2/pwn_contracts/proposal-and-loan/?${stringifiedParams}`
-    : `/api/v2/pwn_contracts/proposal-and-loan/`;
+	return stringifiedParams.length > 0
+		? `/api/v2/pwn_contracts/proposal-and-loan/?${stringifiedParams}`
+		: "/api/v2/pwn_contracts/proposal-and-loan/";
 };
 
 export const proposalAndLoanList = async (
-  params?: ProposalAndLoanListParams,
-  options?: RequestInit
+	params?: ProposalAndLoanListParams,
+	options?: RequestInit,
 ): Promise<PaginatedProposalAndLoanListSchemaWorkaroundList> => {
-  return customInstance<PaginatedProposalAndLoanListSchemaWorkaroundList>(
-    getProposalAndLoanListUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<PaginatedProposalAndLoanListSchemaWorkaroundList>(
+		getProposalAndLoanListUrl(params),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 export const getProposalDetailUrl = (id: number) => {
-  return `/api/v2/pwn_contracts/proposal/${id}`;
+	return `/api/v2/pwn_contracts/proposal/${id}`;
 };
 
 export const proposalDetail = async (
-  id: number,
-  options?: RequestInit
+	id: number,
+	options?: RequestInit,
 ): Promise<ProposalDetailSchema> => {
-  return customInstance<ProposalDetailSchema>(getProposalDetailUrl(id), {
-    ...options,
-    method: 'GET',
-  });
+	return customInstance<ProposalDetailSchema>(getProposalDetailUrl(id), {
+		...options,
+		method: "GET",
+	});
 };
 
 export const getProposalListUrl = (params?: ProposalListParams) => {
-  const normalizedParams = new URLSearchParams();
+	const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ['chains', 'statuses'];
+	Object.entries(params || {}).forEach(([key, value]) => {
+		const explodeParameters = ["chains", "statuses"];
 
-    if (value instanceof Array && explodeParameters.includes(key)) {
-      value.forEach((v) =>
-        normalizedParams.append(key, v === null ? 'null' : v.toString())
-      );
-      return;
-    }
+		if (Array.isArray(value) && explodeParameters.includes(key)) {
+			value.forEach((v) =>
+				normalizedParams.append(key, v === null ? "null" : v.toString()),
+			);
+			return;
+		}
 
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? "null" : value.toString());
+		}
+	});
 
-  const stringifiedParams = normalizedParams.toString();
+	const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v2/pwn_contracts/proposals/?${stringifiedParams}`
-    : `/api/v2/pwn_contracts/proposals/`;
+	return stringifiedParams.length > 0
+		? `/api/v2/pwn_contracts/proposals/?${stringifiedParams}`
+		: "/api/v2/pwn_contracts/proposals/";
 };
 
 export const proposalList = async (
-  params?: ProposalListParams,
-  options?: RequestInit
+	params?: ProposalListParams,
+	options?: RequestInit,
 ): Promise<PaginatedProposalDetailSchemaList> => {
-  return customInstance<PaginatedProposalDetailSchemaList>(
-    getProposalListUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<PaginatedProposalDetailSchemaList>(
+		getProposalListUrl(params),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 export const getThesisListUrl = (params?: ThesisListParams) => {
-  const normalizedParams = new URLSearchParams();
+	const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? "null" : value.toString());
+		}
+	});
 
-  const stringifiedParams = normalizedParams.toString();
+	const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v2/pwn_contracts/thesis/?${stringifiedParams}`
-    : `/api/v2/pwn_contracts/thesis/`;
+	return stringifiedParams.length > 0
+		? `/api/v2/pwn_contracts/thesis/?${stringifiedParams}`
+		: "/api/v2/pwn_contracts/thesis/";
 };
 
 export const thesisList = async (
-  params?: ThesisListParams,
-  options?: RequestInit
+	params?: ThesisListParams,
+	options?: RequestInit,
 ): Promise<PaginatedThesisSchemaWorkaroundList> => {
-  return customInstance<PaginatedThesisSchemaWorkaroundList>(
-    getThesisListUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<PaginatedThesisSchemaWorkaroundList>(
+		getThesisListUrl(params),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 /**
  * Create a new Strategy
  */
 export const getCreateStrategyUrl = () => {
-  return `/api/v2/pwn_contracts/thesis/`;
+	return "/api/v2/pwn_contracts/thesis/";
 };
 
 export const createStrategy = async (
-  thesisCreateUpdateSchemaRequest: ThesisCreateUpdateSchemaRequest,
-  options?: RequestInit
+	thesisCreateUpdateSchemaRequest: ThesisCreateUpdateSchemaRequest,
+	options?: RequestInit,
 ): Promise<CreateStrategy201> => {
-  return customInstance<CreateStrategy201>(getCreateStrategyUrl(), {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(thesisCreateUpdateSchemaRequest),
-  });
+	return customInstance<CreateStrategy201>(getCreateStrategyUrl(), {
+		...options,
+		method: "POST",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(thesisCreateUpdateSchemaRequest),
+	});
 };
 
 export const getThesisDetailUrl = (id: string, params?: ThesisDetailParams) => {
-  const normalizedParams = new URLSearchParams();
+	const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? "null" : value.toString());
+		}
+	});
 
-  const stringifiedParams = normalizedParams.toString();
+	const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v2/pwn_contracts/thesis/${id}/?${stringifiedParams}`
-    : `/api/v2/pwn_contracts/thesis/${id}/`;
+	return stringifiedParams.length > 0
+		? `/api/v2/pwn_contracts/thesis/${id}/?${stringifiedParams}`
+		: `/api/v2/pwn_contracts/thesis/${id}/`;
 };
 
 export const thesisDetail = async (
-  id: string,
-  params?: ThesisDetailParams,
-  options?: RequestInit
+	id: string,
+	params?: ThesisDetailParams,
+	options?: RequestInit,
 ): Promise<ThesisSchemaWorkaround> => {
-  return customInstance<ThesisSchemaWorkaround>(
-    getThesisDetailUrl(id, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<ThesisSchemaWorkaround>(
+		getThesisDetailUrl(id, params),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 /**
  * Update an existing Strategy
  */
 export const getUpdateStrategyUrl = (id: string) => {
-  return `/api/v2/pwn_contracts/thesis/${id}/`;
+	return `/api/v2/pwn_contracts/thesis/${id}/`;
 };
 
 export const updateStrategy = async (
-  id: string,
-  thesisCreateUpdateSchemaRequest: ThesisCreateUpdateSchemaRequest,
-  options?: RequestInit
+	id: string,
+	thesisCreateUpdateSchemaRequest: ThesisCreateUpdateSchemaRequest,
+	options?: RequestInit,
 ): Promise<UpdateStrategy200> => {
-  return customInstance<UpdateStrategy200>(getUpdateStrategyUrl(id), {
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(thesisCreateUpdateSchemaRequest),
-  });
+	return customInstance<UpdateStrategy200>(getUpdateStrategyUrl(id), {
+		...options,
+		method: "PUT",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(thesisCreateUpdateSchemaRequest),
+	});
 };
 
 export const getThesisDetail2Url = (
-  slug: string,
-  params?: ThesisDetail2Params
+	slug: string,
+	params?: ThesisDetail2Params,
 ) => {
-  const normalizedParams = new URLSearchParams();
+	const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? "null" : value.toString());
+		}
+	});
 
-  const stringifiedParams = normalizedParams.toString();
+	const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v2/pwn_contracts/thesis/${slug}/?${stringifiedParams}`
-    : `/api/v2/pwn_contracts/thesis/${slug}/`;
+	return stringifiedParams.length > 0
+		? `/api/v2/pwn_contracts/thesis/${slug}/?${stringifiedParams}`
+		: `/api/v2/pwn_contracts/thesis/${slug}/`;
 };
 
 export const thesisDetail2 = async (
-  slug: string,
-  params?: ThesisDetail2Params,
-  options?: RequestInit
+	slug: string,
+	params?: ThesisDetail2Params,
+	options?: RequestInit,
 ): Promise<ThesisSchemaWorkaround> => {
-  return customInstance<ThesisSchemaWorkaround>(
-    getThesisDetail2Url(slug, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  );
+	return customInstance<ThesisSchemaWorkaround>(
+		getThesisDetail2Url(slug, params),
+		{
+			...options,
+			method: "GET",
+		},
+	);
 };
 
 /**
  * Update an existing Strategy
  */
 export const getUpdateStrategy2Url = (slug: string) => {
-  return `/api/v2/pwn_contracts/thesis/${slug}/`;
+	return `/api/v2/pwn_contracts/thesis/${slug}/`;
 };
 
 export const updateStrategy2 = async (
-  slug: string,
-  thesisCreateUpdateSchemaRequest: ThesisCreateUpdateSchemaRequest,
-  options?: RequestInit
+	slug: string,
+	thesisCreateUpdateSchemaRequest: ThesisCreateUpdateSchemaRequest,
+	options?: RequestInit,
 ): Promise<UpdateStrategy2200> => {
-  return customInstance<UpdateStrategy2200>(getUpdateStrategy2Url(slug), {
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(thesisCreateUpdateSchemaRequest),
-  });
+	return customInstance<UpdateStrategy2200>(getUpdateStrategy2Url(slug), {
+		...options,
+		method: "PUT",
+		headers: { "Content-Type": "application/json", ...options?.headers },
+		body: JSON.stringify(thesisCreateUpdateSchemaRequest),
+	});
 };

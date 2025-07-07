@@ -5,4 +5,5 @@
  */
 
 export type V13SimpleLoanListProposalDetailSchemaWorkaroundCollateralIdsWhitelistMerkleRoot =
-  string | null;
+	| string
+	| null;

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { ProposalSpecificData } from './proposal-specific-data';
+import type { ProposalSpecificData } from "./proposal-specific-data";
 
 export type V13SimpleLoanSimpleProposalDetailSchemaWorkaroundProposalSpecificData =
-  ProposalSpecificData | null;
+	ProposalSpecificData | null;

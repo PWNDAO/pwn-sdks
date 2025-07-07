@@ -5,4 +5,5 @@
  */
 
 export type V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundCreatedFromProposalId =
-  string | null;
+	| string
+	| null;

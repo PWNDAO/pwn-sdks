@@ -5,4 +5,5 @@
  */
 
 export type V13SimpleLoanChainlinkProposalDetailSchemaWorkaroundAllowedAcceptor =
-  string | null;
+	| string
+	| null;

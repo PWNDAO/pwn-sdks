@@ -5,4 +5,5 @@
  */
 
 export type V13CreateSimpleLoanElasticProposalRequestSchemaRequestCollateralId =
-  number | string;
+	| number
+	| string;

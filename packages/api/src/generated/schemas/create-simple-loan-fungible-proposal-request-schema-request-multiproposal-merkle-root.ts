@@ -5,4 +5,5 @@
  */
 
 export type CreateSimpleLoanFungibleProposalRequestSchemaRequestMultiproposalMerkleRoot =
-  string | null;
+	| string
+	| null;

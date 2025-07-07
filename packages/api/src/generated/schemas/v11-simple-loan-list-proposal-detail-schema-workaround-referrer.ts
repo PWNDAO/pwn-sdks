@@ -5,5 +5,5 @@
  */
 
 export type V11SimpleLoanListProposalDetailSchemaWorkaroundReferrer =
-  | string
-  | null;
+	| string
+	| null;

@@ -5,4 +5,5 @@
  */
 
 export type CreateSimpleLoanSimpleProposalRequestSchemaRequestAvailableCreditLimit =
-  number | string;
+	| number
+	| string;

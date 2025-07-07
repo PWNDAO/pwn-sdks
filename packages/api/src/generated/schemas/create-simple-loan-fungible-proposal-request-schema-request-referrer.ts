@@ -5,5 +5,5 @@
  */
 
 export type CreateSimpleLoanFungibleProposalRequestSchemaRequestReferrer =
-  | string
-  | null;
+	| string
+	| null;

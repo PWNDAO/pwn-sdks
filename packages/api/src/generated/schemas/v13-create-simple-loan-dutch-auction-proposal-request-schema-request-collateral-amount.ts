@@ -5,4 +5,5 @@
  */
 
 export type V13CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestCollateralAmount =
-  number | string;
+	| number
+	| string;

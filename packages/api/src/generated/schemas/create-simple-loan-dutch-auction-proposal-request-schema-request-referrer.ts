@@ -5,5 +5,5 @@
  */
 
 export type CreateSimpleLoanDutchAuctionProposalRequestSchemaRequestReferrer =
-  | string
-  | null;
+	| string
+	| null;

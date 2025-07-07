@@ -5,5 +5,5 @@
  */
 
 export type ProposalSpecificDataSchemaWorkaroundFeedIntermediaryDenominations =
-  | string[]
-  | null;
+	| string[]
+	| null;

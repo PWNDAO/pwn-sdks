@@ -5,4 +5,5 @@
  */
 
 export type SimpleLoanListProposalDetailSchemaWorkaroundProposalContractAddress =
-  string | null;
+	| string
+	| null;

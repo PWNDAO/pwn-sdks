@@ -5,4 +5,5 @@
  */
 
 export type CreateSimpleLoanFungibleProposalRequestSchemaRequestUtilizedCreditId =
-  string | null;
+	| string
+	| null;

@@ -3,27 +3,27 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { AssetCategory } from './asset-category';
-import type { ChainIdEnum } from './chain-id-enum';
-import type { AssetInListSchemaWorkaroundDecimals } from './asset-in-list-schema-workaround-decimals';
-import type { AssetInListSchemaWorkaroundIsVerified } from './asset-in-list-schema-workaround-is-verified';
-import type { AssetInListSchemaWorkaroundName } from './asset-in-list-schema-workaround-name';
-import type { AssetInListSchemaWorkaroundTokenId } from './asset-in-list-schema-workaround-token-id';
-import type { AssetInListSchemaWorkaroundSymbol } from './asset-in-list-schema-workaround-symbol';
-import type { AssetInListSchemaWorkaroundIsKycRequired } from './asset-in-list-schema-workaround-is-kyc-required';
-import type { AssetInListSchemaWorkaroundUnderlyingTokenAddress } from './asset-in-list-schema-workaround-underlying-token-address';
+import type { AssetCategory } from "./asset-category";
+import type { AssetInListSchemaWorkaroundDecimals } from "./asset-in-list-schema-workaround-decimals";
+import type { AssetInListSchemaWorkaroundIsKycRequired } from "./asset-in-list-schema-workaround-is-kyc-required";
+import type { AssetInListSchemaWorkaroundIsVerified } from "./asset-in-list-schema-workaround-is-verified";
+import type { AssetInListSchemaWorkaroundName } from "./asset-in-list-schema-workaround-name";
+import type { AssetInListSchemaWorkaroundSymbol } from "./asset-in-list-schema-workaround-symbol";
+import type { AssetInListSchemaWorkaroundTokenId } from "./asset-in-list-schema-workaround-token-id";
+import type { AssetInListSchemaWorkaroundUnderlyingTokenAddress } from "./asset-in-list-schema-workaround-underlying-token-address";
+import type { ChainIdEnum } from "./chain-id-enum";
 
 export interface AssetInListSchemaWorkaround {
-  id: string;
-  category: AssetCategory;
-  chainId: ChainIdEnum;
-  address: string;
-  decimals: AssetInListSchemaWorkaroundDecimals;
-  thumbnailUrl: string;
-  isVerified: AssetInListSchemaWorkaroundIsVerified;
-  name: AssetInListSchemaWorkaroundName;
-  tokenId: AssetInListSchemaWorkaroundTokenId;
-  symbol: AssetInListSchemaWorkaroundSymbol;
-  is_kyc_required: AssetInListSchemaWorkaroundIsKycRequired;
-  underlyingTokenAddress?: AssetInListSchemaWorkaroundUnderlyingTokenAddress;
+	id: string;
+	category: AssetCategory;
+	chainId: ChainIdEnum;
+	address: string;
+	decimals: AssetInListSchemaWorkaroundDecimals;
+	thumbnailUrl: string;
+	isVerified: AssetInListSchemaWorkaroundIsVerified;
+	name: AssetInListSchemaWorkaroundName;
+	tokenId: AssetInListSchemaWorkaroundTokenId;
+	symbol: AssetInListSchemaWorkaroundSymbol;
+	is_kyc_required: AssetInListSchemaWorkaroundIsKycRequired;
+	underlyingTokenAddress?: AssetInListSchemaWorkaroundUnderlyingTokenAddress;
 }

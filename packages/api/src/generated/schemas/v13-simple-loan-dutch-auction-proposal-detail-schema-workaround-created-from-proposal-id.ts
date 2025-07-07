@@ -5,4 +5,5 @@
  */
 
 export type V13SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundCreatedFromProposalId =
-  string | null;
+	| string
+	| null;

@@ -5,4 +5,5 @@
  */
 
 export type V13CreateSimpleLoanElasticProposalRequestSchemaRequestMultiproposalMerkleRoot =
-  string | null;
+	| string
+	| null;

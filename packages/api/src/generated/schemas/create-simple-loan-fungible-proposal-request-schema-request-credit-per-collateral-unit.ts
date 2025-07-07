@@ -5,4 +5,5 @@
  */
 
 export type CreateSimpleLoanFungibleProposalRequestSchemaRequestCreditPerCollateralUnit =
-  number | string;
+	| number
+	| string;

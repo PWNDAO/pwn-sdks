@@ -5,4 +5,5 @@
  */
 
 export type SimpleLoanDutchAuctionProposalDetailSchemaWorkaroundProposalContractAddress =
-  string | null;
+	| string
+	| null;

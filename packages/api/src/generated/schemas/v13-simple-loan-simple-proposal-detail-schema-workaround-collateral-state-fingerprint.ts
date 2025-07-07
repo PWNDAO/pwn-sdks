@@ -5,4 +5,5 @@
  */
 
 export type V13SimpleLoanSimpleProposalDetailSchemaWorkaroundCollateralStateFingerprint =
-  string | null;
+	| string
+	| null;

@@ -5,4 +5,5 @@
  */
 
 export type CreateSimpleLoanFungibleProposalRequestSchemaRequestMinCollateralAmount =
-  number | string;
+	| number
+	| string;

@@ -3,12 +3,12 @@
  * Do not edit manually.
  * OpenAPI spec version: 0.0.0
  */
-import type { TalentScoreResponseLastCalculatedAt } from './talent-score-response-last-calculated-at';
+import type { TalentScoreResponseLastCalculatedAt } from "./talent-score-response-last-calculated-at";
 
 /**
  * Schema for OpenAPI documentation
  */
 export interface TalentScoreResponse {
-  lastCalculatedAt?: TalentScoreResponseLastCalculatedAt;
-  points: number;
+	lastCalculatedAt?: TalentScoreResponseLastCalculatedAt;
+	points: number;
 }

@@ -5,4 +5,5 @@
  */
 
 export type V11SimpleLoanSimpleProposalDetailSchemaWorkaroundProposalContractAddress =
-  string | null;
+	| string
+	| null;
