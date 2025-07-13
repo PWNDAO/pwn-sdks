@@ -8,7 +8,7 @@ import {
 	getUniqueKey,
 	isPoolToken,
 } from "@pwndao/sdk-core";
-import { ReadContractsParameters, readContracts } from "@wagmi/core";
+import { readContracts } from "@wagmi/core";
 import {
 	type ContractFunctionParameters,
 	type Hex,
