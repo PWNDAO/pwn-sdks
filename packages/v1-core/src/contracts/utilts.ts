@@ -36,6 +36,7 @@ export const mayUserSendCalls = async (config: Config, chainId: number) => {
 
 		const okStatus = ["ready", "supported"];
 
+		// :)
 		const value =
 			okStatus.includes(capabilities[chainId]?.atomic?.status ?? "") ||
 			capabilities[chainId]?.atomicBatch?.supported ||

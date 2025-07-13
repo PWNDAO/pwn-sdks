@@ -1,16 +1,15 @@
-import type {
-	ERC20TokenLike,
-	AddressString,
-} from "@pwndao/sdk-core";
+import type { AddressString, ERC20TokenLike } from "@pwndao/sdk-core";
 import { useAcceptProposals } from "@pwndao/sdk-v1-react";
 import {
 	ChainLinkProposalContract,
 	ElasticProposalContract,
 	ProposalType,
 	type ProposalWithSignature,
+	mayUserSendCalls,
 } from "@pwndao/v1-core";
+import { sendCalls, sendTransaction, waitForCallsStatus } from "@wagmi/core";
 import { useMemo } from "react";
-import { useConfig, useAccount } from "wagmi";
+import { useAccount, useConfig } from "wagmi";
 import { fixProposalLtv } from "./AcceptProposalButton";
 
 type AcceptProposalsProps = {
@@ -40,7 +39,7 @@ export const AcceptProposals = ({
 	}, [config, proposals[0]?.type, proposals.length]);
 
 	const {
-		mutate: acceptProposal,
+		mutateAsync: acceptProposal,
 		isPending,
 		error,
 	} = useAcceptProposals({
@@ -51,8 +50,8 @@ export const AcceptProposals = ({
 		return null;
 	}
 
-	const handleAcceptProposals = () => {
-		acceptProposal({
+	const handleAcceptProposals = async () => {
+		const toExecute = await acceptProposal({
 			proposalsToAccept: proposals.map((proposal) => ({
 				proposalToAccept: fixProposalLtv(proposal),
 				acceptor: proposer,
@@ -61,6 +60,19 @@ export const AcceptProposals = ({
 			})),
 			userAddress: address,
 		});
+
+		if (await mayUserSendCalls(config, proposals[0].chainId)) {
+			const toAwait = await sendCalls(config, {
+				calls: toExecute,
+			});
+
+			const res = await waitForCallsStatus(config, toAwait);
+			console.log(res);
+		} else {
+			for (const call of toExecute) {
+				sendTransaction(config, call);
+			}
+		}
 	};
 
 	return (

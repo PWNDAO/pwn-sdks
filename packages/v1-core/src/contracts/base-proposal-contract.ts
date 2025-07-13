@@ -1,7 +1,9 @@
 import { SimpleMerkleTree } from "@openzeppelin/merkle-tree";
 import {
 	type AddressString,
+	type ERC20TokenLike,
 	type Hex,
+	type UniqueKey,
 	getLoanContractAddress,
 } from "@pwndao/sdk-core";
 import {
@@ -9,17 +11,12 @@ import {
 	getAccount,
 	getPublicClient,
 	readContract,
-	sendCalls,
-	sendTransaction,
 	signTypedData,
-	switchChain,
 	watchContractEvent,
-	waitForCallsStatus,
 } from "@wagmi/core";
 import type {
 	GetAccountReturnType,
 	ReadContractsParameters,
-	WaitForCallsStatusReturnType,
 } from "@wagmi/core";
 import type { AcceptProposalRequest } from "src/actions/accept-proposals.js";
 import {
@@ -29,7 +26,6 @@ import {
 	type PublicClient,
 	encodeFunctionData,
 } from "viem";
-import type { SendTransactionReturnType } from "viem";
 import {
 	type IProposalContract,
 	type IServerAPI,
@@ -42,7 +38,7 @@ import type { ProposalWithSignature } from "../models/strategies/types.js";
 import { SafeService } from "../safe/safe-service.js";
 import type { SafeConfig } from "../safe/types.js";
 import { getApprovals } from "../utils/approvals-helper.js";
-import { getInclusionProof, mayUserSendCalls } from "./utilts.js";
+import { getInclusionProof } from "./utilts.js";
 
 const SAFE_ABI = [
 	{
@@ -222,8 +218,16 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 
 	async getApprovalCalls(
 		proposals: ProposalsToAccept[],
+		userAddress: AddressString,
+		totalToApprove: {
+			[key in UniqueKey]: {
+				amount: bigint;
+				asset: ERC20TokenLike;
+				spender?: AddressString;
+			};
+		},
 	): Promise<{ to: AddressString; data: Hex }[]> {
-		return getApprovals(proposals, this);
+		return getApprovals(proposals, this, userAddress, totalToApprove);
 	}
 
 	abstract getReadCollateralAmount(
@@ -232,15 +236,23 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 
 	async acceptProposals(
 		proposals: [AcceptProposalRequest, ...AcceptProposalRequest[]],
-	): Promise<WaitForCallsStatusReturnType | { status?: "success", receipts: SendTransactionReturnType[] }> {
+		userAddress: AddressString,
+		totalToApprove: {
+			[key in UniqueKey]: {
+				amount: bigint;
+				asset: ERC20TokenLike;
+				spender?: AddressString;
+			};
+		},
+	): Promise<
+	{
+		to: AddressString,
+		data: Hex,
+	}[]
+	> {
 		const calls = await Promise.all(
 			proposals.map(
-				async ({
-					proposalToAccept: proposal,
-					creditAmount,
-					acceptor
-				}) => {
-
+				async ({ proposalToAccept: proposal, creditAmount, acceptor }) => {
 					// if proposal is lending offer sourceOfFunds is already set. If not then it's lender address
 					const sourceOfFunds =
 						proposal.sourceOfFunds ||
@@ -290,35 +302,10 @@ export abstract class BaseProposalContract<TProposal extends Proposal>
 			),
 		);
 
-		const approvals = await this.getApprovalCalls(proposals);
-
-		const chainId = proposals[0].proposalToAccept.chainId;
+		const approvals = await this.getApprovalCalls(proposals, userAddress, totalToApprove);
 
 		const callsWithApprovals = approvals.concat(calls);
 
-		// currently only signle chain-context is supported
-		await switchChain(this.config, {
-			chainId,
-		});
-
-		if (await mayUserSendCalls(this.config, chainId)) {
-			const hash = await sendCalls(this.config, {
-				calls: callsWithApprovals,
-			});
-
-			return await waitForCallsStatus(this.config, hash)
-		}
-
-		const receipts: SendTransactionReturnType[] = []
-
-		for (const call of callsWithApprovals) {
-			const receipt = await sendTransaction(this.config, call);
-			receipts.push(receipt)
-		}
-
-		return {
-			status: "success",
-			receipts,
-		}
+		return callsWithApprovals;
 	}
 }
