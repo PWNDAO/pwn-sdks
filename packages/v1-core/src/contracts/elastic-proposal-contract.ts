@@ -1,6 +1,4 @@
-import {
-	getElasticProposalContractAddress,
-} from "@pwndao/sdk-core";
+import { getElasticProposalContractAddress } from "@pwndao/sdk-core";
 import { getAccount, readContract } from "@wagmi/core";
 import type { Hex } from "viem";
 import type { Address } from "viem";

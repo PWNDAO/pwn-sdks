@@ -1,0 +1,362 @@
+specVersion: 1.2.0
+schema:
+  file: ./schema.graphql
+dataSources:
+  # TODO should we also include:
+  # - RevokedNonce ?
+  # - Config?
+  # - Hub?
+  # - SimpleLoanDutchAuction?
+
+  # TODO go over the events here and see what we can remove
+  - kind: ethereum
+    name: SimpleLoanSimpleProposal
+    network: {{network}}
+    source:
+      address: "{{SimpleLoanSimpleProposal.address}}"
+      abi: SimpleLoanSimpleProposal
+      startBlock: {{SimpleLoanSimpleProposal.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - ProposalMade
+      abis:
+        - name: SimpleLoanSimpleProposal
+          file: ./abis/SimpleLoanSimpleProposal.json
+      eventHandlers:
+        - event: ProposalMade(indexed bytes32,indexed
+            address,(uint8,address,uint256,uint256,bool,bytes32,address,uint256,uint256,bytes32,uint256,uint24,uint32,uint40,address,address,bytes32,bool,uint256,uint256,uint256,address))
+          handler: handleProposalMade
+      file: ./src/simple-loan-simple-proposal.ts
+  - kind: ethereum
+    name: SimpleLoanListProposal
+    network: {{network}}
+    source:
+      address: "{{SimpleLoanListProposal.address}}"
+      abi: SimpleLoanListProposal
+      startBlock: {{SimpleLoanListProposal.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - SimpleLoanListProposalProposalMade
+      abis:
+        - name: SimpleLoanListProposal
+          file: ./abis/SimpleLoanListProposal.json
+      eventHandlers:
+        - event: ProposalMade(indexed bytes32,indexed
+            address,(uint8,address,bytes32,uint256,bool,bytes32,address,uint256,uint256,bytes32,uint256,uint24,uint32,uint40,address,address,bytes32,bool,uint256,uint256,uint256,address))
+          handler: handleProposalMade
+      file: ./src/simple-loan-list-proposal.ts
+  - kind: ethereum
+    name: SimpleLoanElasticProposal
+    network: {{network}}
+    source:
+      address: "{{SimpleLoanElasticProposal.address}}"
+      abi: SimpleLoanElasticProposal
+      startBlock: {{SimpleLoanElasticProposal.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - SimpleLoanElasticProposalProposalMade
+      abis:
+        - name: SimpleLoanElasticProposal
+          file: ./abis/SimpleLoanElasticProposal.json
+      eventHandlers:
+        - event: ProposalMade(indexed bytes32,indexed
+            address,(uint8,address,uint256,bool,bytes32,address,uint256,uint256,uint256,bytes32,uint256,uint24,uint32,uint40,address,address,bytes32,bool,uint256,uint256,uint256,address))
+          handler: handleProposalMade
+      file: ./src/simple-loan-elastic-proposal.ts
+  - kind: ethereum
+    name: SimpleLoanElasticChainlinkProposal
+    network: {{network}}
+    source:
+      address: "{{SimpleLoanElasticChainlinkProposal.address}}"
+      abi: SimpleLoanElasticChainlinkProposal
+      startBlock: {{SimpleLoanElasticChainlinkProposal.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - SimpleLoanElasticChainlinkProposalProposalMade
+      abis:
+        - name: SimpleLoanElasticChainlinkProposal
+          file: ./abis/SimpleLoanElasticChainlinkProposal.json
+      eventHandlers:
+        - event: ProposalMade(indexed bytes32,indexed
+            address,(uint8,address,uint256,bool,bytes32,address,address[],bool[],uint256,uint256,uint256,bytes32,uint256,uint24,uint32,uint40,address,address,bytes32,bool,uint256,uint256,uint256,address))
+          handler: handleProposalMade
+      file: ./src/simple-loan-elastic-chainlink-proposal.ts
+  - kind: ethereum
+    name: SimpleLoan
+    network: {{network}}
+    source:
+      address: "{{SimpleLoan.address}}"
+      abi: SimpleLoan
+      startBlock: {{SimpleLoan.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - ExtensionProposalMade
+        - LOANClaimed
+        - LOANCreated
+        - LoanExtendedEvent
+        - LOANPaidBack
+        #- PoolSupply
+        #- PoolWithdraw
+        #- VaultPull
+        #- VaultPush
+        #- VaultPushFrom
+      abis:
+        - name: SimpleLoan
+          file: ./abis/SimpleLoan.json
+      eventHandlers:
+        - event: ExtensionProposalMade(indexed bytes32,indexed
+            address,(uint256,address,uint256,uint40,uint40,address,uint256,uint256))
+          handler: handleExtensionProposalMade
+        - event: LOANClaimed(indexed uint256,indexed bool)
+          handler: handleLOANClaimed
+        - event: LOANCreated(indexed uint256,indexed bytes32,indexed
+            address,uint256,(address,address,uint32,(uint8,address,uint256,uint256),(uint8,address,uint256,uint256),uint256,uint24,bytes32,bytes32),(address),bytes)
+          handler: handleLOANCreated
+        - event: LOANExtended(indexed uint256,uint40,uint40)
+          handler: handleLOANExtended
+        - event: LOANPaidBack(indexed uint256)
+          handler: handleLOANPaidBack
+        #- event: PoolSupply((uint8,address,uint256,uint256),indexed address,indexed address,indexed
+        #    address)
+        #  handler: handlePoolSupply
+        #- event: PoolWithdraw((uint8,address,uint256,uint256),indexed address,indexed
+        #    address,indexed address)
+        #  handler: handlePoolWithdraw
+        #- event: VaultPull((uint8,address,uint256,uint256),indexed address)
+        #  handler: handleVaultPull
+        #- event: VaultPush((uint8,address,uint256,uint256),indexed address)
+        #  handler: handleVaultPush
+        #- event: VaultPushFrom((uint8,address,uint256,uint256),indexed address,indexed address)
+        # handler: handleVaultPushFrom
+      file: ./src/simple-loan.ts
+  - kind: ethereum
+    name: LoanToken
+    network: {{network}}
+    source:
+      address: "{{LoanToken.address}}"
+      abi: LoanToken
+      startBlock: {{LoanToken.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        # - Approval
+        # - ApprovalForAll
+        #- LOANBurned
+        #- LOANMinted
+        - Transfer
+      abis:
+        - name: LoanToken
+          file: ./abis/LoanToken.json
+      eventHandlers:
+        # - event: Approval(indexed address,indexed address,indexed uint256)
+        #   handler: handleApproval
+        # - event: ApprovalForAll(indexed address,indexed address,bool)
+        #   handler: handleApprovalForAll
+        # note: no need to track LOANBurned and LOANMinted as they happen always
+        #  together with LOANCreated and LOANClaimed
+        #- event: LOANBurned(indexed uint256)
+        #  handler: handleLOANBurned
+        #- event: LOANMinted(indexed uint256,indexed address,indexed address)
+        #  handler: handleLOANMinted
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/loan-token.ts
+  # TODO update Config abi
+  # TODO should we also have proxy upgrade events in the config address?
+  # - kind: ethereum
+  #   name: Config
+  #   network: {{network}}
+  #   source:
+  #     address: "{{Config.address}}"
+  #     abi: Config
+  #     startBlock: {{Config.startBlock}}
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.9
+  #     language: wasm/assemblyscript
+  #     entities:
+  #       #- AdminChanged
+  #       #- BeaconUpgraded
+  #       #- Upgraded
+  #       - DefaultLOANMetadataUriUpdated
+  #       - FeeCollectorUpdated
+  #       - FeeUpdated
+  #       #- Initialized
+  #       - LOANMetadataUriUpdated
+  #       #- ConfigOwnershipTransferStarted
+  #       #- ConfigOwnershipTransferred
+  #     abis:
+  #       - name: Config
+  #         file: ./abis/Config.json
+  #     eventHandlers:
+  #       #- event: AdminChanged(address,address)
+  #       #  handler: handleAdminChanged
+  #       #- event: BeaconUpgraded(indexed address)
+  #       #  handler: handleBeaconUpgraded
+  #       #- event: Upgraded(indexed address)
+  #       #  handler: handleUpgraded
+  #       - event: DefaultLOANMetadataUriUpdated(string)
+  #         handler: handleDefaultLOANMetadataUriUpdated
+  #       - event: FeeCollectorUpdated(address,address)
+  #         handler: handleFeeCollectorUpdated
+  #       - event: FeeUpdated(uint16,uint16)
+  #         handler: handleFeeUpdated
+  #       #- event: Initialized(uint8)
+  #       #  handler: handleInitialized
+  #       - event: LOANMetadataUriUpdated(indexed address,string)
+  #         handler: handleLOANMetadataUriUpdated
+  #       #- event: OwnershipTransferStarted(indexed address,indexed address)
+  #       #  handler: handleOwnershipTransferStarted
+  #       #- event: OwnershipTransferred(indexed address,indexed address)
+  #       #  handler: handleOwnershipTransferred
+  #     file: ./src/config.ts
+  - kind: ethereum
+    name: Hub
+    network: {{network}}
+    source:
+      address: "{{Hub.address}}"
+      abi: Hub
+      startBlock: {{Hub.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        #- OwnershipTransferStarted
+        #- OwnershipTransferred
+        - TagSetEvent
+      abis:
+        - name: Hub
+          file: ./abis/Hub.json
+      eventHandlers:
+        #- event: OwnershipTransferStarted(indexed address,indexed address)
+        #  handler: handleOwnershipTransferStarted
+        #- event: OwnershipTransferred(indexed address,indexed address)
+        #  handler: handleOwnershipTransferred
+        - event: TagSet(indexed address,indexed bytes32,bool)
+          handler: handleTagSet
+      file: ./src/hub.ts
+  - kind: ethereum
+    name: ChainlinkFeedRegistry
+    network: {{network}}
+    source:
+      address: "{{ChainlinkFeedRegistry.address}}"
+      abi: ChainlinkFeedRegistry
+      startBlock: {{ChainlinkFeedRegistry.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        #- AccessControllerSet
+        - ChainlinkFeed
+        #- FeedConfirmed
+        #- FeedProposed
+        #- OwnershipTransferRequested
+        #- ChainlinkFeedRegistryOwnershipTransferred
+      abis:
+        - name: ChainlinkFeedRegistry
+          file: ./abis/ChainlinkFeedRegistry.json
+      eventHandlers:
+        #- event: AccessControllerSet(indexed address,indexed address)
+        #  handler: handleAccessControllerSet
+        - event: FeedConfirmed(indexed address,indexed address,indexed
+            address,address,uint16,address)
+          handler: handleFeedConfirmed
+        #- event: FeedProposed(indexed address,indexed address,indexed address,address,address)
+        #  handler: handleFeedProposed
+        #- event: OwnershipTransferRequested(indexed address,indexed address)
+        #  handler: handleOwnershipTransferRequested
+        #- event: OwnershipTransferred(indexed address,indexed address)
+        #  handler: handleOwnershipTransferred
+      file: ./src/chainlink-feed-registry.ts
+  - kind: ethereum
+    name: MultiTokenCategoryRegistry
+    network: {{network}}
+    source:
+      address: "{{MultiTokenCategoryRegistry.address}}"
+      abi: MultiTokenCategoryRegistry
+      startBlock: {{MultiTokenCategoryRegistry.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - AssetInCategory
+        - AssetCategory
+        #- CategoryRegistered
+        #- CategoryUnregistered
+        #- MultiTokenCategoryRegistryOwnershipTransferStarted
+        #- MultiTokenCategoryRegistryOwnershipTransferred
+      abis:
+        - name: MultiTokenCategoryRegistry
+          file: ./abis/MultiTokenCategoryRegistry.json
+      eventHandlers:
+        - event: CategoryRegistered(indexed address,indexed uint8)
+          handler: handleCategoryRegistered
+        - event: CategoryUnregistered(indexed address)
+          handler: handleCategoryUnregistered
+        #- event: OwnershipTransferStarted(indexed address,indexed address)
+        #  handler: handleOwnershipTransferStarted
+        #- event: OwnershipTransferred(indexed address,indexed address)
+       #   handler: handleOwnershipTransferred
+      file: ./src/multi-token-category-registry.ts
+  - kind: ethereum
+    name: SimpleLoanUniswapV3LPIndividualProposal
+    network: {{network}}
+    source:
+      address: "{{SimpleLoanUniswapV3LPIndividualProposal.address}}"
+      abi: SimpleLoanUniswapV3LPIndividualProposal
+      startBlock: {{SimpleLoanUniswapV3LPIndividualProposal.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - SimpleLoanUniswapV3LPIndividualProposalProposalMade
+      abis:
+        - name: SimpleLoanUniswapV3LPIndividualProposal
+          file: ./abis/SimpleLoanUniswapV3LPIndividualProposal.json
+      eventHandlers:
+        - event: ProposalMade(indexed bytes32,indexed
+            address,(uint256,bool,address,address[],bool[],uint256,uint256,uint256,bytes32,uint256,uint24,uint32,uint40,address,bytes,address,bytes32,bool,uint256,uint256,uint256,address))
+          handler: handleProposalMade
+      file: ./src/simple-loan-uniswap-v-3-lp-individual-proposal.ts
+  - kind: ethereum
+    name: SimpleLoanUniswapV3LPSetProposal
+    network: {{network}}
+    source:
+      address: "{{SimpleLoanUniswapV3LPSetProposal.address}}"
+      abi: SimpleLoanUniswapV3LPSetProposal
+      startBlock: {{SimpleLoanUniswapV3LPSetProposal.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - SimpleLoanUniswapV3LPSetProposalProposalMade
+      abis:
+        - name: SimpleLoanUniswapV3LPSetProposal
+          file: ./abis/SimpleLoanUniswapV3LPSetProposal.json
+      eventHandlers:
+        - event: ProposalMade(indexed bytes32,indexed
+            address,(address[],address[],address,address[],bool[],uint256,uint256,uint256,bytes32,uint256,uint24,uint32,uint40,address,bytes,address,bytes32,bool,uint256,uint256,uint256,address))
+          handler: handleProposalMade
+      file: ./src/simple-loan-uniswap-v-3-lp-set-proposal.ts
