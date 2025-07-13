@@ -17,6 +17,8 @@ export enum ProposalType {
 	DutchAuction = "pwn_contracts.v1_3simpleloandutchauctionproposal",
 	Simple = "pwn_contracts.v1_3simpleloansimpleproposal",
 	ChainLink = "pwn_contracts.v1_3simpleloanelasticchainlinkproposal",
+	UniswapV3LpSet = "pwn_contracts.v1_4simpleloanuniswapv3lpsetproposal",
+	UniswapV3Individual = "pwn_contracts.v1_4simpleloanuniswapv3individualproposal",
 }
 
 export interface IProposalMisc {
@@ -181,6 +183,40 @@ export interface IOracleProposalBase
 	minCreditAmount: bigint;
 
 	type: ProposalType.ChainLink;
+}
+
+export interface IUniswapV3LpSetProposalBase extends Omit<IOracleProposalBase, "type"> {
+	type: ProposalType.UniswapV3LpSet;
+
+	/**
+	 * List of assets that can be used in LP pair as a tokenA
+	 */
+	tokenAAllowlist: AddressString[];
+
+	/**
+	 * List of assets that can be used in LP pair as a tokenB
+	 */
+	tokenBAllowlist: AddressString[];
+	
+	/**
+	 * UniswapV3LpSetProposal is always lending offer
+	 */
+	isOffer: true;
+
+	// TODO: remove this after V1.4 is implemented
+	acceptorController: AddressString | null;
+	acceptorControllerData: Hex | null;
+}
+
+export interface IUniswapV3IndividualProposalBase extends Omit<IOracleProposalBase, "type"> {
+	token0Denominator: boolean;
+	feedIntermediaryDenominations: AddressString[];
+	feedInvertFlags: boolean[];
+	loanToValue: bigint;
+	acceptorController: AddressString;
+	acceptorControllerData: Hex;
+	collateralId: bigint;
+	type: ProposalType.UniswapV3Individual;
 }
 
 interface IBaseFixedProposal {

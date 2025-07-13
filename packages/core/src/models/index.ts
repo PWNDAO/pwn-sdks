@@ -4,3 +4,4 @@ export * from "./token.js";
 export * from "./user.js";
 export * from "./types.js";
 export * from "./nft.js";
+export * from "./liquidity-position.js";

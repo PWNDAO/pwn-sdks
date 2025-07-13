@@ -42,6 +42,26 @@ export const getChainLinkProposalContractAddress = (
 	return CHAIN_TO_ADDRESSES_MAP[chainId].pwnSimpleLoanElasticChainlinkProposal;
 };
 
+export const getUniswapV3LpSetProposalContractAddress = (
+	chainId: SupportedChain,
+) => {
+	if (chainId === SupportedChain.Sepolia) {
+		return CHAIN_TO_ADDRESSES_MAP[chainId].pwnSimpleLoanUniswapV3LpSetProposal;
+	}
+
+	throw new Error(`UniswapV3LpSetProposalContractAddress not deployed on chain ${chainId}`);
+};
+
+export const getUniswapV3IndividualProposalContractAddress = (
+	chainId: SupportedChain,
+) => {
+	if (chainId === SupportedChain.Sepolia) {
+		return CHAIN_TO_ADDRESSES_MAP[chainId].pwnSimpleLoanUniswapV3IndividualProposal;
+	}
+
+	throw new Error(`UniswapV3IndividualProposalContractAddress not deployed on chain ${chainId}`);
+};
+
 export const typeSafeObjectKeys = <const T extends object>(obj: T) => {
 	return Object.keys(obj) as Array<keyof T>
 }

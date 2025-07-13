@@ -8,6 +8,7 @@ export enum MultiTokenCategory {
 	NATIVE = 3,
 	ERC721_COLLECTION = 420,
 	ERC1155_COLLECTION = 421,
+	UNISWAP_V3_LP = 666,
 }
 
 interface IBaseAsset {

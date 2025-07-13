@@ -5,6 +5,7 @@ import { User, UserWithNonceManager } from "../models/user.js";
 import type { AddressString } from "../types.js";
 import { PoolToken } from "../models/pool-token.js";
 import type { SupportedProtocol } from "../models/pool-token.js";
+import { UniswapV3Position } from "../models/liquidity-position.js";
 
 export const generateAddress = () => {
 	return faker.finance.ethereumAddress() as AddressString;
@@ -69,4 +70,14 @@ export const getMockPoolToken = (
 ) => {
 	const defaultAddress = address ?? generateAddress();
 	return new PoolToken(chain, defaultAddress, underlyingAddress, decimals, protocol, name, symbol);
+};
+
+export const getMockLiquidityPoolToken = (
+	chain: SupportedChain,
+	tokenA: AddressString,
+	tokenB: AddressString,
+	tokenId: string,
+	tokenAddress: AddressString,
+) => {
+	return new UniswapV3Position(chain, tokenAddress, tokenA, tokenB, tokenId);
 };
