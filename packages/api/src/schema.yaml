@@ -3662,6 +3662,7 @@ components:
       - SEPOLIA
       - SPECTRA
       - RESOLV
+      - UNISWAP
       - TOKEN_LIST_PWN
       - TOKEN_LIST_UNISWAP
       - TOKEN_LIST_ZAPPER
@@ -3717,6 +3718,7 @@ components:
         * `SEPOLIA` - Sepolia
         * `SPECTRA` - Spectra
         * `RESOLV` - Resolv
+        * `UNISWAP` - Uniswap
         * `TOKEN_LIST_PWN` - PWN Token List
         * `TOKEN_LIST_UNISWAP` - Uniswap Token List
         * `TOKEN_LIST_ZAPPER` - Zapper Token List
@@ -5084,6 +5086,7 @@ components:
       - SEPOLIA
       - SPECTRA
       - RESOLV
+      - UNISWAP
       - TOKEN_LIST_PWN
       - TOKEN_LIST_UNISWAP
       - TOKEN_LIST_ZAPPER
@@ -7415,142 +7418,6 @@ components:
         $ref: '#/components/schemas/ParsedLeaderboardPositionResponse'
       title: ParsedLeaderboardPositionResponseList
       type: array
-    PassportProfile:
-      properties:
-        bio:
-          anyOf:
-          - type: string
-          - type: 'null'
-          default: null
-          title: Bio
-        dataSources:
-          default: {}
-          title: Datasources
-          type: object
-        displayName:
-          anyOf:
-          - type: string
-          - type: 'null'
-          default: null
-          title: Displayname
-        imageUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          default: null
-          title: Imageurl
-        location:
-          anyOf:
-          - type: string
-          - type: 'null'
-          default: null
-          title: Location
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          default: null
-          title: Name
-        tags:
-          default: []
-          items:
-            type: string
-          title: Tags
-          type: array
-      title: PassportProfile
-      type: object
-    PassportSocial:
-      properties:
-        disconnected:
-          title: Disconnected
-          type: boolean
-        followerCount:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          default: null
-          title: Followercount
-        followingCount:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          default: null
-          title: Followingcount
-        location:
-          anyOf:
-          - type: string
-          - type: 'null'
-          default: null
-          title: Location
-        profileBio:
-          anyOf:
-          - type: string
-          - type: 'null'
-          default: null
-          title: Profilebio
-        profileDisplayName:
-          anyOf:
-          - type: string
-          - type: 'null'
-          default: null
-          title: Profiledisplayname
-        profileImageUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          default: null
-          title: Profileimageurl
-        profileName:
-          anyOf:
-          - type: string
-          - type: 'null'
-          default: null
-          title: Profilename
-        profileUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          default: null
-          title: Profileurl
-        source:
-          title: Source
-          type: string
-      required:
-      - disconnected
-      - source
-      title: PassportSocial
-      type: object
-    PassportUser:
-      properties:
-        admin:
-          title: Admin
-          type: boolean
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          default: null
-          title: Email
-        id:
-          title: Id
-          type: string
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          default: null
-          title: Name
-        profilePictureUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          default: null
-          title: Profilepictureurl
-      required:
-      - admin
-      - id
-      title: PassportUser
-      type: object
     PeriodEnum:
       enum:
       - 24h
@@ -7599,6 +7466,7 @@ components:
       - SEPOLIA
       - SPECTRA
       - RESOLV
+      - UNISWAP
       - TOKEN_LIST_PWN
       - TOKEN_LIST_UNISWAP
       - TOKEN_LIST_ZAPPER
@@ -7654,6 +7522,7 @@ components:
         * `SEPOLIA` - SEPOLIA
         * `SPECTRA` - SPECTRA
         * `RESOLV` - RESOLV
+        * `UNISWAP` - UNISWAP
         * `TOKEN_LIST_PWN` - TOKEN_LIST_PWN
         * `TOKEN_LIST_UNISWAP` - TOKEN_LIST_UNISWAP
         * `TOKEN_LIST_ZAPPER` - TOKEN_LIST_ZAPPER
@@ -9308,25 +9177,9 @@ components:
       - subdomain_name
       - supported_chains
       - text_color
-    TalentPassport:
+    TalentScoreResponse:
       description: Schema for OpenAPI documentation
       properties:
-        activityScore:
-          title: Activityscore
-          type: integer
-        calculatingScore:
-          title: Calculatingscore
-          type: boolean
-        createdAt:
-          format: date-time
-          title: Createdat
-          type: string
-        humanCheckmark:
-          title: Humancheckmark
-          type: boolean
-        identityScore:
-          title: Identityscore
-          type: integer
         lastCalculatedAt:
           anyOf:
           - format: date-time
@@ -9334,79 +9187,12 @@ components:
           - type: 'null'
           default: null
           title: Lastcalculatedat
-        mainWallet:
-          anyOf:
-          - type: string
-          - type: 'null'
-          default: null
-          title: Mainwallet
-        mainWalletChangedAt:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          default: null
-          title: Mainwalletchangedat
-        merged:
-          title: Merged
-          type: boolean
-        nominationsReceivedCount:
-          title: Nominationsreceivedcount
+        points:
+          title: Points
           type: integer
-        passportId:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Passportid
-        passportProfile:
-          $ref: '#/components/schemas/PassportProfile'
-        passportSocials:
-          items:
-            $ref: '#/components/schemas/PassportSocial'
-          title: Passportsocials
-          type: array
-        pendingKyc:
-          title: Pendingkyc
-          type: boolean
-        score:
-          title: Score
-          type: integer
-        skillsScore:
-          title: Skillsscore
-          type: integer
-        socialsCalculatedAt:
-          format: date-time
-          title: Socialscalculatedat
-          type: string
-        user:
-          $ref: '#/components/schemas/PassportUser'
-        verified:
-          title: Verified
-          type: boolean
-        verifiedWallets:
-          items:
-            type: string
-          title: Verifiedwallets
-          type: array
       required:
-      - activityScore
-      - calculatingScore
-      - createdAt
-      - humanCheckmark
-      - identityScore
-      - merged
-      - nominationsReceivedCount
-      - passportId
-      - passportProfile
-      - passportSocials
-      - pendingKyc
-      - score
-      - skillsScore
-      - socialsCalculatedAt
-      - user
-      - verified
-      - verifiedWallets
-      title: TalentPassport
+      - points
+      title: TalentScoreResponse
       type: object
     TaskInfo:
       properties:
@@ -10137,6 +9923,8 @@ components:
         discord_user_id:
           type: string
           maxLength: 19
+        world_notifications:
+          type: boolean
     UserProfileRequest:
       type: object
       properties:
@@ -10145,6 +9933,8 @@ components:
         discord_user_id:
           type: string
           maxLength: 19
+        world_notifications:
+          type: boolean
     UserProfileRequestRequest:
       oneOf:
       - $ref: '#/components/schemas/UserProfileRequest'
@@ -10161,6 +9951,8 @@ components:
         discord_user_id:
           type: string
           maxLength: 19
+        world_notifications:
+          type: boolean
         email:
           type:
           - string
@@ -10176,6 +9968,8 @@ components:
         discord_user_id:
           type: string
           maxLength: 19
+        world_notifications:
+          type: boolean
         email:
           type:
           - string

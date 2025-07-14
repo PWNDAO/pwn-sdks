@@ -9,6 +9,7 @@ export interface UserProfileSerializerAuthenticated {
 	description?: string;
 	/** @maxLength 19 */
 	discord_user_id?: string;
+	world_notifications?: boolean;
 	email?: UserProfileSerializerAuthenticatedEmail;
 	is_email_verified?: boolean;
 }

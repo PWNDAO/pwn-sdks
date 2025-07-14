@@ -44,6 +44,7 @@
  * `SEPOLIA` - Sepolia
  * `SPECTRA` - Spectra
  * `RESOLV` - Resolv
+ * `UNISWAP` - Uniswap
  * `TOKEN_LIST_PWN` - PWN Token List
  * `TOKEN_LIST_UNISWAP` - Uniswap Token List
  * `TOKEN_LIST_ZAPPER` - Zapper Token List
@@ -103,6 +104,7 @@ export const DecimalsSourceEnum = {
 	SEPOLIA: "SEPOLIA",
 	SPECTRA: "SPECTRA",
 	RESOLV: "RESOLV",
+	UNISWAP: "UNISWAP",
 	TOKEN_LIST_PWN: "TOKEN_LIST_PWN",
 	TOKEN_LIST_UNISWAP: "TOKEN_LIST_UNISWAP",
 	TOKEN_LIST_ZAPPER: "TOKEN_LIST_ZAPPER",
