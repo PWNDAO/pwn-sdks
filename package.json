@@ -76,7 +76,7 @@
 		"jsdoc-to-markdown": "^9.1.1",
 		"jsdom": "~22.1.0",
 		"less": "3.12.2",
-		"nx": "20.8.0-beta.0",
+		"nx": "22.7.2",
 		"pino-pretty": "^13.0.0",
 		"prettier": "^2.6.2",
 		"tslib": "^2.3.0",
